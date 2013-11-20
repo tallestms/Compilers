@@ -1,0 +1,49 @@
+//Arquivo para mostrar diferentes tipos de operações que possam ser realizadas e diferentes interpretações pelo Flex
+algoritmo operacoes;
+
+variáveis
+	x : inteiro;
+	y : inteiro;
+	xReal : real;
+	yReal : real;
+fim-variáveis
+
+início
+	x := 2;
+	y := 2;
+	xReal := 2.22E+1;
+	yReal := 22.22;
+	imprima(soma(x,y));
+	imprima(subtracao(x,y));
+	imprima(somaReal(xReal,yReal));
+	imprima(subtracaoReal(xReal,yReal));
+fim
+
+função soma(x: inteiro, y: inteiro) : inteiro
+res : inteiro;
+início
+	res := x + y; 
+fim
+
+função soma(x: inteiro, y: inteiro) : inteiro
+res : inteiro;
+res2 : inteiro;
+início
+	res := x - y;
+	retorne res;
+fim
+
+função somaReal(x: real, y: real) : real
+res : real;
+res2 : real;
+início
+	res := x + y;
+	retorne res;
+fim
+
+função subtracaoReal(x: real, y: real) : real
+res :real;
+início
+	res := x - y;
+	retorne res;
+fim
