@@ -9,10 +9,13 @@ fim-variáveis
 início
 
 função soma(x: inteiro, y: inteiro) : inteiro
-res : inteiro;
-início
+  res : inteiro;
+  início
+  res := a + b >= 2 - a;
+  retorne res;
 fim
 
-fat := 2+c > a+da+ca+21;
+fat := a + b >= 2 - a;
+
 
 fim
