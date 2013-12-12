@@ -90,13 +90,10 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "!"						{return token_negacao;}
 {caractere}					{return token_caracter;}
 {string}					{return token_string}
-{identificador}					{return token_identificador;}
-[ \t]						;
-[\n]						{nLinha++;}
-
-
 {comentario_linha}				;
 {comentario_bloco}				;
+{identificador}					{return token_identificador;}
+[ \t\n]						;
 <<EOF>>						{return;} /* ctrl+D*/
 %%
 int main()
