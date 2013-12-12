@@ -72,8 +72,8 @@
 %token token_menori
 %token token_igual
 %token token_diferente
-%token token_e
-%token token_ou
+%token token_el
+%token token_oul
 %token token_negacao
 %token token_caracter
 %token token_string
@@ -85,12 +85,29 @@
 
 %%
 
-PROG:	token_programa token_ident token_ptevirgula BLOCO token_ponto
-;
+PROG:	token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim;
+BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
+		  token_variaveis token_fimvariaveis | /*Empty*/;
+VARIAVEIS: token_identificador token_doisp TIPOS_VARIAVEIS token_pontov | VARIAVEIS token_identificador token_doisp TIPOS_VARIAVEIS token_pontov ;  
+TIPOS_VARIAVEIS: token_inteiro | token_real | token_caracter | token_literal | token_logico | MATRIZ;
+MATRIZ: token_matriz token_abrecol token_numinteiro token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ;
+TIPOS_VARIAVEIS_MATRIZ: token_inteiros | token_caracteres | token_literais | token_reais | token_logicos;
 
-BLOCO:	/**/
-	| token_ident
-;
+BLOCO: /*Empty*/ | BLOCO COMANDO | BLOCO token_funcao token_identificador FUNCAO | token_inicio BLOCO token_fim;
+FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp TIPOS_VARIAVEIS VARIAVEIS token_inicio BLOCO_FUNCAO token_fim;
+VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS | VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS ;  
+BLOCO_FUNCAO: /*Empty*/ | token_retorne token_identificador token_pontov;
+
+COMANDO: token_identificador token_atribuicao EXPR token_pontov;
+
+EXPR: SIEXPR | token_identificador COMPARACOES token_identificador;
+COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
+
+SIEXPR: TERMO | TERMO ADICAO_SUBTRACAO SIEXPR;
+ADICAO_SUBTRACAO: token_mais | token_menos;
+
+TERMO: FATOR | FATOR token_dividir FATOR | FATOR token_mod FATOR | FATOR token_vezes FATOR;
+FATOR: token_numinteiro | token_numreal | token_identificador;
 
 
 %%

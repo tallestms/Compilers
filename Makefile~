@@ -1,0 +1,4 @@
+all:	
+	flex -i analizador_lexico.l
+	bison analizador_sintatico.y
+	gcc -otrab3 analizador_sintatico.tab.c -lfl

@@ -1,0 +1,18 @@
+algoritmo declaracao_de_variaveis;
+
+variáveis
+x : caracter;
+y : caracter;
+z : matriz[5] de inteiros;
+fim-variáveis
+
+início
+
+função soma(x: inteiro, y: inteiro) : inteiro
+res : inteiro;
+início
+fim
+
+fat := 2+c > a+da+ca+21;
+
+fim
