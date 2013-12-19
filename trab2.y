@@ -84,9 +84,7 @@
 %start PROG
 
 %%
-// Fazer casos com parenteses <-
 // Fazer expressoes logicas
-// Caso de comentarios <- 
 // Caso de se-entao-senao **
 
 PROG: token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim;
@@ -119,8 +117,8 @@ COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_meno
 SIEXPR: TERMO | SIEXPR ADICAO_SUBTRACAO TERMO; //Correct case with parenthesis
 ADICAO_SUBTRACAO: token_mais | token_menos ;
 
-TERMO: FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR;
-FATOR: token_numinteiro | token_numreal | SINAL token_identificador | token_variavel_caracter | token_string;
+TERMO: FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR ;
+FATOR: token_numinteiro | token_numreal | SINAL token_identificador | token_variavel_caracter | token_string | token_abrep EXPR token_fechap;
 SINAL: /*Empty*/ | token_menos;
 
 FATOR_CASE: token_numinteiro | token_numreal | token_variavel_caracter; 

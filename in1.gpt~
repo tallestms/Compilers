@@ -80,3 +80,8 @@ fim-seleciona
 	 *
 	 a
 	 *
+	 */
+	 
+	 a := (a+1) + (b*(c+1+c+2)));
+	
+fim
