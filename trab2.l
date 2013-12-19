@@ -93,6 +93,34 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 {identificador}					{return token_identificador;}
 [ \t]						;
 [\n]						{nLinha++;}
-{comentario_linha}				;
-{comentario_bloco}				;
+{comentario_linha}				{nLinha++;}
+"/*"  						{  /* regra para o comentario */
+						register int c;
+
+						for ( ; ; )
+						    {
+						    while ( (c = input()) != '*' &&
+							    c != EOF )
+							    if (c == '\n') nLinha++;
+							    /* eat up text of comment or find \n */
+
+						    if ( c == '*' )
+							{
+							while ( (c = input()) == '*' )
+							    ;
+							if ( c == '/' )
+							    break;    /* found the end */
+							if ( c == '\n' )
+							  nLinha++;
+							}
+						
+
+						    if ( c == EOF )
+							{
+							error( "EOF in comment" );
+							break;
+							}
+						    }
+						}
+
 %%

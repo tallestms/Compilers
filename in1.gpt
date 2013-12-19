@@ -73,7 +73,16 @@ fim-seleciona
 	
 	a := "bcde" + "asdasdasdas";
 	x := leia();
-	y := imprima("aaaaa", b, c, "cccc", d, e, 'a');
+	y := imprima("aaaaa", b, c, "cccc", d, 'a');
 
+	 // aa
+	 /* aaa
+	 *
+	 a
+	 *
+	 */
+	 
+	 
+	 a;
 	
 fim
