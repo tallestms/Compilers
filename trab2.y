@@ -85,31 +85,38 @@
 
 %%
 // Fazer expressoes logicas
-// Caso de se-entao-senao **
+// Caso de se-entao-senao
 
 PROG: token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
 		  token_variaveis token_fimvariaveis | /*Empty*/;
-VARIAVEIS: token_identificador token_doisp TIPOS_VARIAVEIS token_pontov | VARIAVEIS token_identificador token_doisp TIPOS_VARIAVEIS token_pontov ;  
+		  
+VARIAVEIS: token_identificador token_doisp TIPOS_VARIAVEIS token_pontov |
+VARIAVEIS token_identificador token_doisp TIPOS_VARIAVEIS token_pontov ; 
 TIPOS_VARIAVEIS: token_inteiro | token_real | token_caracter | token_literal | token_logico | MATRIZ;
+
 MATRIZ: token_matriz token_abrecol token_numinteiro token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ;
 TIPOS_VARIAVEIS_MATRIZ: token_inteiros | token_caracteres | token_literais | token_reais | token_logicos;
 
 BLOCO: /*Empty*/ | BLOCO COMANDO | BLOCO token_funcao token_identificador FUNCAO | token_abrec BLOCO token_fechac;
-BLOCO_REPETICOES: /*Empty*/ | BLOCO_REPETICOES COMANDO | token_abrec BLOCO_REPETICOES token_fechac;
+BLOCO_AUXILIAR: /*Empty*/ | BLOCO_AUXILIAR COMANDO | token_abrec BLOCO_AUXILIAR token_fechac;
+BLOCO_FUNCAO: /*Empty*/ | COMANDO token_retorne token_identificador token_pontov | COMANDO;
+BLOCO_IMPRIMA: BLOCO_IMPRIMA token_virgula FATOR | FATOR;
+BLOCO_SWITCH: token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_AUXILIAR token_parar token_pontov BLOCO_SWITCH | 
+token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_AUXILIAR token_parar token_pontov FIM_BLOCO_SWITCH;
+FIM_BLOCO_SWITCH: token_padrao token_doisp BLOCO_AUXILIAR token_parar token_pontov token_fimseleciona | token_fimseleciona ;
 
 FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp TIPOS_VARIAVEIS VARIAVEIS token_inicio BLOCO_FUNCAO token_fim;
-VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS | VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS ;  
-BLOCO_FUNCAO: /*Empty*/ | COMANDO token_retorne token_identificador token_pontov | COMANDO;
+VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS |
+VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS ;  
 
-COMANDO: token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | token_identificador token_atribuicao token_leia token_abrep token_fechap token_pontov| token_identificador token_atribuicao EXPR token_pontov | token_se token_abrep EXPR token_fechap token_entao COMANDO token_fimse | token_se token_abrep EXPR token_fechap token_entao COMANDO token_senao COMANDO token_fimse |
-token_faca BLOCO_REPETICOES token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_REPETICOES token_fimequanto | 
-token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_REPETICOES token_fimpara | token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
-
-BLOCO_IMPRIMA: BLOCO_IMPRIMA token_virgula FATOR | FATOR;
-
-BLOCO_SWITCH: token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_REPETICOES token_parar token_pontov BLOCO_SWITCH | token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_REPETICOES token_parar token_pontov FIM_BLOCO_SWITCH;
-FIM_BLOCO_SWITCH: token_padrao token_doisp BLOCO_REPETICOES token_parar token_pontov token_fimseleciona | token_fimseleciona ;
+COMANDO: token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | 
+token_identificador token_atribuicao token_leia token_abrep token_fechap token_pontov| 
+token_identificador token_atribuicao EXPR token_pontov | 
+token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
+token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
+token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
+token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_AUXILIAR token_fimpara | token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
 
 EXPR: SIEXPR | EXPR COMPARACOES SIEXPR;
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
@@ -119,9 +126,10 @@ ADICAO_SUBTRACAO: token_mais | token_menos ;
 
 TERMO: FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR ;
 FATOR: token_numinteiro | token_numreal | SINAL token_identificador | token_variavel_caracter | token_string | token_abrep EXPR token_fechap;
+FATOR_CASE: token_numinteiro | token_numreal | token_variavel_caracter; 
+
 SINAL: /*Empty*/ | token_menos;
 
-FATOR_CASE: token_numinteiro | token_numreal | token_variavel_caracter; 
 
 %%
 

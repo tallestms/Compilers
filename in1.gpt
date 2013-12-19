@@ -20,8 +20,12 @@ idade := 20;
 se (idade >= 18) então
 	se (idade < 60) então
 		a := 10;
-	senão
 		b := 20;
+		res := 1;	
+		faça 
+			res := res*x;
+			a := a + b;
+		enquanto (x > 1); 
 	fim-se
 senão
 	c := 30;
@@ -46,11 +50,7 @@ para (x de fat até 1 passo -1) faça
 	a := a + b;
 fim-para
 
-res := 1;	
-faça 
-	res := res*x;
-	a := a + b;
-enquanto (x > 1); 
+
 
 seleciona (x)
 	caso (1):
@@ -80,6 +80,8 @@ fim-seleciona
 	 *
 	 a
 	 *
+	 b
+	 c
 	 */
 	 
 	 a := (a+1) + (b*(c+1+(c+2)));
