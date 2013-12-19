@@ -85,6 +85,8 @@
 // Fazer Switch
 // Fazer casos com parenteses
 // Adicionar funcoes com palavras reserva (imprimir e etc)
+// Fazer expressoes logicas
+
 PROG:	token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
 		  token_variaveis token_fimvariaveis | /*Empty*/;
