@@ -50,6 +50,27 @@ res := 1;
 faça 
 	res := res*x;
 	a := a + b;
-enquanto (x > 1); 	
+enquanto (x > 1); 
+
+seleciona (x)
+	caso (1):
+		x := 1;
+		a := a + 2;
+		parar;
+	caso (2):
+		b := b + 1;
+		c := c + 1;
+		parar;
+	caso (3):
+		d := d + 1;
+		d := a < b;
+		parar;
+	caso (4):
+		parar;
+	padrão:
+		parar;
+fim-seleciona
+	
+	
 
 fim

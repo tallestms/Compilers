@@ -82,12 +82,12 @@
 %start PROG
 
 %%
-// Fazer Switch
 // Fazer casos com parenteses
 // Adicionar funcoes com palavras reserva (imprimir e etc)
 // Fazer expressoes logicas
+// Caso de comentarios
 
-PROG:	token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim;
+PROG: token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
 		  token_variaveis token_fimvariaveis | /*Empty*/;
 VARIAVEIS: token_identificador token_doisp TIPOS_VARIAVEIS token_pontov | VARIAVEIS token_identificador token_doisp TIPOS_VARIAVEIS token_pontov ;  
@@ -104,7 +104,10 @@ BLOCO_FUNCAO: /*Empty*/ | COMANDO token_retorne token_identificador token_pontov
 
 COMANDO: token_identificador token_atribuicao EXPR token_pontov | token_se token_abrep EXPR token_fechap token_entao COMANDO token_fimse | token_se token_abrep EXPR token_fechap token_entao COMANDO token_senao COMANDO token_fimse |
 token_faca BLOCO_REPETICOES token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_REPETICOES token_fimequanto | 
-token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_REPETICOES token_fimpara ;
+token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_REPETICOES token_fimpara | token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
+
+BLOCO_SWITCH: token_caso token_abrep FATOR token_fechap token_doisp BLOCO_REPETICOES token_parar token_pontov BLOCO_SWITCH | token_caso token_abrep FATOR token_fechap token_doisp BLOCO_REPETICOES token_parar token_pontov FIM_BLOCO_SWITCH;
+FIM_BLOCO_SWITCH: token_padrao token_doisp BLOCO_REPETICOES token_parar token_pontov token_fimseleciona | token_fimseleciona ;
 
 EXPR: SIEXPR | EXPR COMPARACOES SIEXPR;
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
