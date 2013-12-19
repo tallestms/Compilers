@@ -15,7 +15,6 @@ comentario_bloco				"/""*"([^*]|[\r\n]|("*"+([^*/]|[\r\n])))*"*"+"/"
 real						("-")?[0-9]+("."[0-9]+([eE](("+"|"-")?[0-9]+))?)
 identificador					[a-zA-Z_][a-zA-Z0-9_]*
 %%
-"\""						{return token_doido;}
 "("						{return token_abrep;}
 ")"						{return token_fechap;}
 ","						{return token_virgula;}
@@ -26,7 +25,6 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "'"						{return token_apostrofe;}
 "{"						{return token_abrec;}
 "}"						{return token_fechac;}
-"\\"						{return token_doido2;}
 "["						{return token_abrecol;}
 "]"						{return token_fechacol;}
 {real}						{return token_numreal;}

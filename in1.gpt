@@ -4,18 +4,52 @@ variáveis
 x : caracter;
 y : caracter;
 z : matriz[5] de inteiros;
+idade: inteiro;
 fim-variáveis
 
 início
 
 função soma(x: inteiro, y: inteiro) : inteiro
-  res : inteiro;
+  res : lógico;
   início
-  res := a + b >= 2 - a;
+  res := a+b >= 2-a;
   retorne res;
 fim
 
-fat := a + b >= 2 - a;
+idade := 20;
+se (idade >= 18) então
+	se (idade < 60) então
+		a := 10;
+	senão
+		b := 20;
+	fim-se
+senão
+	c := 30;
+fim-se
 
+fat := x;
+res := 1;
+enquanto (x <> 0) faça
+	res := res*x;
+	a := a + b;
+	para (x de fat até 1 passo -1) faça
+	      faça 
+		    res := res*x;
+		    a := a + b;
+	      enquanto (x > 1); 
+	fim-para
+fim-enquanto
+	
+res := 1;
+para (x de fat até 1 passo -1) faça
+	res := res*x;
+	a := a + b;
+fim-para
+
+res := 1;	
+faça 
+	res := res*x;
+	a := a + b;
+enquanto (x > 1); 	
 
 fim

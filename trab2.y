@@ -2,8 +2,6 @@
 #include <stdio.h>
 %}
 
-%token token_doido
-%token token_doido2
 %token token_abrep
 %token token_fechap
 %token token_virgula
@@ -84,7 +82,9 @@
 %start PROG
 
 %%
-
+// Fazer Switch
+// Fazer casos com parenteses
+// Adicionar funcoes com palavras reserva (imprimir e etc)
 PROG:	token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
 		  token_variaveis token_fimvariaveis | /*Empty*/;
@@ -93,20 +93,24 @@ TIPOS_VARIAVEIS: token_inteiro | token_real | token_caracter | token_literal | t
 MATRIZ: token_matriz token_abrecol token_numinteiro token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ;
 TIPOS_VARIAVEIS_MATRIZ: token_inteiros | token_caracteres | token_literais | token_reais | token_logicos;
 
-BLOCO: /*Empty*/ | BLOCO COMANDO | BLOCO token_funcao token_identificador FUNCAO;
+BLOCO: /*Empty*/ | BLOCO COMANDO | BLOCO token_funcao token_identificador FUNCAO | token_abrec BLOCO token_fechac;
+BLOCO_REPETICOES: /*Empty*/ | BLOCO_REPETICOES COMANDO | token_abrec BLOCO_REPETICOES token_fechac;
+
 FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp TIPOS_VARIAVEIS VARIAVEIS token_inicio BLOCO_FUNCAO token_fim;
 VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS | VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS ;  
 BLOCO_FUNCAO: /*Empty*/ | COMANDO token_retorne token_identificador token_pontov | COMANDO;
 
-COMANDO: token_identificador token_atribuicao EXPR token_pontov;
+COMANDO: token_identificador token_atribuicao EXPR token_pontov | token_se token_abrep EXPR token_fechap token_entao COMANDO token_fimse | token_se token_abrep EXPR token_fechap token_entao COMANDO token_senao COMANDO token_fimse |
+token_faca BLOCO_REPETICOES token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_REPETICOES token_fimequanto | 
+token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_REPETICOES token_fimpara ;
 
-EXPR: SIEXPR | SIEXPR COMPARACOES SIEXPR;
+EXPR: SIEXPR | EXPR COMPARACOES SIEXPR;
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
 
-SIEXPR: TERMO | TERMO ADICAO_SUBTRACAO SIEXPR; //Correct case with parenthesis
-ADICAO_SUBTRACAO: token_mais | token_menos;
+SIEXPR: TERMO | SIEXPR ADICAO_SUBTRACAO TERMO; //Correct case with parenthesis
+ADICAO_SUBTRACAO: token_mais | token_menos ;
 
-TERMO: FATOR | FATOR token_dividir FATOR | FATOR token_mod FATOR | FATOR token_vezes FATOR;
+TERMO: FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR;
 FATOR: token_numinteiro | token_numreal | SINAL token_identificador;
 SINAL: /*Empty*/ | token_menos
 
