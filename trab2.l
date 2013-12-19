@@ -8,7 +8,7 @@ int_bin						"0"[bB][01]+
 int_oct						"0"[cC][0-7]+
 int_dec	 					("-")?[0-9]+
 int_hex						"0"[xX][0-9a-fA-F]+
-caractere					"'"([^"'"\\\n]|\\.)?"'"
+caracter					"'"([^"'"\\\n]|\\.)?"'"
 string						"\""([^\\\n"\""]|\\.)*"\""
 comentario_linha				"//"[^\n]*[\n]
 comentario_bloco				"/""*"([^*]|[\r\n]|("*"+([^*/]|[\r\n])))*"*"+"/"
@@ -45,10 +45,12 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "fim-para"					{return token_fimpara;}
 "fim-se"					{return token_fimse;}
 "fim-variáveis"					{return token_fimvariaveis;}
-"função"					{return token_funcao;}	
+"função"					{return token_funcao;}
+"imprima"					{return token_imprima;}
 "início"					{return token_inicio;}
-"inteiro"					{return token_inteiro;}
+"inteiro"					{return token_inteiro;} 
 "inteiros"					{return token_inteiros;}
+"leia"						{return token_leia;}
 "literais"					{return token_literais;}
 "literal"					{return token_literal;}
 "lógico"					{return token_logico;}
@@ -86,7 +88,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "&&"						{return token_el;}
 "||"						{return token_oul;}
 "!"						{return token_negacao;}
-{caractere}					{return token_caracter;}
+{caracter}					{return token_variavel_caracter;}
 {string}					{return token_string;}
 {identificador}					{return token_identificador;}
 [ \t]						;

@@ -18,7 +18,7 @@
 %token token_numinteiro
 %token token_algoritmo
 %token token_ate
-%token token_caractere
+%token token_caracter
 %token token_caracteres
 %token token_caso
 %token token_de
@@ -32,10 +32,12 @@
 %token token_fimpara
 %token token_fimse
 %token token_fimvariaveis
-%token token_funcao	
+%token token_funcao
+%token token_imprima
 %token token_inicio
 %token token_inteiro
 %token token_inteiros
+%token token_leia
 %token token_literais
 %token token_literal
 %token token_logico
@@ -73,7 +75,7 @@
 %token token_el
 %token token_oul
 %token token_negacao
-%token token_caracter
+%token token_variavel_caracter
 %token token_string
 %token token_identificador
 
@@ -83,11 +85,11 @@
 
 %%
 // Fazer casos com parenteses
-// Adicionar funcoes com palavras reserva (imprimir e etc)
 // Fazer expressoes logicas
 // Caso de comentarios
+// Caso de se-entao-senao
 
-PROG:	token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim;
+PROG: token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
 		  token_variaveis token_fimvariaveis | /*Empty*/;
 VARIAVEIS: token_identificador token_doisp TIPOS_VARIAVEIS token_pontov | VARIAVEIS token_identificador token_doisp TIPOS_VARIAVEIS token_pontov ;  
@@ -102,11 +104,13 @@ FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp TIPOS_VARIAVEIS VA
 VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS | VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS ;  
 BLOCO_FUNCAO: /*Empty*/ | COMANDO token_retorne token_identificador token_pontov | COMANDO;
 
-COMANDO: token_identificador token_atribuicao EXPR token_pontov | token_se token_abrep EXPR token_fechap token_entao COMANDO token_fimse | token_se token_abrep EXPR token_fechap token_entao COMANDO token_senao COMANDO token_fimse |
+COMANDO: token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | token_identificador token_atribuicao token_leia token_abrep token_fechap token_pontov| token_identificador token_atribuicao EXPR token_pontov | token_se token_abrep EXPR token_fechap token_entao COMANDO token_fimse | token_se token_abrep EXPR token_fechap token_entao COMANDO token_senao COMANDO token_fimse |
 token_faca BLOCO_REPETICOES token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_REPETICOES token_fimequanto | 
 token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_REPETICOES token_fimpara | token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
 
-BLOCO_SWITCH: token_caso token_abrep FATOR token_fechap token_doisp BLOCO_REPETICOES token_parar token_pontov BLOCO_SWITCH | token_caso token_abrep FATOR token_fechap token_doisp BLOCO_REPETICOES token_parar token_pontov FIM_BLOCO_SWITCH;
+BLOCO_IMPRIMA: BLOCO_IMPRIMA token_virgula FATOR | FATOR;
+
+BLOCO_SWITCH: token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_REPETICOES token_parar token_pontov BLOCO_SWITCH | token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_REPETICOES token_parar token_pontov FIM_BLOCO_SWITCH;
 FIM_BLOCO_SWITCH: token_padrao token_doisp BLOCO_REPETICOES token_parar token_pontov token_fimseleciona | token_fimseleciona ;
 
 EXPR: SIEXPR | EXPR COMPARACOES SIEXPR;
@@ -116,8 +120,10 @@ SIEXPR: TERMO | SIEXPR ADICAO_SUBTRACAO TERMO; //Correct case with parenthesis
 ADICAO_SUBTRACAO: token_mais | token_menos ;
 
 TERMO: FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR;
-FATOR: token_numinteiro | token_numreal | SINAL token_identificador;
-SINAL: /*Empty*/ | token_menos
+FATOR: token_numinteiro | token_numreal | SINAL token_identificador | token_variavel_caracter | token_string;
+SINAL: /*Empty*/ | token_menos;
+
+FATOR_CASE: token_numinteiro | token_numreal | token_variavel_caracter; 
 
 %%
 
