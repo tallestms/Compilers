@@ -126,7 +126,7 @@ token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_
  
 //LOGEXPR: EXPR | LOGEXPR LOGICOS EXPR;
 LOGICOS: token_e | token_ou;
-EXPR_FUNCAO: EXPR | ;
+EXPR_FUNCAO: EXPR |  ;
 EXPR: SIEXPR | EXPR COMPARACOES SIEXPR | EXPR LOGICOS SIEXPR;
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
 
