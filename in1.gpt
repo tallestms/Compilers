@@ -9,7 +9,7 @@ fim-variáveis
 
 início
 
-
+      a := a();
 idade := 20;
 se (idade >= 18) então
 	se (idade < 60) então

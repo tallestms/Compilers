@@ -87,7 +87,7 @@
 // Matriz como fatores ( m := [1,2,3,4,5,6] ) 
 // chamadas de funçoes
 
-PROG: token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim ;
+PROG: token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim BLOCO_FUNCOES ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
 		  token_variaveis token_fimvariaveis | /*Empty*/;
 		  
@@ -117,9 +117,8 @@ COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | 
 token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_leia token_abrep token_fechap token_pontov| 
-token_identificador token_atribuicao EXPR token_pontov |
+token_identificador token_atribuicao EXPR_FUNCAO token_pontov |
 token_identificador token_atribuicao MATRIZ |
-
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
@@ -127,6 +126,7 @@ token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_
  
 //LOGEXPR: EXPR | LOGEXPR LOGICOS EXPR;
 LOGICOS: token_e | token_ou;
+EXPR_FUNCAO: EXPR | ;
 EXPR: SIEXPR | EXPR COMPARACOES SIEXPR | EXPR LOGICOS SIEXPR;
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
 
