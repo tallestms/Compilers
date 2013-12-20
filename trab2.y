@@ -81,8 +81,6 @@
 %token token_string
 %token token_identificador
 
-
-
 %start PROG
 
 %%
@@ -95,13 +93,13 @@ BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
 		  
 VARIAVEIS: token_identificador token_doisp TIPOS_VARIAVEIS token_pontov |
 VARIAVEIS token_identificador token_doisp TIPOS_VARIAVEIS token_pontov ; 
-TIPOS_VARIAVEIS: token_inteiro | token_real | token_caracter | token_literal | token_logico | MATRIZ;
+TIPOS_VARIAVEIS: token_inteiro | token_real | token_caracter | token_literal | token_logico | INICIALIZAR_MATRIZ;
 
-MATRIZ: token_matriz token_abrecol token_numinteiro token_fechacol token_abrecol token_numinteiro token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ | 
+INICIALIZAR_MATRIZ: token_matriz token_abrecol token_numinteiro token_fechacol token_abrecol token_numinteiro token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ | 
 	token_matriz token_abrecol token_numinteiro token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ;
 TIPOS_VARIAVEIS_MATRIZ: token_inteiros | token_caracteres | token_literais | token_reais | token_logicos;
 
-BLOCO: /*Empty*/ | BLOCO COMANDO | BLOCO token_funcao token_identificador FUNCAO | token_abrec BLOCO token_fechac;
+BLOCO: /*Empty*/ | BLOCO COMANDO | BLOCO token_funcao token_identificador FUNCAO | BLOCO token_abrec BLOCO token_fechac;
 BLOCO_AUXILIAR: /*Empty*/ | BLOCO_AUXILIAR COMANDO | token_abrec BLOCO_AUXILIAR token_fechac;
 BLOCO_FUNCAO: /*Empty*/ | COMANDO token_retorne token_identificador token_pontov | COMANDO;
 BLOCO_IMPRIMA: BLOCO_IMPRIMA token_virgula FATOR | FATOR;
@@ -114,9 +112,12 @@ FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap VARIAVEIS token_inicio BLOCO_F
 VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS |
 VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS ;  
 
-COMANDO: token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | 
+COMANDO: 
+token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | 
+token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_leia token_abrep token_fechap token_pontov| 
 token_identificador token_atribuicao EXPR token_pontov | 
+token_identificador token_atribuicao MATRIZ |
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
@@ -125,10 +126,11 @@ token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_
 //LOGEXPR: EXPR | LOGEXPR LOGICOS EXPR;
 LOGICOS: token_e | token_ou;
 
+
 EXPR: SIEXPR | EXPR COMPARACOES SIEXPR | EXPR LOGICOS SIEXPR;
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
 
-SIEXPR: TERMO | SIEXPR ADICAO_SUBTRACAO TERMO | SIEXPR SINALFATOR; 
+SIEXPR: TERMO | SIEXPR ADICAO_SUBTRACAO TERMO | SIEXPR SINALFATOR ; 
 ADICAO_SUBTRACAO: token_mais | token_menos ;
 
 SINALFATOR:  token_numreal_comsinal | token_numinteiro_comsinal;
@@ -138,17 +140,11 @@ FATOR_CASE: SINALFATOR | token_numinteiro | token_numreal | token_variavel_carac
 
 SINAL: /*Empty*/ | token_menos;
 
-
-MATRIZ: token_abrec token_abrecol BLOCO_MATRIZ token_fechacol token_virgula token_abrecol BLOCO_MATRIZ token_fechacol token_fechac |
-	token_abrecol BLOCO_MATRIZ token_fechacol | token_abrec token_abrecol BLOCO_MATRIZ token_fechacol token_fechac;
+MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac | token_abrecol BLOCO_MATRIZ token_fechacol;
+MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol BLOCO_MATRIZ token_fechacol | token_abrecol BLOCO_MATRIZ token_fechacol;
 BLOCO_MATRIZ: FATOR | BLOCO_MATRIZ token_virgula FATOR;
-/*
-CHAMADA_FUNCAO: token_identificador token_abrep BLOCO_ARGUMENTOS token_fechap token_pontov |
-token_identificador token_abrep token_fechap token_pontov ;
-BLOCO_ARGUMENTOS: EXPR |
-			BLOCO_ARGUMENTOS token_virgula EXPR;
-*/
 
+//BLOCO_ARGUMENTOS: /*Empty*/ | EXPR | BLOCO_ARGUMENTOS token_virgula EXPR;
 %%
 
 #include "lex.yy.c"

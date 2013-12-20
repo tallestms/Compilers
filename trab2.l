@@ -31,7 +31,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "]"						{return token_fechacol;}
 {real_signed}					{return token_numreal_comsinal;}
 {real}						{return token_numreal;}
-{int_dec_signed}					{return token_numinteiro_comsinal;}
+{int_dec_signed}				{return token_numinteiro_comsinal;}
 {int_dec}|{int_bin}|{int_oct}|{int_hex}	{return token_numinteiro;}
 "algoritmo"					{return token_algoritmo;}
 "até"						{return token_ate;}
