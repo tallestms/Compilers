@@ -98,7 +98,7 @@ função soma(x: inteiro, y: inteiro) : inteiro
   retorne res;
   fim
   
-função soma2(x: inteiro, y: inteiro) 
+função soma2(x: inteiro, y: inteiro) :
   res : lógico;
   início
   res := (a+b >= (2-a)) e (a>-b);

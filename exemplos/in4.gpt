@@ -1,33 +1,5 @@
-/* Este arquivo é para mostrar que os comentários são anulados */
-/*/ Olha aqui */ 
-/******/
-
-algoritmo switch_em_portugol; //Este algoritmo é o switch em portugol  
-
-variáveis
-	x : inteiro;
-fim-variáveis
+algoritmo vazio;
 
 início
-// Exemplo de uso de SWITCH
-	imprima("Por favor escreva um número de 1 a 4:\n");
-	x := leia();
-	seleciona (x)
-		caso (1):
-			imprima("O número impresso foi 1.\n");
-			parar;
-		caso (2):
-			imprima("O número impresso foi 2.\n");
-			parar;
-		caso (3):
-			imprima("O número impresso foi 3.\n");
-		caso (4):
-			imprima("O número impresso foi 4.\n");
-			parar;
-		padrão:
-			parar;
-	fim-seleciona
+
 fim
-
-
-

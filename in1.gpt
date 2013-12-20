@@ -10,59 +10,61 @@ fim-variáveis
 início
 
       a := soma();
-idade := 20;
-se (idade >= 18) então
-	se (idade < 60) então
-		a := 10;
-		b := 20;
-		res := 1;	
-		faça 
-			res := res*x;
-			a := a + b;
-		enquanto (x > 1); 
-	fim-se
-senão
-	c := 30;
-fim-se
-
-fat := x;
-res := 1;
-enquanto (x <> 0) faça
-	res := res*x;
-	a := a + b;
-	para (x de fat até 1 passo -1) faça
-	      faça 
-		    res := res*x;
-		    a := a + b;
-	      enquanto (x > 1); 
-	fim-para
-fim-enquanto
 	
-res := 1;
-para (x de fat até 1 passo -1) faça
-	res := res*x;
-	a := a + b;
-fim-para
+	atualizaGlobal(value);
+	
+	idade := 20;
 
+	se (idade >= 18) então
+		se (idade < 60) então
+			a := 10;
+			b := 20;
+			res := 1;	
+			faça 
+				res := res*x;
+				a := a + b;
+			enquanto (x > 1); 
+		fim-se
+	senão
+		c := 30;
+	fim-se
 
+	fat := x;
+	res := 1;
+	enquanto (x <> 0) faça
+		res := res*x;
+		a := a + b;
+		para (x de fat até 1 passo -1) faça
+			faça 
+			    res := res*x;
+			    a := a + b;
+			enquanto (x > 1); 
+		fim-para
+	fim-enquanto
+	
+	res := 1;
+	para (x de fat até 1 passo -1) faça
+		res := res*x;
+		a := a + b;
+	fim-para
 
-seleciona (x)
-	caso (1):
-		x := 1;
-		a := a + 2;
-		parar;
-	caso (2):
-		b := b + 1;
-		c := c + 1;
-	caso (3):
-		d := d + 1;
-		d := a < b;
-		parar;
-	caso (4):
-		parar;
-	padrão:
-		parar;
-fim-seleciona
+	seleciona (x)
+		caso (1):
+			x := 1;
+			a := a + 2;
+			parar;
+		caso (2):
+			b := b + 1;
+			c := c + 1;  //Sem o "parar"
+		caso (3):
+			d := d + 1;
+			d := a < b;
+			parar;
+		caso (4):
+			parar;
+		padrão:
+			parar;
+	fim-seleciona
 	
 	a := "bcde" + "asdasdasdas";
 	x := leia();
@@ -79,9 +81,13 @@ fim-seleciona
 	 c
 	 */
 	 
-	 a := (a+1) + (b*(c+1+(c+2)));
+	 valor := mes("20/05/2013") > mes(data_atual) e dia(data_atual) < 5 ou ano(data_atual) > 2012 e not(a>b e b>a);
 	 
-	 soma((10*15),15 e 10);
+	 a := soma(mmc(a,b,c)+1) + (b*(c+1+(c+2)));
+	 
+	 
+	 
+	 
 	
 fim
 
@@ -93,7 +99,7 @@ função soma(x: inteiro, y: inteiro) : inteiro
   retorne res;
   fim
   
-  função soma2(x: inteiro, y: inteiro) : inteiro
+função soma2(x: inteiro, y: inteiro) : inteiro
   res : lógico;
   início
   res := (a+b >= (2-a)) e (a>-b);

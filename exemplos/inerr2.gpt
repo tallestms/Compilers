@@ -25,7 +25,7 @@ início
 	x := leia();
 	seleciona (x)
 		caso (1):
-			imprima("O número impresso foi 1.\n");
+			imprima("O número impresso foi 1.\n);
 			parar;
 		caso (2):
 			imprima("O número impresso foi 2.\n");

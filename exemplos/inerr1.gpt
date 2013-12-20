@@ -3,9 +3,11 @@ algoritmo declaracao_de_variaveis;
 variáveis
 	a : inteiro;
 	b : inteiro;
-	c,d,f : real;
+	c : real;
+	d : real;
+	f : real;
 	g : real;
-	char : caracter;
+	char  caracter;
 	lit : literal;
 	z : lógico;
 	mat : matriz[2] de inteiros; 
