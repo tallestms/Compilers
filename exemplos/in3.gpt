@@ -12,17 +12,17 @@ início
 	x := leia();
 	fat := x;
 	res := 1;
-	enquanto x <> 0 faça
+	enquanto (x <> 0) faça
 		res := res * x;
 		x := x - 1;
-	fim-enquanto;
+	fim-enquanto
 	imprima("fatorial de ",fat," é igual a ",res);
 	
 	// Exemplo de FOR
 	imprima("Segunda versão do programa fatorial. Digite um número:");
 	fat := leia();
 	res := 1;
-	para x de fat até 1 passo -1 faça
+	para (x de fat até 1 passo -1) faça
 		res := res * x;
 	fim-para
 	imprima("fatorial de ",fat," é igual a ",res);
@@ -34,6 +34,6 @@ início
 	faça 
 		res := res*x;
 		x := x - 1;
-	enquanto x > 1; 	
+	enquanto (x > 1); 	
 	imprima("fatorial de ",fat," é igual a ",res);
 fim

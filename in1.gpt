@@ -3,7 +3,7 @@ algoritmo declaracao_de_variaveis;
 variáveis
 x : caracter;
 y : caracter;
-z : matriz[5] de inteiros;
+z : matriz[5][5] de inteiros;
 idade: inteiro;
 fim-variáveis
 
@@ -12,7 +12,7 @@ início
 função soma(x: inteiro, y: inteiro) : inteiro
   res : lógico;
   início
-  res := a+b >= 2-a;
+  res := (a+b >= (2-a)) e (a>-b);
   retorne res;
 fim
 
@@ -60,7 +60,6 @@ seleciona (x)
 	caso (2):
 		b := b + 1;
 		c := c + 1;
-		parar;
 	caso (3):
 		d := d + 1;
 		d := a < b;
@@ -85,5 +84,9 @@ fim-seleciona
 	 */
 	 
 	 a := (a+1) + (b*(c+1+(c+2)));
+	
+	
+	
+	
 	
 fim

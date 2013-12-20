@@ -1,12 +1,6 @@
-*/ Este arquivo é para mostrar que os comentários são anulados */
-*/*/ Olha aqui */ 
-*/*/*/ E aí fessora */
-/*/**/
+/* Este arquivo é para mostrar que os comentários são anulados */
+/*/ Olha aqui */ 
 /******/
-/*/******/
-/*  */
-/*/*(fecha só no primeiro, o segundo seria caracteres especiais)*/ */ 
-/*/ //Isso daqui não é considerado comentário
 
 algoritmo switch_em_portugol; //Este algoritmo é o switch em portugol  
 
@@ -27,7 +21,6 @@ início
 			parar;
 		caso (3):
 			imprima("O número impresso foi 3.\n");
-			parar;
 		caso (4):
 			imprima("O número impresso foi 4.\n");
 			parar;

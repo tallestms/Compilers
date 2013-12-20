@@ -10,8 +10,8 @@ início
 	nome := leia();
 	imprima(nome, ", digite sua idade:");
 	idade := leia();
-	se idade >= 18 então
-		se idade < 60 então
+	se (idade >= 18) então
+		se (idade < 60) então
 			imprima("adulto!");
 		senão
 			imprima("ancião", '!');

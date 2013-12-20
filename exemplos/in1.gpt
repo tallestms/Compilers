@@ -5,9 +5,9 @@ variáveis
 	b : inteiro;
 	c : real;
 	d : real;
-	e : real;
 	f : real;
-	char : caractere;
+	g : real;
+	char : caracter;
 	lit : literal;
 	z : lógico;
 	mat : matriz[2] de inteiros; 
@@ -18,11 +18,14 @@ início
 	b := -10;
 	c := 10.10;
 	d := -10.10;
-	e := 10.10e+10;
-	f := -10.10e+10;
+	f := 10.10e+10;
+	g := -10.10e+10;
 	char := 'c';
 	lit := "isso daqui é um texto";
 	z := verdadeiro;
+	
+	soma((10*15),15 e 10);
+	
 	mat := [1,2];
 fim
 
