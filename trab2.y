@@ -117,8 +117,10 @@ COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | 
 token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_leia token_abrep token_fechap token_pontov| 
-token_identificador token_atribuicao EXPR_FUNCAO token_pontov |
-token_identificador token_atribuicao MATRIZ |
+//token_identificador token_atribuicao EXPR_FUNCAO token_pontov |
+token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap token_pontov |
+//token_identificador token_atribuicao MATRIZ |
+token_identificador token_atribuicao EXPR token_pontov|
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
@@ -126,8 +128,8 @@ token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_
  
 //LOGEXPR: EXPR | LOGEXPR LOGICOS EXPR;
 LOGICOS: token_e | token_ou;
-EXPR_FUNCAO: EXPR | token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap;
-ARGUMENTOS_FUNCAO: EXPR_FUNCAO | ARGUMENTOS_FUNCAO token_virgula EXPR_FUNCAO | /*Empty*/;
+//EXPR_FUNCAO: EXPR | token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap;
+ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
 EXPR: SIEXPR | EXPR COMPARACOES SIEXPR | EXPR LOGICOS SIEXPR;
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
 
@@ -136,7 +138,7 @@ ADICAO_SUBTRACAO: token_mais | token_menos ;
 
 SINALFATOR:  token_numreal_comsinal | token_numinteiro_comsinal;
 TERMO: MATRIZ | FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR ;
-FATOR: SINALFATOR | token_numinteiro | token_numreal | token_identificador | token_menos token_identificador | token_variavel_caracter | token_string | token_abrep EXPR token_fechap | token_verdadeiro | token_falso;
+FATOR: SINALFATOR | token_numinteiro | token_numreal | token_identificador | token_menos token_identificador | token_variavel_caracter | token_string | token_abrep EXPR token_fechap | token_verdadeiro | token_falso | token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap;
 FATOR_CASE: SINALFATOR | token_numinteiro | token_numreal | token_variavel_caracter; 
 
 MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac | token_abrecol BLOCO_MATRIZ token_fechacol;

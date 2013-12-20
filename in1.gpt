@@ -9,7 +9,7 @@ fim-variáveis
 
 início
 
-      a := soma(soma(soma(3*4 , 5), 10/5), (a>b) e (-c));
+      a := soma();
 idade := 20;
 se (idade >= 18) então
 	se (idade < 60) então
@@ -80,6 +80,8 @@ fim-seleciona
 	 */
 	 
 	 a := (a+1) + (b*(c+1+(c+2)));
+	 
+	 soma((10*15),15 e 10);
 	
 fim
 
