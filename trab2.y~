@@ -127,7 +127,7 @@ token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_
 //LOGEXPR: EXPR | LOGEXPR LOGICOS EXPR;
 LOGICOS: token_e | token_ou;
 EXPR_FUNCAO: EXPR | token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap;
-ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
+ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR_FUNCAO | /*Empty*/;
 EXPR: SIEXPR | EXPR COMPARACOES SIEXPR | EXPR LOGICOS SIEXPR;
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
 
@@ -138,8 +138,6 @@ SINALFATOR:  token_numreal_comsinal | token_numinteiro_comsinal;
 TERMO: MATRIZ | FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR ;
 FATOR: SINALFATOR | token_numinteiro | token_numreal | token_identificador | token_menos token_identificador | token_variavel_caracter | token_string | token_abrep EXPR token_fechap | token_verdadeiro | token_falso;
 FATOR_CASE: SINALFATOR | token_numinteiro | token_numreal | token_variavel_caracter; 
-
-//SINAL: /*Empty*/ | token_menos;
 
 MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac | token_abrecol BLOCO_MATRIZ token_fechacol;
 MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol BLOCO_MATRIZ token_fechacol | token_abrecol BLOCO_MATRIZ token_fechacol;

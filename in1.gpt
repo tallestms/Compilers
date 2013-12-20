@@ -9,7 +9,7 @@ fim-variáveis
 
 início
 
-      a := funcao(a,b,c,2,verdadeiro);
+      a := soma(soma(soma(3*4 , 5), 10/5), (a>b) e (-c));
 idade := 20;
 se (idade >= 18) então
 	se (idade < 60) então
