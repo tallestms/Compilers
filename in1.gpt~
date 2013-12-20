@@ -9,12 +9,6 @@ fim-variáveis
 
 início
 
-função soma(x: inteiro, y: inteiro) : inteiro
-  res : lógico;
-  início
-  res := (a+b >= (2-a)) e (a>-b);
-  retorne res;
-fim
 
 idade := 20;
 se (idade >= 18) então
@@ -74,7 +68,7 @@ fim-seleciona
 	x := leia();
 	b := imprima(a,b,c);
 	a := {[1,2,3,4,5,6,7],[1,2,3,4,5,6,7],[1,2,3,4,5,6,7]};
-	b := {[1,2,3,4,5];
+	b := {[1,2,3,4,5]};
 	c := [1,2,3,4,5];
 	// aa
 	 /* aaa
@@ -87,8 +81,19 @@ fim-seleciona
 	 
 	 a := (a+1) + (b*(c+1+(c+2)));
 	
-	
-	
-	
-	
 fim
+
+
+função soma(x: inteiro, y: inteiro) : inteiro
+  res : lógico;
+  início
+  res := (a+b >= (2-a)) e (a>-b);
+  retorne res;
+  fim
+  
+  função soma(x: inteiro, y: inteiro) : inteiro
+  res : lógico;
+  início
+  res := (a+b >= (2-a)) e (a>-b);
+  retorne res;
+  fim

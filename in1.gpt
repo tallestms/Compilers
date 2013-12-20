@@ -9,12 +9,6 @@ fim-variáveis
 
 início
 
-função soma(x: inteiro, y: inteiro) : inteiro
-  res : lógico;
-  início
-  res := (a+b >= (2-a)) e (a>-b);
-  retorne res;
-fim
 
 idade := 20;
 se (idade >= 18) então
@@ -87,8 +81,19 @@ fim-seleciona
 	 
 	 a := (a+1) + (b*(c+1+(c+2)));
 	
-	
-	
-	
-	
 fim
+
+
+função soma(x: inteiro, y: inteiro) : inteiro
+  res : lógico;
+  início
+  res := (a+b >= (2-a)) e (a>-b);
+  retorne res;
+  fim
+  
+  função soma2(x: inteiro, y: inteiro) : inteiro
+  res : lógico;
+  início
+  res := (a+b >= (2-a)) e (a>-b);
+  retorne res;
+  fim
