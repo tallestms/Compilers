@@ -9,7 +9,7 @@ fim-variáveis
 
 início
 
-      a := funcao(a,b,c,2,verdeiro);
+      a := funcao(a,b,c,2,verdadeiro);
 idade := 20;
 se (idade >= 18) então
 	se (idade < 60) então

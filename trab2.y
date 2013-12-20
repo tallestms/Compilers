@@ -136,10 +136,8 @@ ADICAO_SUBTRACAO: token_mais | token_menos ;
 
 SINALFATOR:  token_numreal_comsinal | token_numinteiro_comsinal;
 TERMO: MATRIZ | FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR ;
-FATOR: SINALFATOR | token_numinteiro | token_numreal | token_identificador | token_variavel_caracter | token_string | token_abrep EXPR token_fechap | token_verdadeiro | token_falso;
+FATOR: SINALFATOR | token_numinteiro | token_numreal | token_identificador | token_menos token_identificador | token_variavel_caracter | token_string | token_abrep EXPR token_fechap | token_verdadeiro | token_falso;
 FATOR_CASE: SINALFATOR | token_numinteiro | token_numreal | token_variavel_caracter; 
-
-//SINAL: /*Empty*/ | token_menos;
 
 MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac | token_abrecol BLOCO_MATRIZ token_fechacol;
 MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol BLOCO_MATRIZ token_fechacol | token_abrecol BLOCO_MATRIZ token_fechacol;
