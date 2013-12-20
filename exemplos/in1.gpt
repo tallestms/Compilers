@@ -24,8 +24,8 @@ início
 	lit := "isso daqui é um texto";
 	z := verdadeiro;
 	
-	soma((10*15),15 e 10);
+	//soma((10*15),15 e 10);
 	
-	mat := [1,2];
+	mat := {[1,2],[2,1]};
 fim
 
