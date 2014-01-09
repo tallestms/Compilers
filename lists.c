@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "list.h"
+#include "lists.h"
 
 List* startList(void)
 {
@@ -112,11 +112,11 @@ List* reverseList(List* list)
 void destroyList(List *l)
 {
 	List* aux;
-	if(!listEmpty(l))
+	if(!emptyList(l))
 	{
 		aux = l;
 		l = l->next;
-		if(!listEmpty(aux->info))
+		if(!emptyList(aux->info))
 		{
 			free(aux->info);
 		}
