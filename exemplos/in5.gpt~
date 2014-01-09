@@ -62,7 +62,7 @@ início
 			d := a < b;
 			parar;
 		caso (4):
-			parar;
+			para;
 		padrão:
 			parar;
 	fim-seleciona

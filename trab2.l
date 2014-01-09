@@ -121,7 +121,6 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 
 						    if ( c == EOF )
 							{
-							error( "EOF in comment" );
 							break;
 							}
 						    }

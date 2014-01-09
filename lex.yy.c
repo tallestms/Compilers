@@ -1387,7 +1387,6 @@ YY_RULE_SETUP
 
 						    if ( c == EOF )
 							{
-							error( "EOF in comment" );
 							break;
 							}
 						    }
@@ -1395,10 +1394,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 130 "trab2.l"
+#line 129 "trab2.l"
 ECHO;
 	YY_BREAK
-#line 1402 "lex.yy.c"
+#line 1401 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2396,7 +2395,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 130 "trab2.l"
+#line 129 "trab2.l"
 
 
 

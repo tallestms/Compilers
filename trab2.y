@@ -84,9 +84,6 @@
 %start PROG
 
 %%
-// Matriz como fatores ( m := [1,2,3,4,5,6] ) 
-// chamadas de funçoes
-
 PROG: token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim |
 token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim BLOCO_FUNCOES;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
