@@ -149,6 +149,7 @@ BLOCO_MATRIZ: FATOR | BLOCO_MATRIZ token_virgula FATOR;
 %%
 
 #include "lex.yy.c"
+#include "lists.h"
 
 main(){
 	yyparse();

@@ -19,5 +19,4 @@ List* bubbleSortList(List *list, int (*compare)(void*, void*));
 List* reverseList(List* l);
 void destroyList(List* l);
 
-
 #endif /* LIST_H_ */
