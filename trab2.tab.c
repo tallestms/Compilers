@@ -1921,10 +1921,20 @@ yyreturn:
 
 #include "lex.yy.c"
 #include "lists.h"
+#include "hash.h"
 
 main(){
-	List* a = startList();
+
+	char *a = (char*) malloc(sizeof(16));
+	strcpy(a,"aaaa");
+	printf("%s",a);
+	hashTable *b = createHash(10);
+	addString(b,a);
+	List* c = lookupString(b,a);
+	printf("%s", (char*)c->info);
+	
 	yyparse();
+	
 }
 
 /* rotina chamada por yyparse quando encontra erro */
