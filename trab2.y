@@ -117,18 +117,14 @@ COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | 
 token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_leia token_abrep token_fechap token_pontov| 
-//token_identificador token_atribuicao EXPR_FUNCAO token_pontov |
 token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap token_pontov |
-//token_identificador token_atribuicao MATRIZ |
 token_identificador token_atribuicao EXPR token_pontov|
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
 token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_AUXILIAR token_fimpara | token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
  
-//LOGEXPR: EXPR | LOGEXPR LOGICOS EXPR;
 LOGICOS: token_e | token_ou;
-//EXPR_FUNCAO: EXPR | token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap;
 ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
 EXPR: SIEXPR | EXPR COMPARACOES SIEXPR | EXPR LOGICOS SIEXPR;
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
