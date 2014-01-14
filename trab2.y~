@@ -160,7 +160,7 @@ main(){
 	hashTable *b = createHash(10);
 	addString(b,a);
 	List* c = lookupString(b,a);
-	printf("%s", c->info);
+	printf("%s", (char*)c->info);
 	
 	yyparse();
 	

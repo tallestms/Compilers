@@ -1922,6 +1922,7 @@ yyreturn:
 #include "lex.yy.c"
 #include "lists.h"
 #include "hash.h"
+#include "variables.h"
 
 main(){
 
