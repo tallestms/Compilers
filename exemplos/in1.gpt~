@@ -1,11 +1,9 @@
 algoritmo declaracao_de_variaveis;
 
 variáveis
-	a : inteiro;
-	b : inteiro;
-	c : real;
-	d : real;
-	f : real;
+	a: inteiro;
+	b,a : inteiro;
+	c,d,f : real;
 	g : real;
 	char : caracter;
 	lit : literal;
@@ -23,9 +21,6 @@ início
 	char := 'c';
 	lit := "isso daqui é um texto";
 	z := verdadeiro;
-	
-	//soma((10*15),15 e 10);
-	
+	z := a>b e c<d;
 	mat := {[1,2],[2,1]};
 fim
-

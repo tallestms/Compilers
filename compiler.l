@@ -1,6 +1,11 @@
 %{
-int nLinha=1;
+#include <stdio.h>
+#include <string.h>
+int nLine=1;
+char identifiers[500];
+char type[10];
 %}
+
 /* definição de dígito */
 letra						[a-zA-Z]
 digito						[0-9]
@@ -52,12 +57,12 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "função"					{return token_funcao;}
 "imprima"					{return token_imprima;}
 "início"					{return token_inicio;}
-"inteiro"					{return token_inteiro;} 
+"inteiro"					{strcpy(type, yytext); return token_inteiro;} 
 "inteiros"					{return token_inteiros;}
 "leia"						{return token_leia;}
 "literais"					{return token_literais;}
-"literal"					{return token_literal;}
-"lógico"					{return token_logico;}
+"literal"					{strcpy(type, yytext); return token_literal;}
+"lógico"					{strcpy(type, yytext); return token_logico;}
 "lógicos"					{return token_logicos;}
 "matriz"					{return token_matriz;}
 "não"						{return token_nao;}
@@ -67,7 +72,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "parar"						{return token_parar;}
 "passo"						{return token_passo;}
 "reais"						{return token_reais;}
-"real"						{return token_real;}
+"real"						{strcpy(type, yytext); return token_real;}
 "retorne"					{return token_retorne;}
 "se"						{return token_se;}
 "seleciona"					{return token_seleciona;}
@@ -92,12 +97,12 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "&&"						{return token_el;}
 "||"						{return token_oul;}
 "!"						{return token_negacao;}
-{caracter}					{return token_variavel_caracter;}
-{string}					{return token_string;}
-{identificador}					{return token_identificador;}
+{caracter}					{strcpy(type, yytext); return token_variavel_caracter;}
+{string}					{strcpy(type, yytext); return token_string;}
+{identificador}					{strcat(identifiers, yytext); strcat(identifiers, " "); return token_identificador;}
 [ \t]						;
-[\n]						{nLinha++;}
-{comentario_linha}				{nLinha++;}
+[\n]						{nLine++;}
+{comentario_linha}				{nLine++;}
 "/*"  						{  /* regra para o comentario */
 						register int c;
 
@@ -105,7 +110,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 						    {
 						    while ( (c = input()) != '*' &&
 							    c != EOF )
-							    if (c == '\n') nLinha++;
+							    if (c == '\n') nLine++;
 							    /* eat up text of comment or find \n */
 
 						    if ( c == '*' )
@@ -115,7 +120,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 							if ( c == '/' )
 							    break;    /* found the end */
 							if ( c == '\n' )
-							  nLinha++;
+							  nLine++;
 							}
 						
 

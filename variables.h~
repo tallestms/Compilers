@@ -23,7 +23,7 @@ typedef struct variable_t variable;
    * type 1 = caracter 
    * type 2 = literal
    * type 3 = real
-   * type 4 = lógico
+   * type 4 = booleano
    */
 
 /*

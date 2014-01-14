@@ -115,7 +115,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	addString(hashCompiler, varName);
       else
       {
-	printf("Redeclaracao da variavel \"%s\" na linha %d.\n", varName, nLine);
+	printf("Redeclaracao da variavel %s na linha %d", varName, nLine);
 	exit(1);
       }
       varName = strtok(NULL, " ");

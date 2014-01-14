@@ -680,9 +680,13 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "compiler.l"
 #line 2 "compiler.l"
-int nLinha=1;
+#include <stdio.h>
+#include <string.h>
+int nLine=1;
+char identifiers[500];
+char type[10];
 /* definição de dígito */
-#line 686 "lex.yy.c"
+#line 690 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -869,9 +873,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 19 "compiler.l"
+#line 24 "compiler.l"
 
-#line 875 "lex.yy.c"
+#line 879 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -956,414 +960,414 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 20 "compiler.l"
+#line 25 "compiler.l"
 {return token_abrep;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 21 "compiler.l"
+#line 26 "compiler.l"
 {return token_fechap;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 22 "compiler.l"
+#line 27 "compiler.l"
 {return token_virgula;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 23 "compiler.l"
+#line 28 "compiler.l"
 {return token_ponto;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 24 "compiler.l"
+#line 29 "compiler.l"
 {return token_pontov;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 25 "compiler.l"
+#line 30 "compiler.l"
 {return token_doisp;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 26 "compiler.l"
+#line 31 "compiler.l"
 {return token_jogodav;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 27 "compiler.l"
+#line 32 "compiler.l"
 {return token_apostrofe;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 28 "compiler.l"
+#line 33 "compiler.l"
 {return token_abrec;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 29 "compiler.l"
+#line 34 "compiler.l"
 {return token_fechac;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 30 "compiler.l"
+#line 35 "compiler.l"
 {return token_abrecol;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 31 "compiler.l"
+#line 36 "compiler.l"
 {return token_fechacol;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 32 "compiler.l"
+#line 37 "compiler.l"
 {return token_numreal_comsinal;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 33 "compiler.l"
+#line 38 "compiler.l"
 {return token_numreal;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 34 "compiler.l"
+#line 39 "compiler.l"
 {return token_numinteiro_comsinal;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 35 "compiler.l"
+#line 40 "compiler.l"
 {return token_numinteiro;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 36 "compiler.l"
+#line 41 "compiler.l"
 {return token_algoritmo;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 37 "compiler.l"
+#line 42 "compiler.l"
 {return token_ate;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 38 "compiler.l"
+#line 43 "compiler.l"
 {return token_caracter;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 39 "compiler.l"
+#line 44 "compiler.l"
 {return token_caracteres;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 40 "compiler.l"
+#line 45 "compiler.l"
 {return token_caso;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 41 "compiler.l"
+#line 46 "compiler.l"
 {return token_de;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 42 "compiler.l"
+#line 47 "compiler.l"
 {return token_e;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 43 "compiler.l"
+#line 48 "compiler.l"
 {return token_enquanto;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 44 "compiler.l"
+#line 49 "compiler.l"
 {return token_entao;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 45 "compiler.l"
+#line 50 "compiler.l"
 {return token_faca;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 46 "compiler.l"
+#line 51 "compiler.l"
 {return token_falso;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 47 "compiler.l"
+#line 52 "compiler.l"
 {return token_fim;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 48 "compiler.l"
+#line 53 "compiler.l"
 {return token_fimequanto;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 49 "compiler.l"
+#line 54 "compiler.l"
 {return token_fimpara;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 50 "compiler.l"
+#line 55 "compiler.l"
 {return token_fimse;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 51 "compiler.l"
+#line 56 "compiler.l"
 {return token_fimvariaveis;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 52 "compiler.l"
+#line 57 "compiler.l"
 {return token_funcao;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 53 "compiler.l"
+#line 58 "compiler.l"
 {return token_imprima;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 54 "compiler.l"
+#line 59 "compiler.l"
 {return token_inicio;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 55 "compiler.l"
-{return token_inteiro;} 
+#line 60 "compiler.l"
+{strcpy(type, yytext); return token_inteiro;} 
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 56 "compiler.l"
+#line 61 "compiler.l"
 {return token_inteiros;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 57 "compiler.l"
+#line 62 "compiler.l"
 {return token_leia;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 58 "compiler.l"
+#line 63 "compiler.l"
 {return token_literais;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 59 "compiler.l"
-{return token_literal;}
+#line 64 "compiler.l"
+{strcpy(type, yytext); return token_literal;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 60 "compiler.l"
-{return token_logico;}
+#line 65 "compiler.l"
+{strcpy(type, yytext); return token_logico;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 61 "compiler.l"
+#line 66 "compiler.l"
 {return token_logicos;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 62 "compiler.l"
+#line 67 "compiler.l"
 {return token_matriz;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 63 "compiler.l"
+#line 68 "compiler.l"
 {return token_nao;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 64 "compiler.l"
+#line 69 "compiler.l"
 {return token_ou;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 65 "compiler.l"
+#line 70 "compiler.l"
 {return token_padrao;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 66 "compiler.l"
+#line 71 "compiler.l"
 {return token_para;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 67 "compiler.l"
+#line 72 "compiler.l"
 {return token_parar;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 68 "compiler.l"
+#line 73 "compiler.l"
 {return token_passo;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 69 "compiler.l"
+#line 74 "compiler.l"
 {return token_reais;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 70 "compiler.l"
-{return token_real;}
+#line 75 "compiler.l"
+{strcpy(type, yytext); return token_real;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 71 "compiler.l"
+#line 76 "compiler.l"
 {return token_retorne;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 72 "compiler.l"
+#line 77 "compiler.l"
 {return token_se;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 73 "compiler.l"
+#line 78 "compiler.l"
 {return token_seleciona;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 74 "compiler.l"
+#line 79 "compiler.l"
 {return token_fimseleciona;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 75 "compiler.l"
+#line 80 "compiler.l"
 {return token_senao;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 76 "compiler.l"
+#line 81 "compiler.l"
 {return token_variaveis;}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 77 "compiler.l"
+#line 82 "compiler.l"
 {return token_verdadeiro;}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 78 "compiler.l"
+#line 83 "compiler.l"
 {return token_mais;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 79 "compiler.l"
+#line 84 "compiler.l"
 {return token_menos;}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 80 "compiler.l"
+#line 85 "compiler.l"
 {return token_vezes;}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 81 "compiler.l"
+#line 86 "compiler.l"
 {return token_dividir;}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 82 "compiler.l"
+#line 87 "compiler.l"
 {return token_mod;}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 83 "compiler.l"
+#line 88 "compiler.l"
 {return token_maismais;}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 84 "compiler.l"
+#line 89 "compiler.l"
 {return token_menosmenos;}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 85 "compiler.l"
+#line 90 "compiler.l"
 {return token_atribuicao;}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 86 "compiler.l"
+#line 91 "compiler.l"
 {return token_maior;}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 87 "compiler.l"
+#line 92 "compiler.l"
 {return token_menor;}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 88 "compiler.l"
+#line 93 "compiler.l"
 {return token_maiori;}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 89 "compiler.l"
+#line 94 "compiler.l"
 {return token_menori;}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 90 "compiler.l"
+#line 95 "compiler.l"
 {return token_igual;}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 91 "compiler.l"
+#line 96 "compiler.l"
 {return token_diferente;}
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 92 "compiler.l"
+#line 97 "compiler.l"
 {return token_el;}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 93 "compiler.l"
+#line 98 "compiler.l"
 {return token_oul;}
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 94 "compiler.l"
+#line 99 "compiler.l"
 {return token_negacao;}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 95 "compiler.l"
-{return token_variavel_caracter;}
+#line 100 "compiler.l"
+{strcpy(type, yytext); return token_variavel_caracter;}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 96 "compiler.l"
-{return token_string;}
+#line 101 "compiler.l"
+{strcpy(type, yytext); return token_string;}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 97 "compiler.l"
-{return token_identificador;}
+#line 102 "compiler.l"
+{strcat(identifiers, yytext); strcat(identifiers, " "); return token_identificador;}
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 98 "compiler.l"
+#line 103 "compiler.l"
 ;
 	YY_BREAK
 case 80:
 /* rule 80 can match eol */
 YY_RULE_SETUP
-#line 99 "compiler.l"
-{nLinha++;}
+#line 104 "compiler.l"
+{nLine++;}
 	YY_BREAK
 case 81:
 /* rule 81 can match eol */
 YY_RULE_SETUP
-#line 100 "compiler.l"
-{nLinha++;}
+#line 105 "compiler.l"
+{nLine++;}
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 101 "compiler.l"
+#line 106 "compiler.l"
 {  /* regra para o comentario */
 						register int c;
 
@@ -1371,7 +1375,7 @@ YY_RULE_SETUP
 						    {
 						    while ( (c = input()) != '*' &&
 							    c != EOF )
-							    if (c == '\n') nLinha++;
+							    if (c == '\n') nLine++;
 							    /* eat up text of comment or find \n */
 
 						    if ( c == '*' )
@@ -1381,7 +1385,7 @@ YY_RULE_SETUP
 							if ( c == '/' )
 							    break;    /* found the end */
 							if ( c == '\n' )
-							  nLinha++;
+							  nLine++;
 							}
 						
 
@@ -1394,10 +1398,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 129 "compiler.l"
+#line 134 "compiler.l"
 ECHO;
 	YY_BREAK
-#line 1401 "lex.yy.c"
+#line 1405 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2395,7 +2399,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 129 "compiler.l"
+#line 134 "compiler.l"
 
 
 

@@ -69,10 +69,23 @@
 #line 1 "compiler.y"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "variables.h"
+#include "hash.h"
+#include "lists.h"
+
+#define MAX_HASH 1000
+
+extern int nLine;
+extern char identifiers[500];
+extern char type[10];
+char currentScope[50] = "main"; 
+hashTable* hashCompiler = NULL;
 
 
 /* Line 268 of yacc.c  */
-#line 76 "compiler.tab.c"
+#line 89 "compiler.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -194,7 +207,7 @@ typedef int YYSTYPE;
 
 
 /* Line 343 of yacc.c  */
-#line 198 "compiler.tab.c"
+#line 211 "compiler.tab.c"
 
 #ifdef short
 # undef short
@@ -536,17 +549,17 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    87,    87,    88,    89,    90,    90,    92,    93,    94,
-      94,    94,    94,    94,    94,    96,    96,    98,    99,   100,
-     100,   100,   100,   100,   102,   102,   102,   103,   103,   104,
-     104,   104,   105,   105,   105,   106,   106,   107,   108,   109,
-     109,   110,   110,   112,   112,   113,   114,   117,   118,   119,
-     120,   121,   122,   123,   124,   124,   125,   125,   127,   127,
-     128,   128,   128,   129,   129,   129,   130,   130,   130,   130,
-     130,   130,   132,   132,   132,   133,   133,   135,   135,   136,
-     136,   136,   136,   136,   137,   137,   137,   137,   137,   137,
-     137,   137,   137,   137,   137,   138,   138,   138,   138,   140,
-     140,   141,   141,   142,   142
+       0,   100,   100,   101,   102,   103,   103,   105,   126,   147,
+     147,   147,   147,   147,   147,   149,   149,   153,   154,   155,
+     155,   155,   155,   155,   157,   157,   157,   158,   158,   159,
+     159,   159,   160,   160,   160,   161,   161,   162,   163,   164,
+     164,   165,   165,   167,   167,   168,   169,   172,   173,   174,
+     175,   176,   177,   178,   179,   179,   180,   180,   182,   182,
+     183,   183,   183,   184,   184,   184,   185,   185,   185,   185,
+     185,   185,   187,   187,   187,   188,   188,   190,   190,   191,
+     191,   191,   191,   191,   192,   192,   192,   192,   192,   192,
+     192,   192,   192,   192,   192,   193,   193,   193,   193,   195,
+     195,   196,   196,   197,   197
 };
 #endif
 
@@ -1682,10 +1695,60 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
+        case 7:
 
 /* Line 1806 of yacc.c  */
-#line 1689 "compiler.tab.c"
+#line 106 "compiler.y"
+    {
+    char *varName, *varType;
+    varName = strtok(identifiers, " ");
+    while(varName != NULL)
+    {
+      variable* newVar = createVariable();
+      int intVarType = convertType(type);
+      setVariable(newVar, varName, currentScope, intVarType);
+      if(lookupString(hashCompiler, varName)==NULL)
+	addString(hashCompiler, varName);
+      else
+      {
+	printf("Redeclaracao da variavel \"%s\" na linha %d.\n", varName, nLine);
+	exit(1);
+      }
+      varName = strtok(NULL, " ");
+    }
+  strcpy(identifiers, "\0");
+  }
+    break;
+
+  case 8:
+
+/* Line 1806 of yacc.c  */
+#line 127 "compiler.y"
+    {
+    char *varName, *varType;
+    varName = strtok(identifiers, " ");
+    while(varName != NULL)
+    {
+      variable* newVar = createVariable();
+      int intVarType = convertType(type);
+      setVariable(newVar, varName, currentScope, intVarType);
+      if(lookupString(hashCompiler, varName)==NULL)
+	addString(hashCompiler, varName);
+      else
+      {
+	printf("Redeclaracao da variavel \"%s\" na linha %d.\n", varName, nLine);
+	exit(1);
+      }
+      varName = strtok(NULL, " ");
+    }
+  strcpy(identifiers, "\0");
+  }
+    break;
+
+
+
+/* Line 1806 of yacc.c  */
+#line 1752 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1916,30 +1979,20 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 145 "compiler.y"
+#line 200 "compiler.y"
 
 
 #include "lex.yy.c"
-#include "lists.h"
-#include "hash.h"
-#include "variables.h"
 
 main(){
-
-	char *a = (char*) malloc(sizeof(16));
-	strcpy(a,"aaaa");
-	printf("%s",a);
-	hashTable *b = createHash(10);
-	addString(b,a);
-	List* c = lookupString(b,a);
-	printf("%s", (char*)c->info);
-	yyparse();
+      hashCompiler = createHash(MAX_HASH);
+      yyparse();
 	
 }
 
 /* rotina chamada por yyparse quando encontra erro */
 yyerror (void){
-	printf("Erro na Linha: %d\n", nLinha);
+	printf("Erro na Linha: %d\n", nLine);
 }
 
 
