@@ -1933,7 +1933,6 @@ main(){
 	addString(b,a);
 	List* c = lookupString(b,a);
 	printf("%s", (char*)c->info);
-	
 	yyparse();
 	
 }

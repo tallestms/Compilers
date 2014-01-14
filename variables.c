@@ -9,7 +9,7 @@ variable* createVariable()
     return newVar;
 }
 
-void setVariable(variable* var, char* name, char* scope, char* type, void* value)
+void setVariable(variable* var, char* name, char* scope, int type, void* value)
 {
   if (var == NULL)
   {
@@ -20,7 +20,7 @@ void setVariable(variable* var, char* name, char* scope, char* type, void* value
   {
     strcpy(var->name, name);
     strcpy(var->scope, scope);
-    strcpy(var->type, type);
+    var->type = type;
     var->value = value;
     var->used = 0;    
   }

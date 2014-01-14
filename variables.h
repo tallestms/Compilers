@@ -4,16 +4,27 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "lists.h"
+
 
 struct variable_t {
   char name[50]; 
   char scope[50];
-  char type[10];
+  int type;
   void *value;
   int used;
 };
 typedef struct variable_t variable;
+
+  /*
+   * type 0 = inteiro
+   * type 1 = caracter 
+   * type 2 = string
+   * type 3 = real
+   * type 4 = booleano
+   */
 
 /*
  * Aloca memoria para variavel
@@ -27,6 +38,6 @@ variable* createVariable();
  * Input: ponteiro para variavel e seus atributos(nome, escopo e etc)
  * Output: nada
  */
-void setVariable(variable* var, char* name, char* scope, char* type, void* value);
+void setVariable(variable* var, char* name, char* scope, int type, void* value);
 
 #endif /* VARIABLES_H_ */
