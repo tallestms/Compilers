@@ -81,7 +81,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "fim-seleciona"					{return token_fimseleciona;}
 "senão"						{return token_senao;}
 "variáveis"					{return token_variaveis;}
-"verdadeiro"					{strcpy(currentType, "lógico");return token_verdadeiro;}
+"verdadeiro"					{strcpy(currentType, "logico");return token_verdadeiro;}
 "+"						{return token_mais;}
 "-"						{return token_menos;}
 "*"						{return token_vezes;}

@@ -41,18 +41,19 @@ unsigned int hash(hashTable *hashtable, char *str)
     return hashval % hashtable->size;
 }
 
-List *lookupString(hashTable *hashtable, char *str)
+List *lookupStringVariable(hashTable *hashtable, char *str)
 {
     List *list;
     unsigned int hashval = hash(hashtable, str);
 
     for(list = hashtable->table[hashval]; list != NULL; list = list->next) {
-        if (strcmp(str, (char*)list->info) == 0) return list;
+        if (strcmp(str, (char*)(((variable*)(list->info))->name)) == 0) return list;
     }
     return NULL;
 }
 
-int addString(hashTable *hashtable, char *str)
+
+int addInfoVariable(hashTable *hashtable, char*str, void *info)
 {
     List *newList;
     List *currentList;
@@ -62,7 +63,7 @@ int addString(hashTable *hashtable, char *str)
     if ((newList = malloc(sizeof(List))) == NULL) return 1;
 
     /* Does item already exist? */
-    currentList = lookupString(hashtable, str);
+    currentList = lookupStringVariable(hashtable, str);
     
     /* item already exists, don't insert it again. */
     if (currentList != NULL)
@@ -71,7 +72,7 @@ int addString(hashTable *hashtable, char *str)
     /* insert into list */
     char *strTemp = malloc(sizeof(str));
     strcpy(strTemp, str);
-    newList->info = strTemp;
+    newList->info = info;
     newList->next = hashtable->table[hashval];
     hashtable->table[hashval] = newList;
 

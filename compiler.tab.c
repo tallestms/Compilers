@@ -74,18 +74,22 @@
 #include "variables.h"
 #include "hash.h"
 #include "lists.h"
+#include "aux.h"
 
 #define MAX_HASH 1000
 
 extern int nLine;
 extern char identifiers[500];
 extern char type[10];
+extern char currentType[10];
+extern int varRelations[100];
+int currentRelationPos = 0;
 char currentScope[50] = "main"; 
 hashTable* hashCompiler = NULL;
 
 
 /* Line 268 of yacc.c  */
-#line 89 "compiler.tab.c"
+#line 93 "compiler.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -207,7 +211,7 @@ typedef int YYSTYPE;
 
 
 /* Line 343 of yacc.c  */
-#line 211 "compiler.tab.c"
+#line 215 "compiler.tab.c"
 
 #ifdef short
 # undef short
@@ -547,19 +551,19 @@ static const yytype_int8 yyrhs[] =
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
-       0,   100,   100,   101,   102,   103,   103,   105,   126,   147,
-     147,   147,   147,   147,   147,   149,   149,   153,   154,   155,
-     155,   155,   155,   155,   157,   157,   157,   158,   158,   159,
-     159,   159,   160,   160,   160,   161,   161,   162,   163,   164,
-     164,   165,   165,   167,   167,   168,   169,   172,   173,   174,
-     175,   176,   177,   178,   179,   179,   180,   180,   182,   182,
-     183,   183,   183,   184,   184,   184,   185,   185,   185,   185,
-     185,   185,   187,   187,   187,   188,   188,   190,   190,   191,
-     191,   191,   191,   191,   192,   192,   192,   192,   192,   192,
-     192,   192,   192,   192,   192,   193,   193,   193,   193,   195,
-     195,   196,   196,   197,   197
+       0,   104,   104,   105,   106,   107,   107,   109,   130,   151,
+     151,   151,   151,   151,   151,   153,   153,   157,   158,   159,
+     159,   159,   159,   159,   161,   161,   161,   162,   162,   163,
+     163,   163,   164,   164,   164,   165,   165,   166,   167,   168,
+     168,   169,   169,   171,   171,   172,   173,   176,   177,   178,
+     179,   180,   181,   182,   183,   183,   184,   184,   186,   186,
+     187,   187,   187,   188,   198,   199,   200,   200,   200,   200,
+     200,   200,   202,   203,   204,   205,   205,   207,   214,   222,
+     222,   222,   222,   222,   223,   224,   231,   238,   251,   252,
+     258,   264,   265,   271,   277,   279,   279,   279,   279,   281,
+     281,   282,   282,   283,   283
 };
 #endif
 
@@ -1698,7 +1702,7 @@ yyreduce:
         case 7:
 
 /* Line 1806 of yacc.c  */
-#line 106 "compiler.y"
+#line 110 "compiler.y"
     {
     char *varName, *varType;
     varName = strtok(identifiers, " ");
@@ -1707,8 +1711,8 @@ yyreduce:
       variable* newVar = createVariable();
       int intVarType = convertType(type);
       setVariable(newVar, varName, currentScope, intVarType);
-      if(lookupString(hashCompiler, varName)==NULL)
-	addString(hashCompiler, varName);
+      if(lookupStringVariable(hashCompiler, varName)==NULL)
+	addInfoVariable(hashCompiler, varName, newVar);
       else
       {
 	printf("Redeclaracao da variavel \"%s\" na linha %d.\n", varName, nLine);
@@ -1723,7 +1727,7 @@ yyreduce:
   case 8:
 
 /* Line 1806 of yacc.c  */
-#line 127 "compiler.y"
+#line 131 "compiler.y"
     {
     char *varName, *varType;
     varName = strtok(identifiers, " ");
@@ -1732,8 +1736,8 @@ yyreduce:
       variable* newVar = createVariable();
       int intVarType = convertType(type);
       setVariable(newVar, varName, currentScope, intVarType);
-      if(lookupString(hashCompiler, varName)==NULL)
-	addString(hashCompiler, varName);
+      if(lookupStringVariable(hashCompiler, varName)==NULL)
+	addInfoVariable(hashCompiler, varName, newVar);
       else
       {
 	printf("Redeclaracao da variavel \"%s\" na linha %d.\n", varName, nLine);
@@ -1745,10 +1749,136 @@ yyreduce:
   }
     break;
 
+  case 63:
+
+/* Line 1806 of yacc.c  */
+#line 189 "compiler.y"
+    {
+  if(!verifyRelationship(varRelations, currentRelationPos))
+  {
+    printf("Valores incompativeis na linha %d\n",nLine);
+    exit(1);
+  }
+  else
+    currentRelationPos = 0;
+}
+    break;
+
+  case 77:
+
+/* Line 1806 of yacc.c  */
+#line 208 "compiler.y"
+    {
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("real com sinal\n");
+}
+    break;
+
+  case 78:
+
+/* Line 1806 of yacc.c  */
+#line 215 "compiler.y"
+    {
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("inteiro com sinal\n");
+
+}
+    break;
+
+  case 85:
+
+/* Line 1806 of yacc.c  */
+#line 225 "compiler.y"
+    {
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("inteiro sem sinal\n");
+}
+    break;
+
+  case 86:
+
+/* Line 1806 of yacc.c  */
+#line 232 "compiler.y"
+    {
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("real sem sinal\n");
+}
+    break;
+
+  case 87:
+
+/* Line 1806 of yacc.c  */
+#line 239 "compiler.y"
+    {
+  List *identifier_temp = lookupStringVariable(hashCompiler, currentType);
+  if(identifier_temp==NULL)
+  {
+    printf("Variavel nao declarada na linha %d\n", nLine);
+    exit(1);
+  }
+  int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("identificador\n");
+}
+    break;
+
+  case 89:
+
+/* Line 1806 of yacc.c  */
+#line 253 "compiler.y"
+    {
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+}
+    break;
+
+  case 90:
+
+/* Line 1806 of yacc.c  */
+#line 259 "compiler.y"
+    {
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+}
+    break;
+
+  case 92:
+
+/* Line 1806 of yacc.c  */
+#line 266 "compiler.y"
+    {
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+}
+    break;
+
+  case 93:
+
+/* Line 1806 of yacc.c  */
+#line 272 "compiler.y"
+    {
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+}
+    break;
+
 
 
 /* Line 1806 of yacc.c  */
-#line 1752 "compiler.tab.c"
+#line 1882 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1979,7 +2109,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 200 "compiler.y"
+#line 286 "compiler.y"
 
 
 #include "lex.yy.c"

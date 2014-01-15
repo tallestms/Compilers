@@ -39,5 +39,6 @@ variable* createVariable();
  * Output: nada
  */
 void setVariable(variable* var, char* name, char* scope, int type);
-
+int convertType(char *type);
+int convertTypeRelation(char *type);
 #endif /* VARIABLES_H_ */

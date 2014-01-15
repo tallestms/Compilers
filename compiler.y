@@ -5,12 +5,16 @@
 #include "variables.h"
 #include "hash.h"
 #include "lists.h"
+#include "aux.h"
 
 #define MAX_HASH 1000
 
 extern int nLine;
 extern char identifiers[500];
 extern char type[10];
+extern char currentType[10];
+extern int varRelations[100];
+int currentRelationPos = 0;
 char currentScope[50] = "main"; 
 hashTable* hashCompiler = NULL;
 %}
@@ -111,8 +115,8 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
       variable* newVar = createVariable();
       int intVarType = convertType(type);
       setVariable(newVar, varName, currentScope, intVarType);
-      if(lookupString(hashCompiler, varName)==NULL)
-	addString(hashCompiler, varName);
+      if(lookupStringVariable(hashCompiler, varName)==NULL)
+	addInfoVariable(hashCompiler, varName, newVar);
       else
       {
 	printf("Redeclaracao da variavel \"%s\" na linha %d.\n", varName, nLine);
@@ -132,8 +136,8 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
       variable* newVar = createVariable();
       int intVarType = convertType(type);
       setVariable(newVar, varName, currentScope, intVarType);
-      if(lookupString(hashCompiler, varName)==NULL)
-	addString(hashCompiler, varName);
+      if(lookupStringVariable(hashCompiler, varName)==NULL)
+	addInfoVariable(hashCompiler, varName, newVar);
       else
       {
 	printf("Redeclaracao da variavel \"%s\" na linha %d.\n", varName, nLine);
@@ -181,15 +185,97 @@ token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_
  
 LOGICOS: token_e | token_ou;
 ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
-EXPR: SIEXPR | EXPR COMPARACOES SIEXPR | EXPR LOGICOS SIEXPR;
+EXPR: SIEXPR 
+{
+  if(!verifyRelationship(varRelations, currentRelationPos))
+  {
+    printf("Valores incompativeis na linha %d\n",nLine);
+    exit(1);
+  }
+  else
+    currentRelationPos = 0;
+}
+| EXPR COMPARACOES SIEXPR 
+| EXPR LOGICOS SIEXPR;
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
 
-SIEXPR: TERMO | SIEXPR ADICAO_SUBTRACAO TERMO | SIEXPR SINALFATOR ; 
+SIEXPR: TERMO 
+| SIEXPR ADICAO_SUBTRACAO TERMO
+| SIEXPR SINALFATOR ; 
 ADICAO_SUBTRACAO: token_mais | token_menos ;
 
-SINALFATOR:  token_numreal_comsinal | token_numinteiro_comsinal;
+SINALFATOR:  token_numreal_comsinal 
+{
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("real com sinal\n");
+}
+| token_numinteiro_comsinal
+{
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("inteiro com sinal\n");
+
+};
 TERMO: MATRIZ | FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR ;
-FATOR: SINALFATOR | token_numinteiro | token_numreal | token_identificador | token_menos token_identificador | token_variavel_caracter | token_string | token_abrep EXPR token_fechap | token_verdadeiro | token_falso | token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap;
+FATOR: SINALFATOR
+| token_numinteiro
+{
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("inteiro sem sinal\n");
+}
+| token_numreal 
+{
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("real sem sinal\n");
+}
+| token_identificador 
+{
+  List *identifier_temp = lookupStringVariable(hashCompiler, currentType);
+  if(identifier_temp==NULL)
+  {
+    printf("Variavel nao declarada na linha %d\n", nLine);
+    exit(1);
+  }
+  int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("identificador\n");
+}
+| token_menos token_identificador 
+| token_variavel_caracter 
+{
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+}
+| token_string 
+{
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+}
+| token_abrep EXPR token_fechap 
+| token_verdadeiro 
+{
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+}
+| token_falso 
+{
+  int currentTypeInt = convertType(currentType);
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+}
+| token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap;
+
 FATOR_CASE: SINALFATOR | token_numinteiro | token_numreal | token_variavel_caracter; 
 
 MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac | token_abrecol BLOCO_MATRIZ token_fechacol;
