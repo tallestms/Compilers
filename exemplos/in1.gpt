@@ -3,7 +3,7 @@ algoritmo declaracao_de_variaveis;
 variáveis
 	a : inteiro;
 	b : inteiro;
-	c,d,f : real;
+	c,d,f,o : real;
 	g : real;
 	char : caracter;
 	lit : literal;
@@ -16,12 +16,11 @@ início
 	b := -10 + 10;
 	c := 10.10;
 	d := -10.10;
-	f := 10.10e+10;
+	f := (10.10e+10 - 10.10)*10.10;
 	g := -10.10e+10;
 	char := 'c';
 	lit := "isso daqui é um texto";
 	z := verdadeiro;
-	/*z := a > b;
-	z := a>b e c<d;
-	mat := {[1,2],[2,1]};*/
+	z := a>b;
+	//mat := {[1,2],[2,1]};
 fim

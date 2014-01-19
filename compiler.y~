@@ -13,6 +13,7 @@ extern int nLine;
 extern char identifiers[500];
 extern char type[10];
 extern char currentType[10];
+extern char currentIdentifier[100];
 extern int varRelations[100];
 int currentRelationPos = 0;
 char currentScope[50] = "main"; 
@@ -101,8 +102,18 @@ hashTable* hashCompiler = NULL;
 %start PROG
 
 %%
-PROG:  token_algoritmo token_identificador  token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim  |
-token_algoritmo token_identificador token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim BLOCO_FUNCOES;
+PROG:  token_algoritmo token_identificador
+token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
+{
+  verifyUsed(hashCompiler);
+}
+|
+token_algoritmo token_identificador
+token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim BLOCO_FUNCOES
+{
+  verifyUsed(hashCompiler);
+}
+;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
 		  token_variaveis token_fimvariaveis | /*Empty*/;
 		  
@@ -119,14 +130,13 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	addInfoVariable(hashCompiler, varName, newVar);
       else
       {
-	printf("Redeclaracao da variavel \"%s\" na linha %d.\n", varName, nLine);
+	printf("Erro semantico na linha %d. Variavel redeclarada.\n", nLine);
 	exit(1);
       }
       varName = strtok(NULL, " ");
     }
   strcpy(identifiers, "\0");
   }
-
   | VARIAVEIS VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
   {
     char *varName, *varType;
@@ -140,7 +150,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	addInfoVariable(hashCompiler, varName, newVar);
       else
       {
-	printf("Redeclaracao da variavel \"%s\" na linha %d.\n", varName, nLine);
+	printf("Erro semantico na linha %d. Variavel redeclarada.\n", nLine);
 	exit(1);
       }
       varName = strtok(NULL, " ");
@@ -150,6 +160,13 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 
 TIPOS_VARIAVEIS: token_inteiro | token_real | token_caracter | token_literal | token_logico | INICIALIZAR_MATRIZ;
 
+/*
+ *
+ *Tarefa: Fazer funcionar analise semantica para matrizes
+ *
+ */
+
+ 
 VARIAVEIS_IDENTIFICADORES: token_identificador | VARIAVEIS_IDENTIFICADORES token_virgula token_identificador
   
 
@@ -177,7 +194,29 @@ token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_leia token_abrep token_fechap token_pontov| 
 token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap token_pontov |
-token_identificador token_atribuicao EXPR token_pontov|
+token_identificador token_atribuicao EXPR
+{
+  if(!verifyRelationship(varRelations, currentRelationPos))
+  {
+    printf("Valores incompativeis na linha %d\n",nLine);
+  }
+  else
+  {
+    List *identifier_temp = lookupStringVariable(hashCompiler, currentIdentifier);
+    if(identifier_temp == NULL)
+    {
+      printf("Variavel nao declarada na linha %d\n", nLine);
+    }
+    if(((variable*)(identifier_temp->info))->type != varRelations[0])
+    {
+      printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+      printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
+    }
+  ((variable*)(identifier_temp->info))->used=1;
+  }
+  currentRelationPos = 0;
+}
+token_pontov |
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
@@ -186,17 +225,16 @@ token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_
 LOGICOS: token_e | token_ou;
 ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
 EXPR: SIEXPR 
-{
-  if(!verifyRelationship(varRelations, currentRelationPos))
-  {
-    printf("Valores incompativeis na linha %d\n",nLine);
-    exit(1);
-  }
-  else
-    currentRelationPos = 0;
-}
-| EXPR COMPARACOES SIEXPR 
+| EXPR COMPARACOES SIEXPR
 | EXPR LOGICOS SIEXPR;
+
+/*
+ *
+ *Tarefa: Fazer funcionar analise semantica juntando logiocs
+ *
+ */
+
+ 
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
 
 SIEXPR: TERMO 
@@ -237,7 +275,7 @@ FATOR: SINALFATOR
 }
 | token_identificador 
 {
-  List *identifier_temp = lookupStringVariable(hashCompiler, currentType);
+  List *identifier_temp = lookupStringVariable(hashCompiler, currentIdentifier);
   if(identifier_temp==NULL)
   {
     printf("Variavel nao declarada na linha %d\n", nLine);
@@ -248,6 +286,17 @@ FATOR: SINALFATOR
   //printf("identificador\n");
 }
 | token_menos token_identificador 
+{
+  List *identifier_temp = lookupStringVariable(hashCompiler, currentIdentifier);
+  if(identifier_temp==NULL)
+  {
+    printf("Variavel nao declarada na linha %d\n", nLine);
+  }
+  int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+  varRelations[currentRelationPos] = currentTypeInt;
+  ++currentRelationPos;
+  //printf("identificador\n");
+}
 | token_variavel_caracter 
 {
   int currentTypeInt = convertType(currentType);

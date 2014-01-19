@@ -6,6 +6,7 @@ char identifiers[500];
 char type[10];
 int varRelations[100];
 char currentType[10];
+char currentIdentifier[100];
 %}
 
 /* definição de dígito */
@@ -101,7 +102,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "!"						{return token_negacao;}
 {caracter}					{strcpy(currentType, "caracter");return token_variavel_caracter;}
 {string}					{strcpy(currentType, "literal");return token_string;}
-{identificador}					{strcpy(currentType, yytext); strcat(identifiers, yytext); strcat(identifiers, " "); return token_identificador;}
+{identificador}					{strcpy(currentIdentifier, yytext); strcat(identifiers, yytext); strcat(identifiers, " "); return token_identificador;}
 [ \t]						;
 [\n]						{nLine++;}
 {comentario_linha}				{nLine++;}

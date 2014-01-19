@@ -1,4 +1,5 @@
 #include "variables.h"
+#include "hash.h"
 
 variable* createVariable()
 {
@@ -49,4 +50,30 @@ int convertType(char *type)
     printf("Crazy thing in converting type: %s\n", type);
     exit(1);
   }
+}
+
+void verifyUsed(hashTable *hashtable)
+{
+    int i;
+    List *list, *temp;
+
+    if (hashtable==NULL) 
+      return;
+
+    /* Free the memory for every item in the table, including the 
+     * strings themselves.
+     */
+    printf("Tabela de uso:\n");
+    for(i=0; i<hashtable->size; i++) {
+        list = hashtable->table[i];
+        while(list!=NULL) {
+            temp = list;
+            list = list->next;
+            //if(((variable*)(temp->info))->used==0)
+	    {
+	      printf("%s -> %d\n",((variable*)(temp->info))->name,((variable*)(temp->info))->used);
+	      //exit(1);
+	    } 
+        }
+    }
 }
