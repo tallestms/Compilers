@@ -568,8 +568,8 @@ static const yytype_uint16 yyrline[] =
      261,   262,   262,   262,   263,   264,   265,   274,   274,   274,
      274,   274,   274,   276,   277,   278,   279,   279,   281,   288,
      296,   296,   296,   296,   296,   297,   298,   305,   312,   324,
-     336,   342,   348,   349,   355,   362,   361,   396,   396,   396,
-     396,   398,   398,   399,   399,   400,   400
+     336,   342,   348,   349,   355,   362,   361,   400,   400,   400,
+     400,   402,   402,   403,   403,   404,   404
 };
 #endif
 
@@ -1728,7 +1728,7 @@ yyreduce:
 	addInfoVariable(hashVariables, varName, newVar);
       else
       {
-	printf("Erro semantico na linha %d. Variavel redeclarada.\n", nLine);
+	printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
 	exit(1);
       }
       varName = strtok(NULL, " ");
@@ -1753,7 +1753,7 @@ yyreduce:
 	addInfoVariable(hashVariables, varName, newVar);
       else
       {
-	printf("Erro semantico na linha %d. Variavel redeclarada.\n", nLine);
+	printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
 	exit(1);
       }
       varName = strtok(NULL, " ");
@@ -1773,7 +1773,7 @@ yyreduce:
     List *identifier_temp = lookupStringVariable(hashVariables, returnVariable);
     if(identifier_temp==NULL)
     {
-      printf("Variavel nao declarada na linha %d.\n", nLine);
+      printf("Variavel %s nao declarada na linha %d\n",returnVariable, nLine);
       globalFunction->returnType = 5; //default sem tipo de retorno.
     }
     else
@@ -1799,7 +1799,7 @@ yyreduce:
       List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
       if(identifier_temp == NULL)
       {
-	printf("Variavel nao declarada na linha %d\n", nLine);
+	printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
       }
       if(((variable*)(identifier_temp->info))->type != varRelations[0])
       {
@@ -1870,7 +1870,7 @@ yyreduce:
   List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
   if(identifier_temp==NULL)
   {
-    printf("Variavel nao declarada na linha %d\n", nLine);
+    printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
   }
   int currentTypeInt = ((variable*)(identifier_temp->info))->type;
   varRelations[currentRelationPos] = currentTypeInt;
@@ -1887,7 +1887,7 @@ yyreduce:
   List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
   if(identifier_temp==NULL)
   {
-    printf("Variavel nao declarada na linha %d\n", nLine);
+    printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
   }
   int currentTypeInt = ((variable*)(identifier_temp->info))->type;
   varRelations[currentRelationPos] = currentTypeInt;
@@ -1980,6 +1980,10 @@ yyreduce:
       setFunction(newFunction, currentScope, 0, arity, parametersList, nLine, functionList);
     }
   }
+  else
+  {
+    //Fazer caso em que seja necessario adicionar outras funcoes na function_list.
+  }
   strcpy(functionArguments, "\0");
 }
     break;
@@ -1987,7 +1991,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 1991 "compiler.tab.c"
+#line 1995 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2218,7 +2222,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 403 "compiler.y"
+#line 407 "compiler.y"
 
 
 #include "lex.yy.c"

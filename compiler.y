@@ -135,7 +135,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	addInfoVariable(hashVariables, varName, newVar);
       else
       {
-	printf("Erro semantico na linha %d. Variavel redeclarada.\n", nLine);
+	printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
 	exit(1);
       }
       varName = strtok(NULL, " ");
@@ -155,7 +155,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	addInfoVariable(hashVariables, varName, newVar);
       else
       {
-	printf("Erro semantico na linha %d. Variavel redeclarada.\n", nLine);
+	printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
 	exit(1);
       }
       varName = strtok(NULL, " ");
@@ -215,7 +215,7 @@ token_atribuicao EXPR
     List *identifier_temp = lookupStringVariable(hashVariables, returnVariable);
     if(identifier_temp==NULL)
     {
-      printf("Variavel nao declarada na linha %d.\n", nLine);
+      printf("Variavel %s nao declarada na linha %d\n",returnVariable, nLine);
       globalFunction->returnType = 5; //default sem tipo de retorno.
     }
     else
@@ -241,7 +241,7 @@ token_atribuicao EXPR
       List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
       if(identifier_temp == NULL)
       {
-	printf("Variavel nao declarada na linha %d\n", nLine);
+	printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
       }
       if(((variable*)(identifier_temp->info))->type != varRelations[0])
       {
@@ -314,7 +314,7 @@ FATOR: SINALFATOR
   List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
   if(identifier_temp==NULL)
   {
-    printf("Variavel nao declarada na linha %d\n", nLine);
+    printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
   }
   int currentTypeInt = ((variable*)(identifier_temp->info))->type;
   varRelations[currentRelationPos] = currentTypeInt;
@@ -326,7 +326,7 @@ FATOR: SINALFATOR
   List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
   if(identifier_temp==NULL)
   {
-    printf("Variavel nao declarada na linha %d\n", nLine);
+    printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
   }
   int currentTypeInt = ((variable*)(identifier_temp->info))->type;
   varRelations[currentRelationPos] = currentTypeInt;
