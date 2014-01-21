@@ -390,6 +390,10 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       setFunction(newFunction, currentScope, 0, arity, parametersList, nLine, functionList);
     }
   }
+  else
+  {
+    //Fazer caso em que seja necessario adicionar outras funcoes na function_list.
+  }
   strcpy(functionArguments, "\0");
 };
 

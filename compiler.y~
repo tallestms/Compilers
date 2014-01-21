@@ -227,7 +227,7 @@ token_atribuicao EXPR
     currentRelationPos = 0; //Vetor de tipos volta para posicao inicial
     strcpy(currentScope,"main");
     strcpy(returnFunctionType, "\0");
-    strcpy(identifiers, " ");
+    strcpy(identifiers, "\0");
   }
   else
   { 
@@ -389,6 +389,10 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       int arity = countList(parametersList);
       setFunction(newFunction, currentScope, 0, arity, parametersList, nLine, functionList);
     }
+  }
+  else
+  {
+    //Fazer caso em que seja necessario adicionar outras funcoes na function_list
   }
   strcpy(functionArguments, "\0");
 };

@@ -19,7 +19,7 @@ início
 	d := -10.10;
 	d := funcao(a,b,c,d);
 	d := funcao2(f,g);
-	f := (10.10e+10 - 10.10)*10.10;
+	f := (10.10e+10 - 10.10)*10.10 - 10;
 	g := -10.10e+10;
 	char := 'c';
 	lit := "isso daqui é um texto";
