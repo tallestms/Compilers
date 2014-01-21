@@ -9,15 +9,20 @@
 
 #define MAX_HASH 1000
 
+extern int in_function;
 extern int nLine;
 extern char identifiers[500];
+extern char functionArguments[500];
 extern char type[10];
 extern char currentType[10];
 extern char currentIdentifier[100];
 extern int varRelations[100];
 int currentRelationPos = 0;
-char currentScope[50] = "main"; 
-hashTable* hashCompiler = NULL;
+char currentScope[100] = "main";
+char returnFunctionType[100];
+function* globalFunction;
+hashTable* hashVariables = NULL;
+hashTable* hashFunctions = NULL;
 %}
 
 %token token_abrep
@@ -105,13 +110,13 @@ hashTable* hashCompiler = NULL;
 PROG:  token_algoritmo token_identificador
 token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
-  verifyUsed(hashCompiler);
+  verifyUsed(hashVariables);
 }
 |
 token_algoritmo token_identificador
 token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim BLOCO_FUNCOES
 {
-  verifyUsed(hashCompiler);
+  verifyUsed(hashVariables);
 }
 ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
@@ -126,8 +131,8 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
       variable* newVar = createVariable();
       int intVarType = convertType(type);
       setVariable(newVar, varName, currentScope, intVarType);
-      if(lookupStringVariable(hashCompiler, varName)==NULL)
-	addInfoVariable(hashCompiler, varName, newVar);
+      if(lookupStringVariable(hashVariables, varName)==NULL)
+	addInfoVariable(hashVariables, varName, newVar);
       else
       {
 	printf("Erro semantico na linha %d. Variavel redeclarada.\n", nLine);
@@ -146,8 +151,8 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
       variable* newVar = createVariable();
       int intVarType = convertType(type);
       setVariable(newVar, varName, currentScope, intVarType);
-      if(lookupStringVariable(hashCompiler, varName)==NULL)
-	addInfoVariable(hashCompiler, varName, newVar);
+      if(lookupStringVariable(hashVariables, varName)==NULL)
+	addInfoVariable(hashVariables, varName, newVar);
       else
       {
 	printf("Erro semantico na linha %d. Variavel redeclarada.\n", nLine);
@@ -194,29 +199,60 @@ token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_leia token_abrep token_fechap token_pontov| 
 token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap token_pontov |
-token_identificador token_atribuicao EXPR
+
+/*
+ *
+ *Tarefa: Checar aridade de funcao e argumentos (trocar de lugar funcoes para isso? Perguntar para a professora)
+ *
+ */
+
+token_identificador
+token_atribuicao EXPR
 {
-  if(!verifyRelationship(varRelations, currentRelationPos))
+  if(in_function == 1)
   {
-    printf("Valores incompativeis na linha %d\n",nLine);
+    char* returnVariable = strtok(identifiers, " ");
+    List *identifier_temp = lookupStringVariable(hashVariables, returnVariable);
+    if(identifier_temp==NULL)
+    {
+      printf("Variavel nao declarada na linha %d.\n", nLine);
+      globalFunction->returnType = 5; //default sem tipo de retorno.
+    }
+    else
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;  
+      globalFunction->returnType = currentTypeInt;
+    }
+    in_function = 0; //Nao e mais funcao
+    currentRelationPos = 0; //Vetor de tipos volta para posicao inicial
+    strcpy(currentScope,"main");
+    strcpy(returnFunctionType, "\0");
+    strcpy(identifiers, " ");
   }
   else
-  {
-    List *identifier_temp = lookupStringVariable(hashCompiler, currentIdentifier);
-    if(identifier_temp == NULL)
+  { 
+    strcpy(identifiers, "\0");
+    if(!verifyRelationship(varRelations, currentRelationPos))
     {
-      printf("Variavel nao declarada na linha %d\n", nLine);
+      printf("Valores incompativeis na linha %d\n", nLine);
     }
-    if(((variable*)(identifier_temp->info))->type != varRelations[0])
+    else
     {
-      printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-      printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
+      List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
+      if(identifier_temp == NULL)
+      {
+	printf("Variavel nao declarada na linha %d\n", nLine);
+      }
+      if(((variable*)(identifier_temp->info))->type != varRelations[0])
+      {
+	printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+	printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
+      }
+    ((variable*)(identifier_temp->info))->used=1;
     }
-  ((variable*)(identifier_temp->info))->used=1;
-  }
-  currentRelationPos = 0;
-}
-token_pontov |
+    currentRelationPos = 0;
+   }
+} token_pontov |
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
@@ -230,7 +266,7 @@ EXPR: SIEXPR
 
 /*
  *
- *Tarefa: Fazer funcionar analise semantica juntando logiocs
+ *Tarefa: Fazer funcionar analise semantica juntando logicos
  *
  */
 
@@ -275,7 +311,7 @@ FATOR: SINALFATOR
 }
 | token_identificador 
 {
-  List *identifier_temp = lookupStringVariable(hashCompiler, currentIdentifier);
+  List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
   if(identifier_temp==NULL)
   {
     printf("Variavel nao declarada na linha %d\n", nLine);
@@ -287,7 +323,7 @@ FATOR: SINALFATOR
 }
 | token_menos token_identificador 
 {
-  List *identifier_temp = lookupStringVariable(hashCompiler, currentIdentifier);
+  List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
   if(identifier_temp==NULL)
   {
     printf("Variavel nao declarada na linha %d\n", nLine);
@@ -322,7 +358,40 @@ FATOR: SINALFATOR
   varRelations[currentRelationPos] = currentTypeInt;
   ++currentRelationPos;
 }
-| token_identificador token_abrep ARGUMENTOS_FUNCAO token_fechap;
+| token_identificador
+{
+  strcpy(currentScope, currentIdentifier);
+  in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments.
+}
+token_abrep ARGUMENTOS_FUNCAO token_fechap
+{ 
+  List *identifier_temp = lookupStringFunction(hashFunctions, currentScope);
+  if(identifier_temp == NULL)
+  {
+    function* newFunction = createFunction();
+    globalFunction = newFunction;
+    List* functionList = startList();
+    List* parametersList = startList();
+    //printf("%s\n",functionArguments); //Argumentos das funcoes separados
+    //Tipo de retorno sera definido de acordo com variavel sendo atribuida, no final que sera feita a verificacao.
+
+    char *argumentType;
+    argumentType = strtok(functionArguments, " ");
+    while(argumentType != NULL)
+    {
+      int type = convertFunctionArgument(argumentType, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
+      parametersList = insertList(parametersList,(void*) type);
+      argumentType = strtok(NULL, " ");
+    } 
+    if(seekList(parametersList, (void*)5, compareInt) == NULL) 
+    //Se tipo 5 foi encontrado, houve erro de variavel nao declarada ou nao utilizada, entao nao adicionaremos a funcao na tabela hash.
+    {
+      int arity = countList(parametersList);
+      setFunction(newFunction, currentScope, 0, arity, parametersList, nLine, functionList);
+    }
+  }
+  strcpy(functionArguments, "\0");
+};
 
 FATOR_CASE: SINALFATOR | token_numinteiro | token_numreal | token_variavel_caracter; 
 
@@ -336,7 +405,8 @@ BLOCO_MATRIZ: FATOR | BLOCO_MATRIZ token_virgula FATOR;
 #include "lex.yy.c"
 
 main(){
-      hashCompiler = createHash(MAX_HASH);
+      hashVariables = createHash(MAX_HASH);
+      hashFunctions = createHash(MAX_HASH);
       yyparse();
 	
 }

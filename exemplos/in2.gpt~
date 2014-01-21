@@ -7,6 +7,7 @@ fim-variáveis
 
 início
 	imprima("Digite seu nome:");
+	nome := huauhau(a);
 	nome := leia();
 	imprima(nome, ", digite sua idade:");
 	idade := leia();

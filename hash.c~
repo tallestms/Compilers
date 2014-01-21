@@ -52,6 +52,16 @@ List *lookupStringVariable(hashTable *hashtable, char *str)
     return NULL;
 }
 
+List *lookupStringFunction(hashTable *hashtable, char *str)
+{
+    List *list;
+    unsigned int hashval = hash(hashtable, str);
+
+    for(list = hashtable->table[hashval]; list != NULL; list = list->next) {
+        if (strcmp(str, (char*)(((function*)(list->info))->name)) == 0) return list;
+    }
+    return NULL;
+}
 
 int addInfoVariable(hashTable *hashtable, char*str, void *info)
 {
@@ -63,7 +73,33 @@ int addInfoVariable(hashTable *hashtable, char*str, void *info)
     if ((newList = malloc(sizeof(List))) == NULL) return 1;
 
     /* Does item already exist? */
-    currentList = lookupStringVariable(hashtable, str, info);
+    currentList = lookupStringVariable(hashtable, str);
+    
+    /* item already exists, don't insert it again. */
+    if (currentList != NULL)
+      return 1;
+    
+    /* insert into list */
+    char *strTemp = malloc(sizeof(str));
+    strcpy(strTemp, str);
+    newList->info = info;
+    newList->next = hashtable->table[hashval];
+    hashtable->table[hashval] = newList;
+
+    return 0;
+}
+
+int addInfoFunction(hashTable *hashtable, char*str, void *info)
+{
+    List *newList;
+    List *currentList;
+    unsigned int hashval = hash(hashtable, str);
+
+    /* Attempt to allocate memory for list */
+    if ((newList = malloc(sizeof(List))) == NULL) return 1;
+
+    /* Does item already exist? */
+    currentList = lookupStringVariable(hashtable, str);
     
     /* item already exists, don't insert it again. */
     if (currentList != NULL)

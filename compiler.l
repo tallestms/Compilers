@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 int nLine=1;
+int in_function = 0;
 char identifiers[500];
+char functionArguments[500];
 char type[10];
 int varRelations[100];
 char currentType[10];
@@ -37,10 +39,10 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "}"						{return token_fechac;}
 "["						{return token_abrecol;}
 "]"						{return token_fechacol;}
-{real_signed}					{strcpy(currentType, "real"); return token_numreal_comsinal;}
-{real}						{strcpy(currentType, "real"); return token_numreal;}
-{int_dec_signed}				{strcpy(currentType, "inteiro"); return token_numinteiro_comsinal;}
-{int_dec}					{strcpy(currentType, "inteiro"); return token_numinteiro;}
+{real_signed}					{if(in_function == 1){strcat(functionArguments, "real"); strcat(functionArguments, " ");} strcpy(currentType, "real"); return token_numreal_comsinal;}
+{real}						{if(in_function == 1){strcat(functionArguments, "real"); strcat(functionArguments, " ");} strcpy(currentType, "real"); return token_numreal;}
+{int_dec_signed}				{if(in_function == 1){strcat(functionArguments, "inteiro"); strcat(functionArguments, " ");} strcpy(currentType, "inteiro"); return token_numinteiro_comsinal;}
+{int_dec}					{if(in_function == 1){strcat(functionArguments, "inteiro"); strcat(functionArguments, " ");} strcpy(currentType, "inteiro"); return token_numinteiro;}
 "algoritmo"					{return token_algoritmo;}
 "até"						{return token_ate;}
 "caracter"					{strcpy(type, yytext); return token_caracter;}
@@ -51,7 +53,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "enquanto"					{return token_enquanto;}
 "então"						{return token_entao;}
 "faça"						{return token_faca;}
-"falso"						{strcpy(currentType, "lógico");return token_falso;}
+"falso"						{if(in_function == 1){strcat(functionArguments, "lógico"); strcat(functionArguments, " ");} strcpy(currentType, "lógico");return token_falso;}
 "fim"						{return token_fim;}
 "fim-enquanto"					{return token_fimequanto;}
 "fim-para"					{return token_fimpara;}
@@ -82,7 +84,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "fim-seleciona"					{return token_fimseleciona;}
 "senão"						{return token_senao;}
 "variáveis"					{return token_variaveis;}
-"verdadeiro"					{strcpy(currentType, "lógico");return token_verdadeiro;}
+"verdadeiro"					{if(in_function == 1){strcat(functionArguments, "lógico"); strcat(functionArguments, " ");} strcpy(currentType, "lógico");return token_verdadeiro;}
 "+"						{return token_mais;}
 "-"						{return token_menos;}
 "*"						{return token_vezes;}
@@ -100,9 +102,9 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "&&"						{return token_el;}
 "||"						{return token_oul;}
 "!"						{return token_negacao;}
-{caracter}					{strcpy(currentType, "caracter");return token_variavel_caracter;}
-{string}					{strcpy(currentType, "literal");return token_string;}
-{identificador}					{strcpy(currentIdentifier, yytext); strcat(identifiers, yytext); strcat(identifiers, " "); return token_identificador;}
+{caracter}					{if(in_function == 1){strcat(functionArguments, "caracter"); strcat(functionArguments, " ");} strcpy(currentType, "caracter");return token_variavel_caracter;}
+{string}					{if(in_function == 1){strcat(functionArguments, "literal"); strcat(functionArguments, " ");} strcpy(currentType, "literal");return token_string;}
+{identificador}					{strcpy(currentIdentifier, yytext); strcat(identifiers, yytext); strcat(identifiers, " "); if(in_function == 1){strcat(functionArguments, yytext); strcat(functionArguments, " ");} return token_identificador;}
 [ \t]						;
 [\n]						{nLine++;}
 {comentario_linha}				{nLine++;}

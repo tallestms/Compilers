@@ -12,7 +12,6 @@ struct function_t
   int returnType;
   int arity;
   List* parameters;
-  int lineUsed;
   List* nextFunction;
 };
 typedef struct function_t function;

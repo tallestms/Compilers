@@ -17,7 +17,9 @@ typedef struct hashTable_t hashTable;
 hashTable *createHash(int size);
 unsigned int hash(hashTable *hashtable, char *str);
 List *lookupStringVariable(hashTable *hashtable, char *str);
+List *lookupStringFunction(hashTable *hashtable, char *str);
 int addInfoVariable(hashTable *hashtable, char*str, void *info);
+int addInfoFunction(hashTable *hashtable, char*str, void *info);
 void freeTable(hashTable *hashtable);
 
 #endif /* HASH_H_ */
