@@ -484,6 +484,7 @@ token_identificador token_atribuicao EXPR
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	  printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
 	}
+	((variable*)(identifier_temp->info))->used=1;
       }
       currentRelationPos = 0;
       }

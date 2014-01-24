@@ -112,13 +112,13 @@ hashTable* hashFunction = NULL;
 %%
 PROG:  token_algoritmo token_identificador token_pontov BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 }
 |
 token_algoritmo token_identificador
 token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 }
 ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |

@@ -1731,7 +1731,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 114 "compiler.y"
     {
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 }
     break;
 
@@ -1740,7 +1740,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 120 "compiler.y"
     {
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 }
     break;
 

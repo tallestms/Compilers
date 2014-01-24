@@ -4,6 +4,7 @@ função soma(a:inteiro):inteiro
 c,d: inteiro;
 re : real;
 início
+re := 10.10;
 a := 10 + c + re;
 c := 20;
 fim
