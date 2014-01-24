@@ -12,7 +12,9 @@ struct function_t
   int returnType;
   int arity;
   List* parameters;
+  int lineUsed;
   List* nextFunction;
+  int functionDeclared;
 };
 typedef struct function_t function;
 

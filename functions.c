@@ -10,7 +10,7 @@ function* createFunction()
     return newFunction;
 }
 
-void setFunction(function *newFunc, char* name, int returnType, int arity, List* parameters, int lineUsed, List* nextFunction)
+void setFunction(function *newFunc, char* name, int returnType, int arity, List* parameters, int lineUsed, List* nextFunction, int functionDeclared)
 {
   if(!newFunc)
   {
@@ -24,7 +24,8 @@ void setFunction(function *newFunc, char* name, int returnType, int arity, List*
     newFunc->arity = arity;
     newFunc->parameters = parameters;
     newFunc->lineUsed = lineUsed;
-    newFunc->nextFunction = NULL;
+    newFunc->nextFunction = nextFunction;
+    newFunc->functionDeclared = functionDeclared;
   }
 }
 
@@ -40,20 +41,4 @@ int convertFunctionArgument(char* argumentType, hashTable* hashVariables, int nL
     return 3;
   else if(strcmp(argumentType, "lógico")==0)
     return 4;
-  else
-  {
-    List *identifier_temp = lookupStringVariable(hashVariables, argumentType);
-    if(identifier_temp==NULL)
-    {
-      printf("Variavel nao declarada na linha %d.\n", nLine);
-      return 5; //Tipo de erro, o resto da funcao nao sera verificado.
-    }
-    if(((variable*)(identifier_temp->info))->used==0)
-    {
-      printf("Variavel %s nao foi inicializada na linha %d.\n", argumentType, nLine);
-      return 5; //Tipo de erro, o resto da funcao nao sera verificado.
-    }   
-    return(((variable*)(identifier_temp->info))->type);
-  }
-    
 }
