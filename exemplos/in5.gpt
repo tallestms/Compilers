@@ -1,5 +1,19 @@
 algoritmo declaracao_de_variaveis;
 
+função soma(x: inteiro, y: inteiro) : inteiro
+  res : lógico;
+  início
+  res := (a+b >= (2-a)) e (a>-b);
+  retorne res;
+  fim
+  
+função soma2(x: inteiro, y: inteiro) 
+  res : lógico;
+  início
+  res := (a+b >= (2-a)) e (a>-b);
+  retorne res;
+  fim
+
 variáveis
 	x, y : caracter;
 	z : matriz[5][5] de inteiros;
@@ -91,18 +105,3 @@ início
 	 
 	
 fim
-
-
-função soma(x: inteiro, y: inteiro) : inteiro
-  res : lógico;
-  início
-  res := (a+b >= (2-a)) e (a>-b);
-  retorne res;
-  fim
-  
-função soma2(x: inteiro, y: inteiro) 
-  res : lógico;
-  início
-  res := (a+b >= (2-a)) e (a>-b);
-  retorne res;
-  fim

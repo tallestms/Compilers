@@ -21,5 +21,6 @@ List *lookupStringFunction(hashTable *hashtable, char *str);
 int addInfoVariable(hashTable *hashtable, char*str, void *info);
 int addInfoFunction(hashTable *hashtable, char*str, void *info);
 void freeTable(hashTable *hashtable);
+void freeTableFunction(hashTable *hashtable);
 
 #endif /* HASH_H_ */

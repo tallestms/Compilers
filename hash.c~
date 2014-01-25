@@ -99,7 +99,7 @@ int addInfoFunction(hashTable *hashtable, char*str, void *info)
     if ((newList = malloc(sizeof(List))) == NULL) return 1;
 
     /* Does item already exist? */
-    currentList = lookupStringVariable(hashtable, str);
+    currentList = lookupStringFunction(hashtable, str);
     
     /* item already exists, don't insert it again. */
     if (currentList != NULL)
@@ -131,6 +131,33 @@ void freeTable(hashTable *hashtable)
         while(list!=NULL) {
             temp = list;
             list = list->next;
+            free(temp->info);
+            free(temp);
+        }
+    }
+
+    /* Free the table itself */
+    free(hashtable->table);
+    free(hashtable);
+}
+
+void freeTableFunction(hashTable *hashtable)
+{
+    int i;
+    List *list, *temp;
+
+    if (hashtable==NULL) 
+      return;
+
+    /* Free the memory for every item in the table, including the 
+     * strings themselves.
+     */
+    for(i=0; i<hashtable->size; i++) {
+        list = hashtable->table[i];
+        while(list!=NULL) {
+            temp = list;
+            list = list->next;
+	    destroyList(((List*)((function*)temp->info)->parameters));
             free(temp->info);
             free(temp);
         }

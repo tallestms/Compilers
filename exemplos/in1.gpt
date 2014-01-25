@@ -7,6 +7,7 @@ início
 re := 10.10;
 a := 10 + c + re + ada;
 c := 20;
+ada := 20;
 fim
 
 função soma2(a:inteiro, b:inteiro):inteiro
@@ -17,7 +18,6 @@ fim
 
 variáveis
 	a : inteiro;
-	b : inteiro;
 	c,d,f : real;
 	g : real;
 	char : caracter;
@@ -27,11 +27,13 @@ variáveis
 fim-variáveis
 
 início
-	b := -10 + 10 + b;
-	a := 10 + -10 + b;
+	b := 20;
+	a := 10 + 10;
+	b := 20 + b;
 	a := soma(a);
 	c := 10.10;
 	d := -10.10 + 10;
+	adsad := 20;
 	d := funcao(f,g);
 	f := (10.10e+10 - 10.10)*10.10 - 10;
 	g := -10.10e+10;

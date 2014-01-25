@@ -11,10 +11,8 @@ struct function_t
   char name[50];
   int returnType;
   int arity;
-  List* parameters;
-  int lineUsed;
-  List* nextFunction;
   int functionDeclared;
+  List* parameters;
 };
 typedef struct function_t function;
 
@@ -27,6 +25,6 @@ typedef struct function_t function;
    */
 
 function* createFunction();
-void setFunction(function *newFunc, char* name, int returnType, int arity, List* parameters, int lineUsed, List* nextFunction, int functionDeclared);
+void setFunction(function *newFunc, char* name, int returnType, int arity, List* parameters, int functionDeclared);
 
 #endif /*FUNCTIONS_H_*/

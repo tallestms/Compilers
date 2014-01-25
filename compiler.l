@@ -1,11 +1,14 @@
 %{
 #include <stdio.h>
 #include <string.h>
+
+#define MAX_VARIABLE 32 //maior nome de variavel
+#define MAX_FUNCTION 32 //maior nome de funcao
+
 int nLine=1;
 int in_function = 0;
-char identifiers[500];
-char functionArguments[500];
-char type[10];
+char identifiers[10*MAX_VARIABLE];
+char functionArguments[10*MAX_VARIABLE];
 int varRelations[100];
 char currentType[10];
 char currentIdentifier[100];
@@ -45,7 +48,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 {int_dec}					{if(in_function == 1){strcat(functionArguments, "inteiro"); strcat(functionArguments, " ");} strcpy(currentType, "inteiro"); return token_numinteiro;}
 "algoritmo"					{return token_algoritmo;}
 "até"						{return token_ate;}
-"caracter"					{strcpy(type, yytext); return token_caracter;}
+"caracter"					{strcpy(currentType, yytext); return token_caracter;}
 "caracteres"					{return token_caracteres;}
 "caso"						{return token_caso;}
 "de"						{return token_de;}
@@ -62,12 +65,12 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "função"					{return token_funcao;}
 "imprima"					{return token_imprima;}
 "início"					{return token_inicio;}
-"inteiro"					{strcpy(type, yytext); return token_inteiro;} 
+"inteiro"					{strcpy(currentType, yytext); return token_inteiro;} 
 "inteiros"					{return token_inteiros;}
 "leia"						{return token_leia;}
 "literais"					{return token_literais;}
-"literal"					{strcpy(type, yytext); return token_literal;}
-"lógico"					{strcpy(type, yytext); return token_logico;}
+"literal"					{strcpy(currentType, yytext); return token_literal;}
+"lógico"					{strcpy(currentType, yytext); return token_logico;}
 "lógicos"					{return token_logicos;}
 "matriz"					{return token_matriz;}
 "não"						{return token_nao;}
@@ -77,7 +80,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "parar"						{return token_parar;}
 "passo"						{return token_passo;}
 "reais"						{return token_reais;}
-"real"						{strcpy(type, yytext); return token_real;}
+"real"						{strcpy(currentType, yytext); return token_real;}
 "retorne"					{return token_retorne;}
 "se"						{return token_se;}
 "seleciona"					{return token_seleciona;}

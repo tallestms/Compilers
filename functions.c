@@ -10,12 +10,12 @@ function* createFunction()
     return newFunction;
 }
 
-void setFunction(function *newFunc, char* name, int returnType, int arity, List* parameters, int lineUsed, List* nextFunction, int functionDeclared)
+void setFunction(function *newFunc, char* name, int returnType, int arity, List* parameters, int functionDeclared)
 {
   if(!newFunc)
   {
-    printf("Null function.");
-    exit(2);
+    printf("Erro em funcao.\n");
+    exit(1);
   }
   else
   {
@@ -23,8 +23,6 @@ void setFunction(function *newFunc, char* name, int returnType, int arity, List*
     newFunc->returnType = returnType;
     newFunc->arity = arity;
     newFunc->parameters = parameters;
-    newFunc->lineUsed = lineUsed;
-    newFunc->nextFunction = nextFunction;
     newFunc->functionDeclared = functionDeclared;
   }
 }
