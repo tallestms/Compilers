@@ -266,7 +266,7 @@ FUNCAO
     ((function*)(identifier_temp->info))->arity=currentFunctionArity; //Adicionando aridade
     ((function*)(identifier_temp->info))->parameters=currentParameters; //Adicionando parametros
   }
-  currentFunctionArity = 0; //Variavel global de aridade retornando ao valor 0/
+  currentFunctionArity = 0; //Variavel global de aridade retornando ao valor 0.
   strcpy(currentScope, "main"); //Escopo retornando ao valor global
 }
 | token_funcao token_identificador //Mesma coisa do de cima.

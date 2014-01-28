@@ -266,7 +266,7 @@ FUNCAO
     ((function*)(identifier_temp->info))->arity=currentFunctionArity; //Adicionando aridade
     ((function*)(identifier_temp->info))->parameters=currentParameters; //Adicionando parametros
   }
-  currentFunctionArity = 0; //Variavel global de aridade retornando ao valor 0/
+  currentFunctionArity = 0; //Variavel global de aridade retornando ao valor 0.
   strcpy(currentScope, "main"); //Escopo retornando ao valor global
 }
 | token_funcao token_identificador //Mesma coisa do de cima.
@@ -329,7 +329,8 @@ token_inicio BLOCO_FUNCAO token_fim
 
 VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS
 {
-    currentFunctionArity++; //Variavel global controlando aridade sendo incrementada.
+    currentFunctionAri
+    ty++; //Variavel global controlando aridade sendo incrementada.
     char varName[MAX_FUNCTION+MAX_VARIABLE+1];
     strcpy(varName, currentIdentifier);
     strcat(varName, " ");
@@ -386,7 +387,7 @@ token_identificador
 {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
-  in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments.
+    in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
@@ -689,7 +690,7 @@ e se ela foi declarada.
 {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
-  in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
+    in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 

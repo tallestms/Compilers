@@ -29,17 +29,19 @@ fim-variáveis
 início
 	b := 20;
 	a := 10 + 10;
-	b := 20 + b;
-	a := soma(a);
+	c := 20.20;
+	b := 20 + b + c;
+	a := soma2(a,c); //problema de aridade
 	c := 10.10;
 	d := -10.10 + 10;
-	adsad := 20 + adsad;
+	adsad := 20;
 	d := funcao(f,g);
 	f := (10.10e+10 - 10.10)*10.10 - 10;
 	g := -10.10e+10;
 	char := 'c';
 	lit := "isso daqui é um texto";
 	z := verdadeiro;
-	z := a>b;
+	z := 10;
+	z := a>b e b<c; //erro
 	//mat := {[1,2],[2,1]};
 fim

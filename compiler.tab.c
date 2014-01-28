@@ -1886,7 +1886,7 @@ yyreduce:
     ((function*)(identifier_temp->info))->arity=currentFunctionArity; //Adicionando aridade
     ((function*)(identifier_temp->info))->parameters=currentParameters; //Adicionando parametros
   }
-  currentFunctionArity = 0; //Variavel global de aridade retornando ao valor 0/
+  currentFunctionArity = 0; //Variavel global de aridade retornando ao valor 0.
   strcpy(currentScope, "main"); //Escopo retornando ao valor global
 }
     break;
@@ -2012,7 +2012,7 @@ yyreduce:
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
-  in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments.
+    in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
 }
     break;
 
@@ -2346,7 +2346,7 @@ yyreduce:
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
-  in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments.
+    in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
 }
     break;
 
