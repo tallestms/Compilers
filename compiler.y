@@ -505,8 +505,9 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	{
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	  printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
-	((variable*)(identifier_temp->info))->used=1;
 	}
+	else
+	  ((variable*)(identifier_temp->info))->used=1;
       }
       currentRelationPos = 0;
       }
@@ -584,7 +585,7 @@ e se ela foi declarada.
     List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
     if(identifier_temp==NULL)
     {
-      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      printf("Variavel %s aaaa nao declarada na linha %d\n",currentIdentifier, nLine);
     }
     else if(((variable*)(identifier_temp->info))->used == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);

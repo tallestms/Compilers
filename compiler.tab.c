@@ -573,12 +573,12 @@ static const yytype_uint16 yyrline[] =
      272,   300,   300,   300,   301,   301,   301,   302,   302,   304,
      304,   305,   306,   307,   307,   308,   308,   310,   311,   313,
      312,   323,   321,   330,   352,   374,   382,   383,   384,   386,
-     392,   385,   414,   413,   515,   516,   517,   517,   518,   518,
-     520,   520,   521,   521,   521,   522,   523,   524,   533,   533,
-     533,   533,   533,   533,   535,   536,   537,   538,   538,   540,
-     551,   559,   559,   559,   559,   559,   560,   561,   568,   575,
-     622,   663,   669,   675,   676,   682,   689,   688,   716,   716,
-     716,   716,   718,   718,   719,   719,   720,   720
+     392,   385,   414,   413,   516,   517,   518,   518,   519,   519,
+     521,   521,   522,   522,   522,   523,   524,   525,   534,   534,
+     534,   534,   534,   534,   536,   537,   538,   539,   539,   541,
+     552,   560,   560,   560,   560,   560,   561,   562,   569,   576,
+     623,   664,   670,   676,   677,   683,   690,   689,   717,   717,
+     717,   717,   719,   719,   720,   720,   721,   721
 };
 #endif
 
@@ -2140,8 +2140,9 @@ yyreduce:
 	{
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	  printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
-	((variable*)(identifier_temp->info))->used=1;
 	}
+	else
+	  ((variable*)(identifier_temp->info))->used=1;
       }
       currentRelationPos = 0;
       }
@@ -2152,7 +2153,7 @@ yyreduce:
   case 89:
 
 /* Line 1806 of yacc.c  */
-#line 541 "compiler.y"
+#line 542 "compiler.y"
     {
   /*
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
@@ -2168,7 +2169,7 @@ yyreduce:
   case 90:
 
 /* Line 1806 of yacc.c  */
-#line 552 "compiler.y"
+#line 553 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2181,7 +2182,7 @@ yyreduce:
   case 97:
 
 /* Line 1806 of yacc.c  */
-#line 562 "compiler.y"
+#line 563 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2193,7 +2194,7 @@ yyreduce:
   case 98:
 
 /* Line 1806 of yacc.c  */
-#line 569 "compiler.y"
+#line 570 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2205,14 +2206,14 @@ yyreduce:
   case 99:
 
 /* Line 1806 of yacc.c  */
-#line 581 "compiler.y"
+#line 582 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
     List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
     if(identifier_temp==NULL)
     {
-      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      printf("Variavel %s aaaa nao declarada na linha %d\n",currentIdentifier, nLine);
     }
     else if(((variable*)(identifier_temp->info))->used == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
@@ -2252,7 +2253,7 @@ yyreduce:
   case 100:
 
 /* Line 1806 of yacc.c  */
-#line 623 "compiler.y"
+#line 624 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2298,7 +2299,7 @@ yyreduce:
   case 101:
 
 /* Line 1806 of yacc.c  */
-#line 664 "compiler.y"
+#line 665 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2309,7 +2310,7 @@ yyreduce:
   case 102:
 
 /* Line 1806 of yacc.c  */
-#line 670 "compiler.y"
+#line 671 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2320,7 +2321,7 @@ yyreduce:
   case 104:
 
 /* Line 1806 of yacc.c  */
-#line 677 "compiler.y"
+#line 678 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2331,7 +2332,7 @@ yyreduce:
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 683 "compiler.y"
+#line 684 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2342,7 +2343,7 @@ yyreduce:
   case 106:
 
 /* Line 1806 of yacc.c  */
-#line 689 "compiler.y"
+#line 690 "compiler.y"
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2353,7 +2354,7 @@ yyreduce:
   case 107:
 
 /* Line 1806 of yacc.c  */
-#line 695 "compiler.y"
+#line 696 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -2379,7 +2380,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 2383 "compiler.tab.c"
+#line 2384 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2610,7 +2611,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 723 "compiler.y"
+#line 724 "compiler.y"
 
 
 #include "lex.yy.c"

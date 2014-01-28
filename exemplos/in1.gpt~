@@ -4,9 +4,10 @@ função soma(a:inteiro):inteiro
 c,d: inteiro;
 re : real;
 início
-re := 10.10;
-a := 10 + c + re + ada;
+re := 10.10; //erro de inicializacao
 c := 20;
+a := 10 + c + re + ada;
+
 ada := 20;
 fim
 
@@ -31,7 +32,7 @@ início
 	a := 10 + 10;
 	c := 20.20;
 	b := 20 + b + c;
-	a := soma2(a,c); //problema de aridade
+	a := soma2(a,aaaa); //problema de aridade, verificar tipo dentro da funcao
 	c := 10.10;
 	d := -10.10 + 10;
 	adsad := 20;
