@@ -17,7 +17,7 @@ d := 10;
 fim
 
 variáveis
-	a : inteiro; //erro, aparecendo como redeclarada
+	b : inteiro; //erro, aparecendo como redeclarada o b não está declarado e está na hash
 	c,d,f : real;
 	g : real;
 	char : caracter;
@@ -31,7 +31,9 @@ início
 	a := 10 + 10;
 	c := 20.20;
 	b := 20 + b + c;
-	a := soma2(a,aaaa); //problema de aridade, verificar tipo dentro da funcao
+	a := soma2(a,aaaa); //verificar tipo dentro da funcao
+	c := soma(a,b) + c; //veirifcar a função dentro da expressao
+	//veriricar retorno na função, seja com ou sem retorno
 	c := 10.10;
 	d := -10.10 + 10;
 	adsad := 20;
