@@ -1,25 +1,27 @@
 algoritmo declaracao_de_variaveis;
 
-função soma(a : inteiro):inteiro
-c,d: inteiro;
+função soma(a : inteiro)
+d: inteiro;
 re : real;
 início
 re := 10.10;
-c := 20;
-a := 10 + c; //retornando c como nao declarado e não a
+//c := 20;
+//a := 10 + c; //retornando c como nao declarado e não a
 //ada := 20.5;
+//retorne re;
 fim
 
-função soma2(a:inteiro, b:inteiro):inteiro
-c,d: inteiro;
+função soma2(a:inteiro, b:inteiro):real
+d: inteiro;
 início
 d := 10;
+retorne c;
 fim
 
 variáveis
 	a : inteiro;
 	b : inteiro;
-	c,d,f : real;
+	d,f : real;
 	g : real;
 	char : caracter;
 	lit : literal;
@@ -33,7 +35,7 @@ início
 	c := 20.20;
 	//b := 20 + b + c;
 	//c := soma2(a,b); //verificar tipo dentro da funcao
-	soma2(a);
+	soma2(a,b);
 	//a := soma2(a,b); //verificar tipo dentro da funcao
 	//c := soma(a) + c; //verificar a função dentro da expressao
 	//verificar retorno na função, seja com ou sem retorno

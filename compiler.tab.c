@@ -2452,7 +2452,7 @@ yyreduce:
       while(argumentAux != NULL)
       {
 	int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
-      
+	printf("%d\n", type);
 	//currentParameters = insertList(currentParameters,(void*) type);
 	argumentAux = strtok(NULL, " ");
       }
