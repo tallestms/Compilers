@@ -397,19 +397,26 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   }
   else
   {
-    char *argumentAux;
-    argumentAux = strtok(functionArguments, " ");
-    while(argumentAux != NULL)
+    char auxArguments[100];
+    strcpy(auxArguments, functionArguments);
+    int arity = numSpaces(auxArguments);
+    if(arity != ((function*)(identifier_temp->info))->arity)
+      printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+    else
     {
-      int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
-     
-      currentParameters = insertList(currentParameters,(void*) type);
-      argumentAux = strtok(NULL, " ");
+      char *argumentAux;
+      argumentAux = strtok(functionArguments, " ");
+      while(argumentAux != NULL)
+      {
+	int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
+      
+	//currentParameters = insertList(currentParameters,(void*) type);
+	argumentAux = strtok(NULL, " ");
+      }
     }
   }
   strcpy(functionArguments, "\0");
 } token_pontov
-
 | token_identificador token_atribuicao EXPR
 {
   if(strcmp(currentScope, "main") == 0)
@@ -701,14 +708,22 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   }
   else
   {
-    char *argumentAux;
-    argumentAux = strtok(functionArguments, " ");
-    while(argumentAux != NULL)
+    char auxArguments[100];
+    strcpy(auxArguments, functionArguments);
+    int arity = numSpaces(auxArguments);
+    if(arity != ((function*)(identifier_temp->info))->arity)
+      printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+    else
     {
-      int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
-     
-      //currentParameters = insertList(currentParameters,(void*) type);
-      argumentAux = strtok(NULL, " ");
+      char *argumentAux;
+      argumentAux = strtok(functionArguments, " ");
+      while(argumentAux != NULL)
+      {
+	int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
+      
+	//currentParameters = insertList(currentParameters,(void*) type);
+	argumentAux = strtok(NULL, " ");
+      }
     }
   }
   strcpy(functionArguments, "\0");

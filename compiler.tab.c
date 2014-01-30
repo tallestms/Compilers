@@ -573,12 +573,12 @@ static const yytype_uint16 yyrline[] =
      272,   300,   300,   300,   301,   301,   301,   302,   302,   304,
      304,   305,   306,   307,   307,   308,   308,   310,   311,   313,
      312,   323,   321,   330,   352,   374,   382,   383,   384,   386,
-     392,   385,   414,   413,   516,   517,   518,   518,   519,   519,
-     521,   521,   522,   522,   522,   523,   524,   525,   534,   534,
-     534,   534,   534,   534,   536,   537,   538,   539,   539,   541,
-     552,   560,   560,   560,   560,   560,   561,   562,   569,   576,
-     623,   664,   670,   676,   677,   683,   690,   689,   717,   717,
-     717,   717,   719,   719,   720,   720,   721,   721
+     392,   385,   421,   420,   523,   524,   525,   525,   526,   526,
+     528,   528,   529,   529,   529,   530,   531,   532,   541,   541,
+     541,   541,   541,   541,   543,   544,   545,   546,   546,   548,
+     559,   567,   567,   567,   567,   567,   568,   569,   576,   583,
+     630,   671,   677,   683,   684,   690,   697,   696,   732,   732,
+     732,   732,   734,   734,   735,   735,   736,   736
 };
 #endif
 
@@ -2028,14 +2028,22 @@ yyreduce:
   }
   else
   {
-    char *argumentAux;
-    argumentAux = strtok(functionArguments, " ");
-    while(argumentAux != NULL)
+    char auxArguments[100];
+    strcpy(auxArguments, functionArguments);
+    int arity = numSpaces(auxArguments);
+    if(arity != ((function*)(identifier_temp->info))->arity)
+      printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+    else
     {
-      int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
-     
-      currentParameters = insertList(currentParameters,(void*) type);
-      argumentAux = strtok(NULL, " ");
+      char *argumentAux;
+      argumentAux = strtok(functionArguments, " ");
+      while(argumentAux != NULL)
+      {
+	int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
+      
+	//currentParameters = insertList(currentParameters,(void*) type);
+	argumentAux = strtok(NULL, " ");
+      }
     }
   }
   strcpy(functionArguments, "\0");
@@ -2045,7 +2053,7 @@ yyreduce:
   case 62:
 
 /* Line 1806 of yacc.c  */
-#line 414 "compiler.y"
+#line 421 "compiler.y"
     {
   if(strcmp(currentScope, "main") == 0)
   {
@@ -2153,7 +2161,7 @@ yyreduce:
   case 89:
 
 /* Line 1806 of yacc.c  */
-#line 542 "compiler.y"
+#line 549 "compiler.y"
     {
   /*
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
@@ -2169,7 +2177,7 @@ yyreduce:
   case 90:
 
 /* Line 1806 of yacc.c  */
-#line 553 "compiler.y"
+#line 560 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2182,7 +2190,7 @@ yyreduce:
   case 97:
 
 /* Line 1806 of yacc.c  */
-#line 563 "compiler.y"
+#line 570 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2194,7 +2202,7 @@ yyreduce:
   case 98:
 
 /* Line 1806 of yacc.c  */
-#line 570 "compiler.y"
+#line 577 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2206,7 +2214,7 @@ yyreduce:
   case 99:
 
 /* Line 1806 of yacc.c  */
-#line 582 "compiler.y"
+#line 589 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2253,7 +2261,7 @@ yyreduce:
   case 100:
 
 /* Line 1806 of yacc.c  */
-#line 624 "compiler.y"
+#line 631 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2299,7 +2307,7 @@ yyreduce:
   case 101:
 
 /* Line 1806 of yacc.c  */
-#line 665 "compiler.y"
+#line 672 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2310,7 +2318,7 @@ yyreduce:
   case 102:
 
 /* Line 1806 of yacc.c  */
-#line 671 "compiler.y"
+#line 678 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2321,7 +2329,7 @@ yyreduce:
   case 104:
 
 /* Line 1806 of yacc.c  */
-#line 678 "compiler.y"
+#line 685 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2332,7 +2340,7 @@ yyreduce:
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 684 "compiler.y"
+#line 691 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2343,7 +2351,7 @@ yyreduce:
   case 106:
 
 /* Line 1806 of yacc.c  */
-#line 690 "compiler.y"
+#line 697 "compiler.y"
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2354,7 +2362,7 @@ yyreduce:
   case 107:
 
 /* Line 1806 of yacc.c  */
-#line 696 "compiler.y"
+#line 703 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -2363,14 +2371,22 @@ yyreduce:
   }
   else
   {
-    char *argumentAux;
-    argumentAux = strtok(functionArguments, " ");
-    while(argumentAux != NULL)
+    char auxArguments[100];
+    strcpy(auxArguments, functionArguments);
+    int arity = numSpaces(auxArguments);
+    if(arity != ((function*)(identifier_temp->info))->arity)
+      printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+    else
     {
-      int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
-     
-      //currentParameters = insertList(currentParameters,(void*) type);
-      argumentAux = strtok(NULL, " ");
+      char *argumentAux;
+      argumentAux = strtok(functionArguments, " ");
+      while(argumentAux != NULL)
+      {
+	int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
+      
+	//currentParameters = insertList(currentParameters,(void*) type);
+	argumentAux = strtok(NULL, " ");
+      }
     }
   }
   strcpy(functionArguments, "\0");
@@ -2380,7 +2396,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 2384 "compiler.tab.c"
+#line 2400 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2611,7 +2627,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 724 "compiler.y"
+#line 739 "compiler.y"
 
 
 #include "lex.yy.c"

@@ -21,3 +21,15 @@ void printRelationship(int *varRelations, int currentRelationPos)
     printf("%d\n",varRelations[i]);
   }
 }
+
+int numSpaces(char *s)
+{
+    int counter = 0;
+    int i;
+    for (i = 0; s[i]; i++)
+    { 
+	if(s[i]==' ')
+	  counter++;
+    }
+return counter;
+}

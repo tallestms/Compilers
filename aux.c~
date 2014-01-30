@@ -15,8 +15,21 @@ int verifyRelationship(int *varRelations, int currentRelationPos)
 void printRelationship(int *varRelations, int currentRelationPos)
 {
   int i = 0;
+  printf("Imprimindo vetor de relacoes.\n");
   for(i=0;i<currentRelationPos;i++)
   {
     printf("%d\n",varRelations[i]);
   }
+}
+
+int numSpaces(char *s)
+{
+    int counter = 0;
+    int i;
+    for (i = 0; s[i]; i++)
+    { 
+	if(s[i]=' ')
+	  counter++;
+    }
+return counter;
 }

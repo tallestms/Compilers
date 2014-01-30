@@ -31,7 +31,8 @@ início
 	a := 10 + 10;
 	c := 20.20;
 	b := 20 + b + c;
-	a := soma2(a,aaaa); //problema de aridade, verificar tipo dentro da funcao
+	c := soma2(a,b); //verificar tipo dentro da funcao
+	soma(a);
 	c := 10.10;
 	d := -10.10 + 10;
 	adsad := 20;
