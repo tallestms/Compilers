@@ -112,13 +112,13 @@ hashTable* hashFunction = NULL;
 %%
 PROG:  token_algoritmo token_identificador token_pontov BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
-  //verifyUsed(hashVariables);
+  verifyUsed(hashVariables);
 }
 |
 token_algoritmo token_identificador
 token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
-  //verifyUsed(hashVariables);
+  verifyUsed(hashVariables);
 }
 ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
@@ -317,7 +317,11 @@ BLOCO_FUNCAO_RETORNO: token_retorne token_identificador
 token_pontov | REPETICAO_COMANDO token_retorne token_identificador
 {
 	//foi retornada uma variável, verificar tipo de retorno
-	List *returned_variable = lookupStringVariable(hashVariables, currentIdentifier);	
+	char aux[MAX_VARIABLE + MAX_FUNCTION + 1];
+	strcpy(aux, currentIdentifier);
+	strcat(aux, " ");
+	strcat(aux, currentScope);
+	List *returned_variable = lookupStringVariable(hashVariables, aux);	
 	if(returned_variable != NULL){
 		List *current_function = lookupStringFunction(hashFunction, currentScope);
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
@@ -386,8 +390,8 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
     currentFunctionArity++;
     char varName[MAX_FUNCTION+MAX_VARIABLE+1];
     strcpy(varName,currentIdentifier);
-    strcat(currentIdentifier, " ");
-    strcat(currentIdentifier, currentScope);
+    strcat(varName, " ");
+    strcat(varName, currentScope);
     if(lookupStringVariable(hashVariables, varName)==NULL)
     {
       variable* newVar = createVariable();
@@ -398,7 +402,7 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
     }
     else
     {
-      printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, currentScope);
+      printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, currentIdentifier);
     }
     
   strcpy(identifiers, "\0");
@@ -433,7 +437,9 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     strcpy(auxArguments, functionArguments);
     int arity = numSpaces(auxArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
+      {      
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+     }
     else
     {
       char *argumentAux;
@@ -448,6 +454,9 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     }
   }
   strcpy(functionArguments, "\0");
+  strcpy(identifiers, "\0");
+  currentRelationPos = 0;
+  in_function = 0;
 } token_pontov
 | token_identificador token_atribuicao EXPR
 {
@@ -482,7 +491,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       }
       else if(!verifyRelationship(varRelations, currentRelationPos))
       {
-	printf("Valores incompativeis na linha %d.\n", nLine);
+	printf("Valores incompativeis na linha %d aaa.\n", nLine);
       }
       else if(((variable*)(identifier_temp->info))->type != varRelations[0])
       {	
@@ -624,7 +633,7 @@ e se ela foi declarada.
     List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
     if(identifier_temp==NULL)
     {
-      printf("Variavel %s aaaa nao declarada na linha %d\n",currentIdentifier, nLine);
+      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
     }
     else if(((variable*)(identifier_temp->info))->used == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
@@ -744,7 +753,9 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     strcpy(auxArguments, functionArguments);
     int arity = numSpaces(auxArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
+     {      
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+     }
     else
     {
       char *argumentAux;
@@ -759,6 +770,9 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     }
   }
   strcpy(functionArguments, "\0");
+  strcpy(identifiers, "\0");
+  currentRelationPos = 0;
+  in_function = 0;
 };
 
 FATOR_CASE: SINALFATOR | token_numinteiro | token_numreal | token_variavel_caracter; 

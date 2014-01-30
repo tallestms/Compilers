@@ -7,7 +7,7 @@ início
 re := 10.10;
 c := 20;
 a := 10 + c; //retornando c como nao declarado e não a
-ada := 20.5	;
+//ada := 20.5;
 fim
 
 função soma2(a:inteiro, b:inteiro):inteiro
@@ -17,7 +17,8 @@ d := 10;
 fim
 
 variáveis
-	b : inteiro; //erro, aparecendo como redeclarada o b não está declarado e está na hash
+	a : inteiro;
+	b : inteiro;
 	c,d,f : real;
 	g : real;
 	char : caracter;
@@ -27,28 +28,25 @@ variáveis
 fim-variáveis
 
 início
-	b := 20; //erro o b não está declarado e está na hash
+	b := 20;
 	a := 10 + 10;
 	c := 20.20;
-	b := 20 + b + c;
-<<<<<<< HEAD
-	c := soma2(a,b); //verificar tipo dentro da funcao
-	soma(a);
-=======
-	a := soma2(a,aaaa); //verificar tipo dentro da funcao
-	c := soma(a,b) + c; //veirifcar a função dentro da expressao
-	//veriricar retorno na função, seja com ou sem retorno
->>>>>>> 01d209388d59564513458d4ee2f943c33cfc62a1
+	//b := 20 + b + c;
+	//c := soma2(a,b); //verificar tipo dentro da funcao
+	soma2(a);
+	//a := soma2(a,b); //verificar tipo dentro da funcao
+	//c := soma(a) + c; //verificar a função dentro da expressao
+	//verificar retorno na função, seja com ou sem retorno
 	c := 10.10;
-	d := -10.10 + 10;
-	adsad := 20;
-	d := funcao(f,g);
-	f := (10.10e+10 - 10.10)*10.10 - 10;
+	//d := -10.10 + 10;
+	//adsad := 20;
+	//d := funcao(f,g);
+	//f := (10.10e+10 - 10.10)*10.10 - 10;
 	g := -10.10e+10;
 	char := 'c';
 	lit := "isso daqui é um texto";
 	z := verdadeiro;
-	z := 10;
-	z := a>b e b<c; //erro
+	//z := 10;
+	//z := a>b e b<c; //erro
 	//mat := {[1,2],[2,1]};
 fim
