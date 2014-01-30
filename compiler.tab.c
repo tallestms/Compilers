@@ -573,12 +573,12 @@ static const yytype_uint16 yyrline[] =
      272,   300,   300,   300,   301,   301,   301,   302,   302,   304,
      304,   305,   306,   307,   307,   308,   308,   310,   311,   313,
      312,   323,   321,   330,   352,   374,   382,   383,   384,   386,
-     392,   385,   421,   420,   523,   524,   525,   525,   526,   526,
-     528,   528,   529,   529,   529,   530,   531,   532,   541,   541,
-     541,   541,   541,   541,   543,   544,   545,   546,   546,   548,
-     559,   567,   567,   567,   567,   567,   568,   569,   576,   583,
-     630,   671,   677,   683,   684,   690,   697,   696,   732,   732,
-     732,   732,   734,   734,   735,   735,   736,   736
+     392,   385,   427,   426,   529,   530,   531,   531,   532,   532,
+     534,   534,   535,   535,   535,   536,   537,   538,   547,   547,
+     547,   547,   547,   547,   549,   550,   551,   552,   552,   554,
+     565,   573,   573,   573,   573,   573,   574,   575,   582,   589,
+     636,   677,   683,   689,   690,   696,   703,   702,   744,   744,
+     744,   744,   746,   746,   747,   747,   748,   748
 };
 #endif
 
@@ -1732,7 +1732,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 114 "compiler.y"
     {
-  //verifyUsed(hashVariables);
+  verifyUsed(hashVariables);
 }
     break;
 
@@ -1741,7 +1741,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 120 "compiler.y"
     {
-  //verifyUsed(hashVariables);
+  verifyUsed(hashVariables);
 }
     break;
 
@@ -1986,8 +1986,8 @@ yyreduce:
     currentFunctionArity++;
     char varName[MAX_FUNCTION+MAX_VARIABLE+1];
     strcpy(varName,currentIdentifier);
-    strcat(currentIdentifier, " ");
-    strcat(currentIdentifier, currentScope);
+    strcat(varName, " ");
+    strcat(varName, currentScope);
     if(lookupStringVariable(hashVariables, varName)==NULL)
     {
       variable* newVar = createVariable();
@@ -1998,7 +1998,7 @@ yyreduce:
     }
     else
     {
-      printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, currentScope);
+      printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, currentIdentifier);
     }
     
   strcpy(identifiers, "\0");
@@ -2032,7 +2032,12 @@ yyreduce:
     strcpy(auxArguments, functionArguments);
     int arity = numSpaces(auxArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
+      {
+      printf("%d %d\n", arity, ((function*)(identifier_temp->info))->arity);
+      
+      
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+     }
     else
     {
       char *argumentAux;
@@ -2047,13 +2052,14 @@ yyreduce:
     }
   }
   strcpy(functionArguments, "\0");
+  in_function = 0;
 }
     break;
 
   case 62:
 
 /* Line 1806 of yacc.c  */
-#line 421 "compiler.y"
+#line 427 "compiler.y"
     {
   if(strcmp(currentScope, "main") == 0)
   {
@@ -2161,7 +2167,7 @@ yyreduce:
   case 89:
 
 /* Line 1806 of yacc.c  */
-#line 549 "compiler.y"
+#line 555 "compiler.y"
     {
   /*
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
@@ -2177,7 +2183,7 @@ yyreduce:
   case 90:
 
 /* Line 1806 of yacc.c  */
-#line 560 "compiler.y"
+#line 566 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2190,7 +2196,7 @@ yyreduce:
   case 97:
 
 /* Line 1806 of yacc.c  */
-#line 570 "compiler.y"
+#line 576 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2202,7 +2208,7 @@ yyreduce:
   case 98:
 
 /* Line 1806 of yacc.c  */
-#line 577 "compiler.y"
+#line 583 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2214,7 +2220,7 @@ yyreduce:
   case 99:
 
 /* Line 1806 of yacc.c  */
-#line 589 "compiler.y"
+#line 595 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2261,7 +2267,7 @@ yyreduce:
   case 100:
 
 /* Line 1806 of yacc.c  */
-#line 631 "compiler.y"
+#line 637 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2307,7 +2313,7 @@ yyreduce:
   case 101:
 
 /* Line 1806 of yacc.c  */
-#line 672 "compiler.y"
+#line 678 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2318,7 +2324,7 @@ yyreduce:
   case 102:
 
 /* Line 1806 of yacc.c  */
-#line 678 "compiler.y"
+#line 684 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2329,7 +2335,7 @@ yyreduce:
   case 104:
 
 /* Line 1806 of yacc.c  */
-#line 685 "compiler.y"
+#line 691 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2340,7 +2346,7 @@ yyreduce:
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 691 "compiler.y"
+#line 697 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2351,7 +2357,7 @@ yyreduce:
   case 106:
 
 /* Line 1806 of yacc.c  */
-#line 697 "compiler.y"
+#line 703 "compiler.y"
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2362,7 +2368,7 @@ yyreduce:
   case 107:
 
 /* Line 1806 of yacc.c  */
-#line 703 "compiler.y"
+#line 709 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -2375,7 +2381,12 @@ yyreduce:
     strcpy(auxArguments, functionArguments);
     int arity = numSpaces(auxArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
+           {
+      printf("%s %d %d\n", auxArguments, arity, ((function*)(identifier_temp->info))->arity);
+      
+      
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+     }
     else
     {
       char *argumentAux;
@@ -2390,13 +2401,14 @@ yyreduce:
     }
   }
   strcpy(functionArguments, "\0");
+  in_function = 0;
 }
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 2400 "compiler.tab.c"
+#line 2412 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2627,7 +2639,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 739 "compiler.y"
+#line 751 "compiler.y"
 
 
 #include "lex.yy.c"
