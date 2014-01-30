@@ -1,13 +1,13 @@
 algoritmo declaracao_de_variaveis;
 
-função soma(a:inteiro):inteiro
+função soma(a : inteiro):inteiro
 c,d: inteiro;
 re : real;
 início
-re := 10.10; //erro de inicializacao
+re := 10.10;
 c := 20;
-a := 10 + c + re + ada;
-ada := 20;
+a := 10 + c; //retornando c como nao declarado e não a
+ada := 20.5	;
 fim
 
 função soma2(a:inteiro, b:inteiro):inteiro
@@ -17,7 +17,7 @@ d := 10;
 fim
 
 variáveis
-	a : inteiro;
+	b : inteiro; //erro, aparecendo como redeclarada o b não está declarado e está na hash
 	c,d,f : real;
 	g : real;
 	char : caracter;
@@ -27,12 +27,18 @@ variáveis
 fim-variáveis
 
 início
-	b := 20;
+	b := 20; //erro o b não está declarado e está na hash
 	a := 10 + 10;
 	c := 20.20;
 	b := 20 + b + c;
+<<<<<<< HEAD
 	c := soma2(a,b); //verificar tipo dentro da funcao
 	soma(a);
+=======
+	a := soma2(a,aaaa); //verificar tipo dentro da funcao
+	c := soma(a,b) + c; //veirifcar a função dentro da expressao
+	//veriricar retorno na função, seja com ou sem retorno
+>>>>>>> 01d209388d59564513458d4ee2f943c33cfc62a1
 	c := 10.10;
 	d := -10.10 + 10;
 	adsad := 20;
