@@ -11,7 +11,7 @@ a := 10 + c; //retornando c como nao declarado e não a
 //retorne re;
 fim
 
-função soma2(a:inteiro, b:inteiro):real
+função soma2(a:inteiro, b:real):real
 c,d: inteiro;
 início
 d := 10;
@@ -34,11 +34,10 @@ início
 	a := 10 + 10;
 	c := 20.20;
 	//b := 20 + b + c;
-	//c := soma2(a,b); //verificar tipo dentro da funcao
+	//c := soma2(a,b); 
 	soma2(a,b);
-	//a := soma2(a,b); //verificar tipo dentro da funcao
+	a := soma2(a,b); 
 	//c := soma(a) + c; //verificar a função dentro da expressao
-	//verificar retorno na função, seja com ou sem retorno
 	c := 10.10;
 	//d := -10.10 + 10;
 	//adsad := 20;

@@ -112,13 +112,13 @@ hashTable* hashFunction = NULL;
 %%
 PROG:  token_algoritmo token_identificador token_pontov BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 }
 |
 token_algoritmo token_identificador
 token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 }
 ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
@@ -264,6 +264,8 @@ FUNCAO
   if(identifier_temp!=NULL)
   {
     ((function*)(identifier_temp->info))->arity=currentFunctionArity; //Adicionando aridade
+    //Irei adicionar a versao inversa da lista de tipos de parametros para facilitar mais tarde com a comparacao.
+    currentParameters = reverseList(currentParameters);
     ((function*)(identifier_temp->info))->parameters=currentParameters; //Adicionando parametros
   }
   currentFunctionArity = 0; //Variavel global de aridade retornando ao valor 0.
@@ -292,6 +294,8 @@ FUNCAO
   if(identifier_temp!=NULL)
   {
     ((function*)(identifier_temp->info))->arity=currentFunctionArity;
+    //Adicionando versao inversa da lista para facilitar mais tarde
+    currentParameters = reverseList(currentParameters);
     ((function*)(identifier_temp->info))->parameters=currentParameters;
   }
   currentFunctionArity = 0;
@@ -301,18 +305,25 @@ BLOCO_AUXILIAR: /*Empty*/ | BLOCO_AUXILIAR COMANDO | token_abrec BLOCO_AUXILIAR 
 BLOCO_FUNCAO_RETORNO: token_retorne token_identificador 
 {
 	//foi retornada uma variável, verificar tipo de retorno
-	List *returned_variable = lookupStringVariable(hashVariables, currentIdentifier);	
-	printf("Passei aqui <<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
+	char aux[MAX_VARIABLE + MAX_FUNCTION + 1];
+	strcpy(aux, currentIdentifier);
+	strcat(aux, " ");
+	strcat(aux, currentScope);
+	List *returned_variable = lookupStringVariable(hashVariables, aux);	
 	if(returned_variable != NULL){
 		List *current_function = lookupStringFunction(hashFunction, currentScope);
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
-			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d. Linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d na linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+		}
+		if ( ((variable*)(returned_variable->info))->used == 0) {
+			printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
 		}
 	} else {
 		printf("Variavel %s não declarada na linha %d\n", currentIdentifier, nLine);
 	}
+	strcpy(identifiers, "\0");
 }
 token_pontov | REPETICAO_COMANDO token_retorne token_identificador
 {
@@ -327,11 +338,15 @@ token_pontov | REPETICAO_COMANDO token_retorne token_identificador
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
-			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d. Linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d na linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+		}
+		if ( ((variable*)(returned_variable->info))->used == 0) {
+			printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
 		}
 	} else {
 		printf("Variavel %s não declarada na linha %d\n", currentIdentifier, nLine);
 	}
+	strcpy(identifiers, "\0");
 } 
 token_pontov;
 BLOCO_FUNCAO: /*Empty*/ | REPETICAO_COMANDO;
@@ -437,19 +452,27 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     strcpy(auxArguments, functionArguments);
     int arity = numSpaces(auxArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
-      {      
+    {  
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
-     }
+    }
     else
     {
       char *argumentAux;
       argumentAux = strtok(functionArguments, " ");
+      List *functionTypes = (((function *)(identifier_temp->info))->parameters);
       while(argumentAux != NULL)
       {
-	int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
-      
-	//currentParameters = insertList(currentParameters,(void*) type);
+	List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
+	if(arguments_temp == NULL)
+	{
+	  break;
+	}
+	else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	{
+	  printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	}
 	argumentAux = strtok(NULL, " ");
+	functionTypes=functionTypes->next;
       }
     }
   }
@@ -461,106 +484,68 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 | token_identificador token_atribuicao EXPR
 {
   if(strcmp(currentScope, "main") == 0)
-  {
-    if(in_function == 1)
-    {
-      char* returnVariable = strtok(identifiers, " ");
-      List *identifier_temp = lookupStringVariable(hashVariables, returnVariable);
-      if(identifier_temp==NULL)
-      {
-	printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
-      }
-      else
-      {
-	int currentTypeInt = ((variable*)(identifier_temp->info))->type;  
-	((variable*)(identifier_temp->info))->used=1;
-      }
-      in_function = 0; //Nao e mais funcao
-      currentRelationPos = 0; //Vetor de tipos volta para posicao inicial
-      strcpy(currentScope,"main");
-      strcpy(returnFunctionType, "\0");
-      strcpy(identifiers, "\0");
-    }
-    else
     { 
       char* returnVariable = strtok(identifiers, " ");
-      List *identifier_temp = lookupStringVariable(hashVariables, returnVariable);
-      if(identifier_temp==NULL)
+      if (returnVariable != NULL)
       {
-	printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
-      }
-      else if(!verifyRelationship(varRelations, currentRelationPos))
-      {
-	printf("Valores incompativeis na linha %d aaa.\n", nLine);
-      }
-      else if(((variable*)(identifier_temp->info))->type != varRelations[0])
-      {	
-	printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	printf("Tipo da varivel: %d -> Tipo da expressao: %d.\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
-      }
-      else
-      {
-	((variable*)(identifier_temp->info))->used=1;
-      }
-      currentRelationPos = 0;
-      strcpy(identifiers, "\0");
-    }
-   }
-   else
-   {
-    if(in_function == 1)
-    {
-      char* returnVariable = strtok(identifiers, " ");
-      strcat(returnVariable, " ");
-      strcat(returnVariable, currentScope);
-      List *identifier_temp = lookupStringVariable(hashVariables, returnVariable);
-      if(identifier_temp == NULL)
-      {
-	printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
-      }
-      else
-      {
-	int currentTypeInt = ((variable*)(identifier_temp->info))->type;  
-	((variable*)(identifier_temp->info))->used=1;
-      }
-      in_function = 0; //Nao e mais funcao
-      currentRelationPos = 0; //Vetor de tipos volta para posicao inicial
-      strcpy(returnFunctionType, "\0");
-      strcpy(identifiers, "\0");
-    }
-    else
-    {
-      char* varName = strtok(identifiers, " "); //Pegando o primeiro caracter
-      char auxVariable[100];
-      strcpy(auxVariable, varName);
-      strcpy(identifiers, "\0");
-      //printf("Funcao %s\n", currentScope);
-      //printRelationship(varRelations, currentRelationPos);
-      if(!verifyRelationship(varRelations, currentRelationPos))
-      {
-	printf("Valores incompativeis na linha %d.\n", nLine);
-      }
-      else
-      {
-	strcat(auxVariable, " ");
-	strcat(auxVariable, currentScope);
-	List *identifier_temp = lookupStringVariable(hashVariables, auxVariable);
-	if(identifier_temp == NULL)
+	List *identifier_temp = lookupStringVariable(hashVariables, returnVariable);
+	if(identifier_temp==NULL)
 	{
-	  printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
+	  printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
+	}
+	else if(!verifyRelationship(varRelations, currentRelationPos))
+	{
+	  printf("Valores incompativeis na linha %d.\n", nLine);
 	}
 	else if(((variable*)(identifier_temp->info))->type != varRelations[0])
-	{
+	{	
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	  printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
+	  printf("Tipo da varivel: %d -> Tipo da expressao: %d.\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
 	}
 	else
+	{
 	  ((variable*)(identifier_temp->info))->used=1;
+	}
+	currentRelationPos = 0;
+	strcpy(identifiers, "\0");
+	}
       }
-      currentRelationPos = 0;
+   else
+    {
+      char* varName = strtok(identifiers, " "); //Pegando o primeiro caracter
+      if (varName != NULL)
+      {
+	char auxVariable[100];
+	strcpy(auxVariable, varName);
+	strcpy(identifiers, "\0");
+	//printf("Funcao %s\n", currentScope);
+	//printRelationship(varRelations, currentRelationPos);
+	if(!verifyRelationship(varRelations, currentRelationPos))
+	{
+	  printf("Valores incompativeis na linha %d.\n", nLine);
+	}
+	else
+	{
+	  strcat(auxVariable, " ");
+	  strcat(auxVariable, currentScope);
+	  List *identifier_temp = lookupStringVariable(hashVariables, auxVariable);
+	  if(identifier_temp == NULL)
+	  {
+	    printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
+	  }
+	  else if(((variable*)(identifier_temp->info))->type != varRelations[0])
+	  {
+	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+	    printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
+	  }
+	  else
+	    ((variable*)(identifier_temp->info))->used=1;
+	}
+	currentRelationPos = 0;
+	}
       }
    }
-} token_pontov |
+token_pontov |
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
@@ -753,19 +738,27 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     strcpy(auxArguments, functionArguments);
     int arity = numSpaces(auxArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
-     {      
+    {  
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
-     }
+    }
     else
     {
       char *argumentAux;
       argumentAux = strtok(functionArguments, " ");
+      List *functionTypes = (((function *)(identifier_temp->info))->parameters);
       while(argumentAux != NULL)
       {
-	int type = convertFunctionArgument(argumentAux, hashVariables, nLine); //Caso seja variavel, ira buscar na tabela hash equivalente o tipo, assim como se a variavel foi inicializada para uso dentro da funcao.
-	printf("%d\n", type);
-	//currentParameters = insertList(currentParameters,(void*) type);
+	List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
+	if(arguments_temp == NULL)
+	{
+	  break;
+	}
+	else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	{
+	  printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	}
 	argumentAux = strtok(NULL, " ");
+	functionTypes=functionTypes->next;
       }
     }
   }

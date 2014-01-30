@@ -80,8 +80,6 @@ int addInfoVariable(hashTable *hashtable, char*str, void *info)
       return 1;
     
     /* insert into list */
-    char *strTemp = malloc(sizeof(str));
-    strcpy(strTemp, str);
     newList->info = info;
     newList->next = hashtable->table[hashval];
     hashtable->table[hashval] = newList;
@@ -106,8 +104,6 @@ int addInfoFunction(hashTable *hashtable, char*str, void *info)
       return 1;
     
     /* insert into list */
-    char *strTemp = malloc(sizeof(str));
-    strcpy(strTemp, str);
     newList->info = info;
     newList->next = hashtable->table[hashval];
     hashtable->table[hashval] = newList;
@@ -157,7 +153,8 @@ void freeTableFunction(hashTable *hashtable)
         while(list!=NULL) {
             temp = list;
             list = list->next;
-	    destroyList(((List*)((function*)temp->info)->parameters));
+	    if(!((List*)((function*)temp->info)->parameters)))
+	      destroyList(((List*)((function*)temp->info)->parameters));
             free(temp->info);
             free(temp);
         }
