@@ -249,7 +249,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
     {
 	function* newFunction = createFunction();
 	addInfoFunction(hashFunction, currentIdentifier, newFunction);
-	setFunction(newFunction, currentIdentifier, 0, 0, NULL, 0); //A funcao foi setada com valores default, estes valores serao alterados depois.
+	setFunction(newFunction, currentIdentifier, 0, 5, NULL, 0); //A funcao foi setada com valores default, estes valores serao alterados depois.
     }
     else
     {
@@ -277,7 +277,7 @@ FUNCAO
     {
 	function* newFunction = createFunction();
 	addInfoFunction(hashFunction, currentIdentifier, newFunction);
-	setFunction(newFunction, currentIdentifier, 0, 0, NULL, 0);
+	setFunction(newFunction, currentIdentifier, 0, 5, NULL, 0);
     }
     else
     {
