@@ -572,16 +572,16 @@ static const yytype_uint16 yyrline[] =
        0,   113,   113,   118,   124,   125,   125,   127,   177,   226,
      226,   226,   226,   226,   226,   235,   235,   239,   240,   241,
      241,   241,   241,   241,   243,   243,   243,   245,   244,   273,
-     272,   300,   300,   300,   302,   301,   318,   317,   337,   337,
-     338,   338,   340,   340,   341,   342,   343,   343,   344,   344,
-     346,   347,   349,   348,   359,   357,   366,   388,   410,   418,
-     419,   420,   422,   428,   421,   462,   461,   564,   565,   566,
-     566,   567,   567,   569,   569,   570,   570,   570,   571,   572,
-     573,   582,   582,   582,   582,   582,   582,   584,   585,   586,
-     587,   587,   589,   600,   608,   608,   608,   608,   608,   609,
-     610,   617,   624,   671,   712,   718,   724,   725,   731,   738,
-     737,   778,   778,   778,   778,   780,   780,   781,   781,   782,
-     782
+     272,   300,   300,   300,   302,   301,   325,   324,   348,   348,
+     349,   349,   351,   351,   352,   353,   354,   354,   355,   355,
+     357,   358,   360,   359,   370,   368,   377,   399,   421,   429,
+     430,   431,   433,   439,   432,   473,   472,   575,   576,   577,
+     577,   578,   578,   580,   580,   581,   581,   581,   582,   583,
+     584,   593,   593,   593,   593,   593,   593,   595,   596,   597,
+     598,   598,   600,   611,   619,   619,   619,   619,   619,   620,
+     621,   628,   635,   682,   723,   729,   735,   736,   742,   749,
+     748,   789,   789,   789,   789,   791,   791,   792,   792,   793,
+     793
 };
 #endif
 
@@ -1952,25 +1952,32 @@ yyreduce:
 #line 302 "compiler.y"
     {
 	//foi retornada uma variável, verificar tipo de retorno
-	List *returned_variable = lookupStringVariable(hashVariables, currentIdentifier);	
-	printf("Passei aqui <<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
+	char aux[MAX_VARIABLE + MAX_FUNCTION + 1];
+	strcpy(aux, currentIdentifier);
+	strcat(aux, " ");
+	strcat(aux, currentScope);
+	List *returned_variable = lookupStringVariable(hashVariables, aux);	
 	if(returned_variable != NULL){
 		List *current_function = lookupStringFunction(hashFunction, currentScope);
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
-			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d. Linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d na linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+		}
+		if ( ((variable*)(returned_variable->info))->used == 0) {
+			printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
 		}
 	} else {
 		printf("Variavel %s não declarada na linha %d\n", currentIdentifier, nLine);
 	}
+	strcpy(identifiers, "\0");
 }
     break;
 
   case 36:
 
 /* Line 1806 of yacc.c  */
-#line 318 "compiler.y"
+#line 325 "compiler.y"
     {
 	//foi retornada uma variável, verificar tipo de retorno
 	char aux[MAX_VARIABLE + MAX_FUNCTION + 1];
@@ -1983,18 +1990,22 @@ yyreduce:
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
-			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d. Linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d na linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+		}
+		if ( ((variable*)(returned_variable->info))->used == 0) {
+			printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
 		}
 	} else {
 		printf("Variavel %s não declarada na linha %d\n", currentIdentifier, nLine);
 	}
+	strcpy(identifiers, "\0");
 }
     break;
 
   case 52:
 
 /* Line 1806 of yacc.c  */
-#line 349 "compiler.y"
+#line 360 "compiler.y"
     {
 // Em tipos_variaveis ira retornar o tipo de retorno da funcao, a qual sera acrescentada.
   List *aux = lookupStringFunction(hashFunction, currentScope);
@@ -2006,7 +2017,7 @@ yyreduce:
   case 54:
 
 /* Line 1806 of yacc.c  */
-#line 359 "compiler.y"
+#line 370 "compiler.y"
     {
   List *aux = lookupStringFunction(hashFunction, currentScope);
   if(aux!=NULL)
@@ -2017,7 +2028,7 @@ yyreduce:
   case 56:
 
 /* Line 1806 of yacc.c  */
-#line 367 "compiler.y"
+#line 378 "compiler.y"
     {
     currentFunctionArity++; //Variavel global controlando aridade sendo incrementada.
     char varName[MAX_FUNCTION+MAX_VARIABLE+1];
@@ -2043,7 +2054,7 @@ yyreduce:
   case 57:
 
 /* Line 1806 of yacc.c  */
-#line 389 "compiler.y"
+#line 400 "compiler.y"
     {
     currentFunctionArity++;
     char varName[MAX_FUNCTION+MAX_VARIABLE+1];
@@ -2070,7 +2081,7 @@ yyreduce:
   case 62:
 
 /* Line 1806 of yacc.c  */
-#line 422 "compiler.y"
+#line 433 "compiler.y"
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2081,7 +2092,7 @@ yyreduce:
   case 63:
 
 /* Line 1806 of yacc.c  */
-#line 428 "compiler.y"
+#line 439 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -2120,7 +2131,7 @@ yyreduce:
   case 65:
 
 /* Line 1806 of yacc.c  */
-#line 462 "compiler.y"
+#line 473 "compiler.y"
     {
   if(strcmp(currentScope, "main") == 0)
   {
@@ -2228,7 +2239,7 @@ yyreduce:
   case 92:
 
 /* Line 1806 of yacc.c  */
-#line 590 "compiler.y"
+#line 601 "compiler.y"
     {
   /*
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
@@ -2244,7 +2255,7 @@ yyreduce:
   case 93:
 
 /* Line 1806 of yacc.c  */
-#line 601 "compiler.y"
+#line 612 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2257,7 +2268,7 @@ yyreduce:
   case 100:
 
 /* Line 1806 of yacc.c  */
-#line 611 "compiler.y"
+#line 622 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2269,7 +2280,7 @@ yyreduce:
   case 101:
 
 /* Line 1806 of yacc.c  */
-#line 618 "compiler.y"
+#line 629 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2281,7 +2292,7 @@ yyreduce:
   case 102:
 
 /* Line 1806 of yacc.c  */
-#line 630 "compiler.y"
+#line 641 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2328,7 +2339,7 @@ yyreduce:
   case 103:
 
 /* Line 1806 of yacc.c  */
-#line 672 "compiler.y"
+#line 683 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2374,7 +2385,7 @@ yyreduce:
   case 104:
 
 /* Line 1806 of yacc.c  */
-#line 713 "compiler.y"
+#line 724 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2385,7 +2396,7 @@ yyreduce:
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 719 "compiler.y"
+#line 730 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2396,7 +2407,7 @@ yyreduce:
   case 107:
 
 /* Line 1806 of yacc.c  */
-#line 726 "compiler.y"
+#line 737 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2407,7 +2418,7 @@ yyreduce:
   case 108:
 
 /* Line 1806 of yacc.c  */
-#line 732 "compiler.y"
+#line 743 "compiler.y"
     {
   int currentTypeInt = convertType(currentType);
   varRelations[currentRelationPos] = currentTypeInt;
@@ -2418,7 +2429,7 @@ yyreduce:
   case 109:
 
 /* Line 1806 of yacc.c  */
-#line 738 "compiler.y"
+#line 749 "compiler.y"
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2429,7 +2440,7 @@ yyreduce:
   case 110:
 
 /* Line 1806 of yacc.c  */
-#line 744 "compiler.y"
+#line 755 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -2468,7 +2479,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 2472 "compiler.tab.c"
+#line 2483 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2699,7 +2710,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 785 "compiler.y"
+#line 796 "compiler.y"
 
 
 #include "lex.yy.c"

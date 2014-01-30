@@ -33,7 +33,7 @@ início
 	b := 20;
 	a := 10 + 10;
 	c := 20.20;
-	//b := 20 + b + c;
+	b := 20 + b + c;
 	//c := soma2(a,b); //verificar tipo dentro da funcao
 	soma2(a,b);
 	//a := soma2(a,b); //verificar tipo dentro da funcao

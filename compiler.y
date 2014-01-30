@@ -301,18 +301,25 @@ BLOCO_AUXILIAR: /*Empty*/ | BLOCO_AUXILIAR COMANDO | token_abrec BLOCO_AUXILIAR 
 BLOCO_FUNCAO_RETORNO: token_retorne token_identificador 
 {
 	//foi retornada uma variável, verificar tipo de retorno
-	List *returned_variable = lookupStringVariable(hashVariables, currentIdentifier);	
-	printf("Passei aqui <<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
+	char aux[MAX_VARIABLE + MAX_FUNCTION + 1];
+	strcpy(aux, currentIdentifier);
+	strcat(aux, " ");
+	strcat(aux, currentScope);
+	List *returned_variable = lookupStringVariable(hashVariables, aux);	
 	if(returned_variable != NULL){
 		List *current_function = lookupStringFunction(hashFunction, currentScope);
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
-			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d. Linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d na linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+		}
+		if ( ((variable*)(returned_variable->info))->used == 0) {
+			printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
 		}
 	} else {
 		printf("Variavel %s não declarada na linha %d\n", currentIdentifier, nLine);
 	}
+	strcpy(identifiers, "\0");
 }
 token_pontov | REPETICAO_COMANDO token_retorne token_identificador
 {
@@ -327,11 +334,15 @@ token_pontov | REPETICAO_COMANDO token_retorne token_identificador
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
-			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d. Linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d na linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+		}
+		if ( ((variable*)(returned_variable->info))->used == 0) {
+			printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
 		}
 	} else {
 		printf("Variavel %s não declarada na linha %d\n", currentIdentifier, nLine);
 	}
+	strcpy(identifiers, "\0");
 } 
 token_pontov;
 BLOCO_FUNCAO: /*Empty*/ | REPETICAO_COMANDO;
