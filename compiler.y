@@ -112,13 +112,13 @@ hashTable* hashFunction = NULL;
 %%
 PROG:  token_algoritmo token_identificador token_pontov BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 }
 |
 token_algoritmo token_identificador
 token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 }
 ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
@@ -401,10 +401,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     strcpy(auxArguments, functionArguments);
     int arity = numSpaces(auxArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
-      {
-      printf("%d %d\n", arity, ((function*)(identifier_temp->info))->arity);
-      
-      
+      {      
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
      }
     else
@@ -421,6 +418,8 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     }
   }
   strcpy(functionArguments, "\0");
+  strcpy(identifiers, "\0");
+  currentRelationPos = 0;
   in_function = 0;
 } token_pontov
 | token_identificador token_atribuicao EXPR
@@ -456,7 +455,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       }
       else if(!verifyRelationship(varRelations, currentRelationPos))
       {
-	printf("Valores incompativeis na linha %d.\n", nLine);
+	printf("Valores incompativeis na linha %d aaa.\n", nLine);
       }
       else if(((variable*)(identifier_temp->info))->type != varRelations[0])
       {	
@@ -598,7 +597,7 @@ e se ela foi declarada.
     List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
     if(identifier_temp==NULL)
     {
-      printf("Variavel %s aaaa nao declarada na linha %d\n",currentIdentifier, nLine);
+      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
     }
     else if(((variable*)(identifier_temp->info))->used == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
@@ -718,10 +717,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     strcpy(auxArguments, functionArguments);
     int arity = numSpaces(auxArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
-           {
-      printf("%s %d %d\n", auxArguments, arity, ((function*)(identifier_temp->info))->arity);
-      
-      
+     {      
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
      }
     else
@@ -738,6 +734,8 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     }
   }
   strcpy(functionArguments, "\0");
+  strcpy(identifiers, "\0");
+  currentRelationPos = 0;
   in_function = 0;
 };
 
