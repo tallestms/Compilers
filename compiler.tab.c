@@ -575,13 +575,13 @@ static const yytype_uint16 yyrline[] =
      274,   304,   304,   304,   306,   305,   329,   328,   352,   352,
      353,   353,   355,   355,   356,   357,   358,   358,   359,   359,
      361,   362,   364,   363,   374,   372,   381,   403,   425,   433,
-     434,   435,   437,   443,   436,   529,   528,   595,   596,   597,
-     597,   598,   598,   600,   600,   601,   601,   601,   602,   603,
-     604,   613,   613,   613,   613,   613,   613,   615,   616,   617,
-     618,   618,   620,   634,   645,   645,   645,   645,   645,   646,
-     647,   657,   667,   721,   770,   780,   789,   790,   799,   809,
-     808,   926,   926,   926,   926,   928,   928,   929,   929,   930,
-     930
+     434,   435,   437,   443,   436,   552,   551,   618,   619,   620,
+     620,   621,   621,   623,   623,   624,   624,   624,   625,   626,
+     627,   636,   636,   636,   636,   636,   636,   638,   639,   640,
+     641,   641,   643,   657,   668,   668,   668,   668,   668,   669,
+     670,   680,   690,   744,   793,   803,   812,   813,   822,   832,
+     831,   949,   949,   949,   949,   951,   951,   952,   952,   953,
+     953
 };
 #endif
 
@@ -2156,15 +2156,38 @@ yyreduce:
 	}
 	else
 	{
-	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
-	  if(arguments_temp == NULL)
+	  if(strcmp("main",currentScope)==0)
 	  {
-	    printf("Argumento %s nao foi inicializado na funcao %s.\n", argumentAux, currentFunction);
-	    break;
+	    List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
+	    if(arguments_temp==NULL)
+	    {
+	      //printf("Variavel %s nao declarada na linha %d\n",argumentAux, nLine);
+	    }
+	    else if(((variable*)(arguments_temp->info))->used == 0)
+	      printf("Variavel %s nao foi inicializada na linha %d\n", argumentAux, nLine);
+	    else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	    {
+	      printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	    }
 	  }
-	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	  else
 	  {
-	    printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	    char variableAux[MAX_FUNCTION+MAX_VARIABLE+1];
+	    strcpy(variableAux, argumentAux);
+	    strcat(variableAux, " ");
+	    strcat(variableAux, currentScope);
+	    
+	    List *arguments_temp = lookupStringFunction(hashVariables, variableAux);
+	    if(arguments_temp==NULL)
+	    {
+	      //printf("Variavel %s nao declarada na linha %d\n",argumentAux, nLine);
+	    }
+	    else if(((variable*)(arguments_temp->info))->used == 0)
+	      printf("Variavel %s nao foi inicializada na linha %d\n", argumentAux, nLine);
+	    else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	    {
+	      printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	    }
 	  }
 	}
 	argumentAux = strtok(NULL, " ");
@@ -2187,7 +2210,7 @@ yyreduce:
   case 65:
 
 /* Line 1806 of yacc.c  */
-#line 529 "compiler.y"
+#line 552 "compiler.y"
     {
   if(strcmp(currentScope, "main") == 0)
     { 
@@ -2258,7 +2281,7 @@ yyreduce:
   case 92:
 
 /* Line 1806 of yacc.c  */
-#line 621 "compiler.y"
+#line 644 "compiler.y"
     {
   /*
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
@@ -2277,7 +2300,7 @@ yyreduce:
   case 93:
 
 /* Line 1806 of yacc.c  */
-#line 635 "compiler.y"
+#line 658 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2293,7 +2316,7 @@ yyreduce:
   case 100:
 
 /* Line 1806 of yacc.c  */
-#line 648 "compiler.y"
+#line 671 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2308,7 +2331,7 @@ yyreduce:
   case 101:
 
 /* Line 1806 of yacc.c  */
-#line 658 "compiler.y"
+#line 681 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2323,7 +2346,7 @@ yyreduce:
   case 102:
 
 /* Line 1806 of yacc.c  */
-#line 673 "compiler.y"
+#line 696 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2377,7 +2400,7 @@ yyreduce:
   case 103:
 
 /* Line 1806 of yacc.c  */
-#line 722 "compiler.y"
+#line 745 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2431,7 +2454,7 @@ yyreduce:
   case 104:
 
 /* Line 1806 of yacc.c  */
-#line 771 "compiler.y"
+#line 794 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2446,7 +2469,7 @@ yyreduce:
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 781 "compiler.y"
+#line 804 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2460,7 +2483,7 @@ yyreduce:
   case 107:
 
 /* Line 1806 of yacc.c  */
-#line 791 "compiler.y"
+#line 814 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2474,7 +2497,7 @@ yyreduce:
   case 108:
 
 /* Line 1806 of yacc.c  */
-#line 800 "compiler.y"
+#line 823 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2488,7 +2511,7 @@ yyreduce:
   case 109:
 
 /* Line 1806 of yacc.c  */
-#line 809 "compiler.y"
+#line 832 "compiler.y"
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2499,7 +2522,7 @@ yyreduce:
   case 110:
 
 /* Line 1806 of yacc.c  */
-#line 815 "compiler.y"
+#line 838 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -2590,10 +2613,12 @@ yyreduce:
 	      printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
 	    }
 	  }
+	}
 	argumentAux = strtok(NULL, " ");
 	functionTypes=functionTypes->next;
 	}
     }
+  }
     
       int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
      // printf("%d \n", currentTypeInt);
@@ -2603,19 +2628,17 @@ yyreduce:
 	printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
       }
       ++currentRelationPos;
-  }
   strcpy(functionArguments, "\0");
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;
   in_function = 0;
   }
-}
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 2619 "compiler.tab.c"
+#line 2642 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2846,7 +2869,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 933 "compiler.y"
+#line 956 "compiler.y"
 
 
 #include "lex.yy.c"

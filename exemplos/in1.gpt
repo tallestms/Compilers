@@ -11,16 +11,6 @@ a := 10 + c; //retornando c como nao declarado e não a
 retorne re;
 fim
 
-função soma2(a:real, b:real):real
-c,d: inteiro;
-p: real;
-início
-d := 10;
-c := 20;
-p := 20.20;
-retorne p;
-fim
-
 função soma3(a:inteiro)
 c,d: inteiro;
 p: real;
@@ -28,7 +18,19 @@ início
 d := 10;
 c := 20;
 p := 20.20;
-p := soma(c,d); //chamada de funcao dentro de outra funcao
+ //chamada de funcao dentro de outra funcao
+fim
+
+função soma2(a:real, b:real):real
+c,d: inteiro;
+p: real;
+início
+d := 10;
+c := 20;
+p := 10.10;
+soma3(p);
+p := 20.20;
+retorne p;
 fim
 
 variáveis
@@ -67,6 +69,6 @@ início
 	//lit := "isso daqui é um texto";
 	//z := verdadeiro;
 	//z := 10;
-	//z := a>b e b<c; //erro
+	z := a>b e b<c; //erro
 	//mat := {[1,2],[2,1]};
 fim
