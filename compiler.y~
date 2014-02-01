@@ -502,7 +502,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
 	  if(arguments_temp == NULL)
 	  {
-	    printf("Argumento %s nao foi inicializado na funcao %s", argumentAux, currentFunction);
+	    printf("Argumento %s nao foi inicializado na funcao %s.\n", argumentAux, currentFunction);
 	    break;
 	  }
 	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
@@ -813,6 +813,8 @@ e se ela foi declarada.
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
+if(strcmp(currentScope, "main") == 0)
+{
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
   {
@@ -874,7 +876,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
 	  if(arguments_temp == NULL)
 	  {
-	    printf("Argumento %s nao foi inicializado na funcao %s", argumentAux, currentFunction);
+	    printf("Argumento %s nao foi inicializado na funcao %s.\n", argumentAux, currentFunction);
 	    break;
 	  }
 	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
@@ -892,7 +894,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       varRelations[currentRelationPos] = currentTypeInt;
       if(currentTypeInt==5)
       {
-	printf("Na linha %d, a funcao %s nao possui retorno.", nLine, currentFunction);
+	printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
       }
       ++currentRelationPos;
   }
@@ -900,7 +902,13 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;
   in_function = 0;
-};
+  }
+  else //Chamada de funcao dentro de outra funcao
+  {
+  printf("oi");
+  }
+}
+;
 
 FATOR_CASE: SINALFATOR | token_numinteiro | token_numreal | token_variavel_caracter; 
 

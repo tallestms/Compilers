@@ -580,8 +580,8 @@ static const yytype_uint16 yyrline[] =
      604,   613,   613,   613,   613,   613,   613,   615,   616,   617,
      618,   618,   620,   634,   645,   645,   645,   645,   645,   646,
      647,   657,   667,   721,   770,   780,   789,   790,   799,   809,
-     808,   905,   905,   905,   905,   907,   907,   908,   908,   909,
-     909
+     808,   913,   913,   913,   913,   915,   915,   916,   916,   917,
+     917
 };
 #endif
 
@@ -2159,7 +2159,7 @@ yyreduce:
 	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
 	  if(arguments_temp == NULL)
 	  {
-	    printf("Argumento %s nao foi inicializado na funcao %s", argumentAux, currentFunction);
+	    printf("Argumento %s nao foi inicializado na funcao %s.\n", argumentAux, currentFunction);
 	    break;
 	  }
 	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
@@ -2501,6 +2501,8 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 815 "compiler.y"
     { 
+//if(strcmp(currentScope, "main") == 0)
+{
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
   {
@@ -2562,7 +2564,7 @@ yyreduce:
 	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
 	  if(arguments_temp == NULL)
 	  {
-	    printf("Argumento %s nao foi inicializado na funcao %s", argumentAux, currentFunction);
+	    printf("Argumento %s nao foi inicializado na funcao %s.\n", argumentAux, currentFunction);
 	    break;
 	  }
 	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
@@ -2588,13 +2590,18 @@ yyreduce:
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;
   in_function = 0;
+  }
+ // else //Chamada de funcao dentro de outra funcao
+  {
+  //printf("oi");
+  }
 }
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 2598 "compiler.tab.c"
+#line 2605 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2825,7 +2832,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 912 "compiler.y"
+#line 920 "compiler.y"
 
 
 #include "lex.yy.c"
