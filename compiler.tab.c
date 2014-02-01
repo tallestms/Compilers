@@ -580,8 +580,8 @@ static const yytype_uint16 yyrline[] =
      604,   613,   613,   613,   613,   613,   613,   615,   616,   617,
      618,   618,   620,   634,   645,   645,   645,   645,   645,   646,
      647,   657,   667,   721,   770,   780,   789,   790,   799,   809,
-     808,   901,   901,   901,   901,   903,   903,   904,   904,   905,
-     905
+     808,   905,   905,   905,   905,   907,   907,   908,   908,   909,
+     909
 };
 #endif
 
@@ -1881,7 +1881,7 @@ yyreduce:
     {
 	function* newFunction = createFunction();
 	addInfoFunction(hashFunction, currentIdentifier, newFunction);
-	setFunction(newFunction, currentIdentifier, 0, 5, NULL, 0); //A funcao foi setada com valores default, estes valores serao alterados depois.
+	setFunction(newFunction, currentIdentifier, 5, 0, NULL, 0); //A funcao foi setada com valores default, estes valores serao alterados depois.
     }
     else
     {
@@ -1921,7 +1921,7 @@ yyreduce:
     {
 	function* newFunction = createFunction();
 	addInfoFunction(hashFunction, currentIdentifier, newFunction);
-	setFunction(newFunction, currentIdentifier, 0, 5, NULL, 0);
+	setFunction(newFunction, currentIdentifier, 5, 0, NULL, 0);
     }
     else
     {
@@ -2202,7 +2202,7 @@ yyreduce:
 	}
 	else if(!verifyRelationship(varRelations, currentRelationPos))
 	{
-	  printRelationship(varRelations, currentRelationPos);
+	  //printRelationship(varRelations, currentRelationPos);
 	  printf("Valores incompativeis na linha %d.\n", nLine);
 	}
 	else if(((variable*)(identifier_temp->info))->type != varRelations[0])
@@ -2578,6 +2578,10 @@ yyreduce:
       int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
      // printf("%d \n", currentTypeInt);
       varRelations[currentRelationPos] = currentTypeInt;
+      if(currentTypeInt==5)
+      {
+	printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
+      }
       ++currentRelationPos;
   }
   strcpy(functionArguments, "\0");
@@ -2590,7 +2594,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 2594 "compiler.tab.c"
+#line 2598 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2821,7 +2825,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 908 "compiler.y"
+#line 912 "compiler.y"
 
 
 #include "lex.yy.c"

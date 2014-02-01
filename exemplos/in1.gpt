@@ -51,9 +51,10 @@ início
 	//soma2(a,b);
 	//a := soma2(a,b,c); 
 	soma(10.10);
+	soma3(a);
 	a := 10;
 	a := 10.10 + 20.10 + soma(a);
-	b := soma3(a);
+	b := 10 + soma3(a);
 	//c := soma(10); //verificar a função dentro da expressao
 	//c := 10.10;
 	//d := -10.10 + 10;

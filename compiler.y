@@ -249,7 +249,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
     {
 	function* newFunction = createFunction();
 	addInfoFunction(hashFunction, currentIdentifier, newFunction);
-	setFunction(newFunction, currentIdentifier, 0, 5, NULL, 0); //A funcao foi setada com valores default, estes valores serao alterados depois.
+	setFunction(newFunction, currentIdentifier, 5, 0, NULL, 0); //A funcao foi setada com valores default, estes valores serao alterados depois.
     }
     else
     {
@@ -279,7 +279,7 @@ FUNCAO
     {
 	function* newFunction = createFunction();
 	addInfoFunction(hashFunction, currentIdentifier, newFunction);
-	setFunction(newFunction, currentIdentifier, 0, 5, NULL, 0);
+	setFunction(newFunction, currentIdentifier, 5, 0, NULL, 0);
     }
     else
     {
@@ -540,7 +540,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	}
 	else if(!verifyRelationship(varRelations, currentRelationPos))
 	{
-	  printRelationship(varRelations, currentRelationPos);
+	  //printRelationship(varRelations, currentRelationPos);
 	  printf("Valores incompativeis na linha %d.\n", nLine);
 	}
 	else if(((variable*)(identifier_temp->info))->type != varRelations[0])
@@ -890,6 +890,10 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
      // printf("%d \n", currentTypeInt);
       varRelations[currentRelationPos] = currentTypeInt;
+      if(currentTypeInt==5)
+      {
+	printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
+      }
       ++currentRelationPos;
   }
   strcpy(functionArguments, "\0");
