@@ -898,15 +898,16 @@ if(strcmp(currentScope, "main") == 0)
       }
       ++currentRelationPos;
   }
-  strcpy(functionArguments, "\0");
-  //strcpy(identifiers, "\0");
-  //currentRelationPos = 0;
-  in_function = 0;
+
   }
   else //Chamada de funcao dentro de outra funcao
   {
-  printf("oi");
+    printf("oi");
   }
+   strcpy(functionArguments, "\0");
+  //strcpy(identifiers, "\0");
+  //currentRelationPos = 0;
+  in_function = 0;
 }
 ;
 

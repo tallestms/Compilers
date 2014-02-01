@@ -813,7 +813,7 @@ e se ela foi declarada.
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
-//if(strcmp(currentScope, "main") == 0)
+if(strcmp(currentScope, "main") == 0)
 {
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -898,15 +898,15 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       }
       ++currentRelationPos;
   }
-  strcpy(functionArguments, "\0");
+
+  }
+  else //Chamada de funcao dentro de outra funcao
+  {
+  }
+   strcpy(functionArguments, "\0");
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;
   in_function = 0;
-  }
- // else //Chamada de funcao dentro de outra funcao
-  {
-  //printf("oi");
-  }
 }
 ;
 
