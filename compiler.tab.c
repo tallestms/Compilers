@@ -575,13 +575,13 @@ static const yytype_uint16 yyrline[] =
      274,   304,   304,   304,   306,   305,   329,   328,   352,   352,
      353,   353,   355,   355,   356,   357,   358,   358,   359,   359,
      361,   362,   364,   363,   374,   372,   381,   403,   425,   433,
-     434,   435,   437,   443,   436,   485,   484,   549,   550,   551,
-     551,   552,   552,   554,   554,   555,   555,   555,   556,   557,
-     558,   567,   567,   567,   567,   567,   567,   569,   570,   571,
-     572,   572,   574,   585,   593,   593,   593,   593,   593,   594,
-     595,   602,   609,   656,   697,   703,   709,   710,   716,   723,
-     722,   771,   771,   771,   771,   773,   773,   774,   774,   775,
-     775
+     434,   435,   437,   443,   436,   529,   528,   595,   596,   597,
+     597,   598,   598,   600,   600,   601,   601,   601,   602,   603,
+     604,   613,   613,   613,   613,   613,   613,   615,   616,   617,
+     618,   618,   620,   634,   645,   645,   645,   645,   645,   646,
+     647,   657,   667,   721,   770,   780,   789,   790,   799,   809,
+     808,   901,   901,   901,   901,   903,   903,   904,   904,   905,
+     905
 };
 #endif
 
@@ -1881,7 +1881,7 @@ yyreduce:
     {
 	function* newFunction = createFunction();
 	addInfoFunction(hashFunction, currentIdentifier, newFunction);
-	setFunction(newFunction, currentIdentifier, 0, 0, NULL, 0); //A funcao foi setada com valores default, estes valores serao alterados depois.
+	setFunction(newFunction, currentIdentifier, 0, 5, NULL, 0); //A funcao foi setada com valores default, estes valores serao alterados depois.
     }
     else
     {
@@ -1921,7 +1921,7 @@ yyreduce:
     {
 	function* newFunction = createFunction();
 	addInfoFunction(hashFunction, currentIdentifier, newFunction);
-	setFunction(newFunction, currentIdentifier, 0, 0, NULL, 0);
+	setFunction(newFunction, currentIdentifier, 0, 5, NULL, 0);
     }
     else
     {
@@ -2119,19 +2119,63 @@ yyreduce:
       List *functionTypes = (((function *)(identifier_temp->info))->parameters);
       while(argumentAux != NULL)
       {
-	List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
-	if(arguments_temp == NULL)
+	if(strcmp(argumentAux, "inteiro")==0)
 	{
-	  break;
+	if(0 != ((int)(functionTypes->info))) //inteiro
+	  {
+	    printf("Inteiro na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
 	}
-	else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	else if	(strcmp(argumentAux, "real")==0)
 	{
-	  printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	if(3 != ((int)(functionTypes->info))) //real
+	  {
+	    printf("Real na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "caracter")==0)
+	{
+	if(1 != ((int)(functionTypes->info))) //caracter
+	  {
+	    printf("Caracter na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "literal")==0)
+	{
+	if(2 != ((int)(functionTypes->info))) //literal
+	  {
+	    printf("Literal na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "lógico")==0)
+	{
+	if(4 != ((int)(functionTypes->info))) //logico
+	  {
+	    printf("Logico na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else
+	{
+	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
+	  if(arguments_temp == NULL)
+	  {
+	    printf("Argumento %s nao foi inicializado na funcao %s", argumentAux, currentFunction);
+	    break;
+	  }
+	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	  {
+	    printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	  }
 	}
 	argumentAux = strtok(NULL, " ");
 	functionTypes=functionTypes->next;
       }
     }
+    
+      int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
+     // printf("%d \n", currentTypeInt);
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
   }
   strcpy(functionArguments, "\0");
   strcpy(identifiers, "\0");
@@ -2143,10 +2187,11 @@ yyreduce:
   case 65:
 
 /* Line 1806 of yacc.c  */
-#line 485 "compiler.y"
+#line 529 "compiler.y"
     {
   if(strcmp(currentScope, "main") == 0)
     { 
+      //printf("%s %d\n", identifiers, currentRelationPos);
       char* returnVariable = strtok(identifiers, " ");
       if (returnVariable != NULL)
       {
@@ -2157,12 +2202,13 @@ yyreduce:
 	}
 	else if(!verifyRelationship(varRelations, currentRelationPos))
 	{
+	  printRelationship(varRelations, currentRelationPos);
 	  printf("Valores incompativeis na linha %d.\n", nLine);
 	}
 	else if(((variable*)(identifier_temp->info))->type != varRelations[0])
 	{	
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	  printf("Tipo da varivel: %d -> Tipo da expressao: %d.\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
+	 // printf("Tipo da varivel: %d -> Tipo da expressao: %d.\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
 	}
 	else
 	{
@@ -2198,7 +2244,7 @@ yyreduce:
 	  else if(((variable*)(identifier_temp->info))->type != varRelations[0])
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	    printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
+	  //  printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
 	  }
 	  else
 	    ((variable*)(identifier_temp->info))->used=1;
@@ -2212,28 +2258,34 @@ yyreduce:
   case 92:
 
 /* Line 1806 of yacc.c  */
-#line 575 "compiler.y"
+#line 621 "compiler.y"
     {
   /*
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
   O vetor sera usado mais tarde para fazer comparacao de tipos de maneira tal que apenas mesmos tipos podem realizar operacoes. 
   */
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
-  //printf("real com sinal\n");
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+    //printf("real com sinal\n");
+  }
 }
     break;
 
   case 93:
 
 /* Line 1806 of yacc.c  */
-#line 586 "compiler.y"
+#line 635 "compiler.y"
     {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
-  //printf("inteiro com sinal\n");
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+    //printf("real com sinal\n");
+  }
 
 }
     break;
@@ -2241,31 +2293,37 @@ yyreduce:
   case 100:
 
 /* Line 1806 of yacc.c  */
-#line 596 "compiler.y"
+#line 648 "compiler.y"
     {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
-  //printf("inteiro sem sinal\n");
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+    //printf("real com sinal\n");
+  }
 }
     break;
 
   case 101:
 
 /* Line 1806 of yacc.c  */
-#line 603 "compiler.y"
+#line 658 "compiler.y"
     {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
-  //printf("real sem sinal\n");
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+    //printf("real com sinal\n");
+  }
 }
     break;
 
   case 102:
 
 /* Line 1806 of yacc.c  */
-#line 615 "compiler.y"
+#line 673 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2278,11 +2336,14 @@ yyreduce:
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
-    int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-    varRelations[currentRelationPos] = currentTypeInt;
-    ++currentRelationPos;
-    //printf("identificador\n");
+    if(in_function!=1)
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
+   }
   }
   else
   //Caso em que escopo nao e funcao global, portanto precisa-se utilizar o tipo de variavel (nome_variavel nome_funcao)
@@ -2300,9 +2361,13 @@ yyreduce:
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
+    if(in_function!=1)
+    {
       int currentTypeInt = ((variable*)(identifier_temp->info))->type;
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+    }
     }
     //printf("identificador\n");
   }
@@ -2312,7 +2377,7 @@ yyreduce:
   case 103:
 
 /* Line 1806 of yacc.c  */
-#line 657 "compiler.y"
+#line 722 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2325,9 +2390,13 @@ yyreduce:
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
-    int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-    varRelations[currentRelationPos] = currentTypeInt;
-    ++currentRelationPos;
+    if(in_function!=1)
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+    }
     //printf("identificador\n");
     }
   }
@@ -2346,9 +2415,13 @@ yyreduce:
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
-    int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-    varRelations[currentRelationPos] = currentTypeInt;
-    ++currentRelationPos;
+    if(in_function!=1)
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+    }
     //printf("identificador\n");
     }
   }
@@ -2358,51 +2431,64 @@ yyreduce:
   case 104:
 
 /* Line 1806 of yacc.c  */
-#line 698 "compiler.y"
+#line 771 "compiler.y"
     {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+  }
+  
 }
     break;
 
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 704 "compiler.y"
+#line 781 "compiler.y"
     {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+  }
 }
     break;
 
   case 107:
 
 /* Line 1806 of yacc.c  */
-#line 711 "compiler.y"
+#line 791 "compiler.y"
     {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+  }
 }
     break;
 
   case 108:
 
 /* Line 1806 of yacc.c  */
-#line 717 "compiler.y"
+#line 800 "compiler.y"
     {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+  }
 }
     break;
 
   case 109:
 
 /* Line 1806 of yacc.c  */
-#line 723 "compiler.y"
+#line 809 "compiler.y"
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2413,7 +2499,7 @@ yyreduce:
   case 110:
 
 /* Line 1806 of yacc.c  */
-#line 729 "compiler.y"
+#line 815 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -2436,23 +2522,67 @@ yyreduce:
       List *functionTypes = (((function *)(identifier_temp->info))->parameters);
       while(argumentAux != NULL)
       {
-	List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
-	if(arguments_temp == NULL)
+	if(strcmp(argumentAux, "inteiro")==0)
 	{
-	  break;
+	if(0 != ((int)(functionTypes->info))) //inteiro
+	  {
+	    printf("Inteiro na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
 	}
-	else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	else if	(strcmp(argumentAux, "real")==0)
 	{
-	  printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	if(3 != ((int)(functionTypes->info))) //real
+	  {
+	    printf("Real na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "caracter")==0)
+	{
+	if(1 != ((int)(functionTypes->info))) //caracter
+	  {
+	    printf("Caracter na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "literal")==0)
+	{
+	if(2 != ((int)(functionTypes->info))) //literal
+	  {
+	    printf("Literal na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "lógico")==0)
+	{
+	if(4 != ((int)(functionTypes->info))) //logico
+	  {
+	    printf("Logico na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else
+	{
+	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
+	  if(arguments_temp == NULL)
+	  {
+	    printf("Argumento %s nao foi inicializado na funcao %s", argumentAux, currentFunction);
+	    break;
+	  }
+	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	  {
+	    printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	  }
 	}
 	argumentAux = strtok(NULL, " ");
 	functionTypes=functionTypes->next;
       }
     }
+    
+      int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
+     // printf("%d \n", currentTypeInt);
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
   }
   strcpy(functionArguments, "\0");
-  strcpy(identifiers, "\0");
-  currentRelationPos = 0;
+  //strcpy(identifiers, "\0");
+  //currentRelationPos = 0;
   in_function = 0;
 }
     break;
@@ -2460,7 +2590,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 2464 "compiler.tab.c"
+#line 2594 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2691,7 +2821,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 778 "compiler.y"
+#line 908 "compiler.y"
 
 
 #include "lex.yy.c"

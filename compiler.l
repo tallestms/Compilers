@@ -107,7 +107,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "!"						{return token_negacao;}
 {caracter}					{if(in_function == 1){strcat(functionArguments, "caracter"); strcat(functionArguments, " ");} strcpy(currentType, "caracter");return token_variavel_caracter;}
 {string}					{if(in_function == 1){strcat(functionArguments, "literal"); strcat(functionArguments, " ");} strcpy(currentType, "literal");return token_string;}
-{identificador}					{strcpy(currentIdentifier, yytext); strcat(identifiers, yytext); strcat(identifiers, " "); if(in_function == 1){strcat(functionArguments, yytext); strcat(functionArguments, " ");} return token_identificador;}
+{identificador}					{strcpy(currentIdentifier, yytext); if(in_function!=1){strcat(identifiers, yytext); strcat(identifiers, " ");} if(in_function == 1){strcat(functionArguments, yytext); strcat(functionArguments, " ");} return token_identificador;}
 [ \t]						;
 [\n]						{nLine++;}
 {comentario_linha}				{nLine++;}

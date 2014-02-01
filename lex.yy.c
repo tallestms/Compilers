@@ -1335,7 +1335,7 @@ YY_RULE_SETUP
 case 78:
 YY_RULE_SETUP
 #line 110 "compiler.l"
-{strcpy(currentIdentifier, yytext); strcat(identifiers, yytext); strcat(identifiers, " "); if(in_function == 1){strcat(functionArguments, yytext); strcat(functionArguments, " ");} return token_identificador;}
+{strcpy(currentIdentifier, yytext); if(in_function!=1){strcat(identifiers, yytext); strcat(identifiers, " ");} if(in_function == 1){strcat(functionArguments, yytext); strcat(functionArguments, " ");} return token_identificador;}
 	YY_BREAK
 case 79:
 YY_RULE_SETUP

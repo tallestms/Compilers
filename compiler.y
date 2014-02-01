@@ -462,19 +462,63 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       List *functionTypes = (((function *)(identifier_temp->info))->parameters);
       while(argumentAux != NULL)
       {
-	List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
-	if(arguments_temp == NULL)
+	if(strcmp(argumentAux, "inteiro")==0)
 	{
-	  break;
+	if(0 != ((int)(functionTypes->info))) //inteiro
+	  {
+	    printf("Inteiro na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
 	}
-	else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	else if	(strcmp(argumentAux, "real")==0)
 	{
-	  printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	if(3 != ((int)(functionTypes->info))) //real
+	  {
+	    printf("Real na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "caracter")==0)
+	{
+	if(1 != ((int)(functionTypes->info))) //caracter
+	  {
+	    printf("Caracter na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "literal")==0)
+	{
+	if(2 != ((int)(functionTypes->info))) //literal
+	  {
+	    printf("Literal na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "lógico")==0)
+	{
+	if(4 != ((int)(functionTypes->info))) //logico
+	  {
+	    printf("Logico na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else
+	{
+	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
+	  if(arguments_temp == NULL)
+	  {
+	    printf("Argumento %s nao foi inicializado na funcao %s", argumentAux, currentFunction);
+	    break;
+	  }
+	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	  {
+	    printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	  }
 	}
 	argumentAux = strtok(NULL, " ");
 	functionTypes=functionTypes->next;
       }
     }
+    
+      int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
+     // printf("%d \n", currentTypeInt);
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
   }
   strcpy(functionArguments, "\0");
   strcpy(identifiers, "\0");
@@ -485,6 +529,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 {
   if(strcmp(currentScope, "main") == 0)
     { 
+      //printf("%s %d\n", identifiers, currentRelationPos);
       char* returnVariable = strtok(identifiers, " ");
       if (returnVariable != NULL)
       {
@@ -495,12 +540,13 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	}
 	else if(!verifyRelationship(varRelations, currentRelationPos))
 	{
+	  printRelationship(varRelations, currentRelationPos);
 	  printf("Valores incompativeis na linha %d.\n", nLine);
 	}
 	else if(((variable*)(identifier_temp->info))->type != varRelations[0])
 	{	
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	  printf("Tipo da varivel: %d -> Tipo da expressao: %d.\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
+	 // printf("Tipo da varivel: %d -> Tipo da expressao: %d.\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
 	}
 	else
 	{
@@ -536,7 +582,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	  else if(((variable*)(identifier_temp->info))->type != varRelations[0])
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	    printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
+	  //  printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
 	  }
 	  else
 	    ((variable*)(identifier_temp->info))->used=1;
@@ -577,34 +623,46 @@ SINALFATOR:  token_numreal_comsinal
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
   O vetor sera usado mais tarde para fazer comparacao de tipos de maneira tal que apenas mesmos tipos podem realizar operacoes. 
   */
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
-  //printf("real com sinal\n");
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+    //printf("real com sinal\n");
+  }
 }
 | token_numinteiro_comsinal
 {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
-  //printf("inteiro com sinal\n");
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+    //printf("real com sinal\n");
+  }
 
 };
 TERMO: MATRIZ | FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR ;
 FATOR: SINALFATOR
 | token_numinteiro
 {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
-  //printf("inteiro sem sinal\n");
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+    //printf("real com sinal\n");
+  }
 }
 | token_numreal 
 {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
-  //printf("real sem sinal\n");
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+    //printf("real com sinal\n");
+  }
 }
 | token_identificador 
 // Aqui esta sendo feito conversao de tipo para os identificadores.
@@ -624,11 +682,14 @@ e se ela foi declarada.
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
-    int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-    varRelations[currentRelationPos] = currentTypeInt;
-    ++currentRelationPos;
-    //printf("identificador\n");
+    if(in_function!=1)
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
+   }
   }
   else
   //Caso em que escopo nao e funcao global, portanto precisa-se utilizar o tipo de variavel (nome_variavel nome_funcao)
@@ -646,9 +707,13 @@ e se ela foi declarada.
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
+    if(in_function!=1)
+    {
       int currentTypeInt = ((variable*)(identifier_temp->info))->type;
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+    }
     }
     //printf("identificador\n");
   }
@@ -666,9 +731,13 @@ e se ela foi declarada.
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
-    int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-    varRelations[currentRelationPos] = currentTypeInt;
-    ++currentRelationPos;
+    if(in_function!=1)
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+    }
     //printf("identificador\n");
     }
   }
@@ -687,37 +756,54 @@ e se ela foi declarada.
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
-    int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-    varRelations[currentRelationPos] = currentTypeInt;
-    ++currentRelationPos;
+    if(in_function!=1)
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+    }
     //printf("identificador\n");
     }
   }
 }
 | token_variavel_caracter 
 {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+  }
+  
 }
 | token_string 
 {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+  }
 }
 | token_abrep EXPR token_fechap 
 | token_verdadeiro 
 {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+  }
 }
 | token_falso 
 {
-  int currentTypeInt = convertType(currentType);
-  varRelations[currentRelationPos] = currentTypeInt;
-  ++currentRelationPos;
+  if(in_function!=1)
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelations[currentRelationPos] = currentTypeInt;
+    ++currentRelationPos;
+  }
 }
 | token_identificador
 {
@@ -748,23 +834,67 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       List *functionTypes = (((function *)(identifier_temp->info))->parameters);
       while(argumentAux != NULL)
       {
-	List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
-	if(arguments_temp == NULL)
+	if(strcmp(argumentAux, "inteiro")==0)
 	{
-	  break;
+	if(0 != ((int)(functionTypes->info))) //inteiro
+	  {
+	    printf("Inteiro na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
 	}
-	else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	else if	(strcmp(argumentAux, "real")==0)
 	{
-	  printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	if(3 != ((int)(functionTypes->info))) //real
+	  {
+	    printf("Real na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "caracter")==0)
+	{
+	if(1 != ((int)(functionTypes->info))) //caracter
+	  {
+	    printf("Caracter na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "literal")==0)
+	{
+	if(2 != ((int)(functionTypes->info))) //literal
+	  {
+	    printf("Literal na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else if	(strcmp(argumentAux, "lógico")==0)
+	{
+	if(4 != ((int)(functionTypes->info))) //logico
+	  {
+	    printf("Logico na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
+	  }
+	}
+	else
+	{
+	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
+	  if(arguments_temp == NULL)
+	  {
+	    printf("Argumento %s nao foi inicializado na funcao %s", argumentAux, currentFunction);
+	    break;
+	  }
+	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	  {
+	    printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	  }
 	}
 	argumentAux = strtok(NULL, " ");
 	functionTypes=functionTypes->next;
       }
     }
+    
+      int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
+     // printf("%d \n", currentTypeInt);
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
   }
   strcpy(functionArguments, "\0");
-  strcpy(identifiers, "\0");
-  currentRelationPos = 0;
+  //strcpy(identifiers, "\0");
+  //currentRelationPos = 0;
   in_function = 0;
 };
 
