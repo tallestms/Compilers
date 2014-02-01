@@ -580,8 +580,8 @@ static const yytype_uint16 yyrline[] =
      604,   613,   613,   613,   613,   613,   613,   615,   616,   617,
      618,   618,   620,   634,   645,   645,   645,   645,   645,   646,
      647,   657,   667,   721,   770,   780,   789,   790,   799,   809,
-     808,   913,   913,   913,   913,   915,   915,   916,   916,   917,
-     917
+     808,   926,   926,   926,   926,   928,   928,   929,   929,   930,
+     930
 };
 #endif
 
@@ -2501,8 +2501,6 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 815 "compiler.y"
     { 
-if(strcmp(currentScope, "main") == 0)
-{
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
   {
@@ -2510,9 +2508,7 @@ if(strcmp(currentScope, "main") == 0)
   }
   else
   {
-    char auxArguments[100];
-    strcpy(auxArguments, functionArguments);
-    int arity = numSpaces(auxArguments);
+    int arity = numSpaces(functionArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
     {  
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
@@ -2561,20 +2557,42 @@ if(strcmp(currentScope, "main") == 0)
 	}
 	else
 	{
-	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
-	  if(arguments_temp == NULL)
+	  if(strcmp("main",currentScope)==0)
 	  {
-	    printf("Argumento %s nao foi inicializado na funcao %s.\n", argumentAux, currentFunction);
-	    break;
+	    List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
+	    if(arguments_temp==NULL)
+	    {
+	      //printf("Variavel %s nao declarada na linha %d\n",argumentAux, nLine);
+	    }
+	    else if(((variable*)(arguments_temp->info))->used == 0)
+	      printf("Variavel %s nao foi inicializada na linha %d\n", argumentAux, nLine);
+	    else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	    {
+	      printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	    }
 	  }
-	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	  else
 	  {
-	    printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	    char variableAux[MAX_FUNCTION+MAX_VARIABLE+1];
+	    strcpy(variableAux, argumentAux);
+	    strcat(variableAux, " ");
+	    strcat(variableAux, currentScope);
+	    
+	    List *arguments_temp = lookupStringFunction(hashVariables, variableAux);
+	    if(arguments_temp==NULL)
+	    {
+	      //printf("Variavel %s nao declarada na linha %d\n",argumentAux, nLine);
+	    }
+	    else if(((variable*)(arguments_temp->info))->used == 0)
+	      printf("Variavel %s nao foi inicializada na linha %d\n", argumentAux, nLine);
+	    else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	    {
+	      printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	    }
 	  }
-	}
 	argumentAux = strtok(NULL, " ");
 	functionTypes=functionTypes->next;
-      }
+	}
     }
     
       int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
@@ -2586,22 +2604,18 @@ if(strcmp(currentScope, "main") == 0)
       }
       ++currentRelationPos;
   }
-
-  }
-  else //Chamada de funcao dentro de outra funcao
-  {
-  }
-   strcpy(functionArguments, "\0");
+  strcpy(functionArguments, "\0");
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;
   in_function = 0;
+  }
 }
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 2605 "compiler.tab.c"
+#line 2619 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2832,7 +2846,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 920 "compiler.y"
+#line 933 "compiler.y"
 
 
 #include "lex.yy.c"

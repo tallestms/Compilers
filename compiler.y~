@@ -813,8 +813,6 @@ e se ela foi declarada.
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
-if(strcmp(currentScope, "main") == 0)
-{
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
   {
@@ -822,9 +820,7 @@ if(strcmp(currentScope, "main") == 0)
   }
   else
   {
-    char auxArguments[100];
-    strcpy(auxArguments, functionArguments);
-    int arity = numSpaces(auxArguments);
+    int arity = numSpaces(functionArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
     {  
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
@@ -873,20 +869,42 @@ if(strcmp(currentScope, "main") == 0)
 	}
 	else
 	{
-	  List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
-	  if(arguments_temp == NULL)
+	  if(strcmp("main",currentScope)==0)
 	  {
-	    printf("Argumento %s nao foi inicializado na funcao %s.\n", argumentAux, currentFunction);
-	    break;
+	    List *arguments_temp = lookupStringFunction(hashVariables, argumentAux);
+	    if(arguments_temp==NULL)
+	    {
+	      printf("Variavel %s nao declarada na linha %d\n",argumentAux, nLine);
+	    }
+	    else if(((variable*)(arguments_temp->info))->used == 0)
+	      printf("Variavel %s nao foi inicializada na linha %d\n", argumentAux, nLine);
+	    else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	    {
+	      printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	    }
 	  }
-	  else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	  else
 	  {
-	    printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	    char variableAux[MAX_FUNCTION+MAX_VARIABLE+1];
+	    strcpy(variableAux, argumentAux);
+	    strcat(variableAux, " ");
+	    strcat(variableAux, currentScope);
+	    
+	    List *arguments_temp = lookupStringFunction(hashVariables, variableAux);
+	    if(arguments_temp==NULL)
+	    {
+	      printf("Variavel %s nao declarada na linha %d\n",argumentAux, nLine);
+	    }
+	    else if(((variable*)(arguments_temp->info))->used == 0)
+	      printf("Variavel %s nao foi inicializada na linha %d\n", argumentAux, nLine);
+	    else if (((variable*)(arguments_temp->info))->type != ((int)(functionTypes->info))) 
+	    {
+	      printf("Variavel %s na linha %d nao tem tipo correto equivalente na funcao %s.\n", argumentAux, nLine, currentFunction);
+	    }
 	  }
-	}
 	argumentAux = strtok(NULL, " ");
 	functionTypes=functionTypes->next;
-      }
+	}
     }
     
       int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
@@ -898,18 +916,12 @@ if(strcmp(currentScope, "main") == 0)
       }
       ++currentRelationPos;
   }
-
-  }
-  else //Chamada de funcao dentro de outra funcao
-  {
-    printf("oi");
-  }
-   strcpy(functionArguments, "\0");
+  strcpy(functionArguments, "\0");
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;
   in_function = 0;
-}
-;
+  }
+};
 
 FATOR_CASE: SINALFATOR | token_numinteiro | token_numreal | token_variavel_caracter; 
 
