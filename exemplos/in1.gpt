@@ -66,9 +66,9 @@ início
 	//f := (10.10e+10 - 10.10)*10.10 - 10;
 	//g := -10.10e+10;
 	//char := 'c';
-	//lit := "isso daqui é um texto";
+	lit := "isso daqui é um texto" + "aqui";
 	//z := verdadeiro;
 	//z := 10;
-	z := a>b e b<c; //erro
+	z := c>d e f<g; //erro
 	//mat := {[1,2],[2,1]};
 fim

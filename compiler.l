@@ -7,6 +7,7 @@
 
 int nLine=1;
 int in_function = 0;
+int in_logico = 0;
 char identifiers[10*MAX_VARIABLE];
 char functionArguments[10*MAX_VARIABLE];
 int varRelations[100];

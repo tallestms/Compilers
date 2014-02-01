@@ -12,6 +12,7 @@
 #define MAX_FUNCTION 32 //maior nome de funcao
 
 extern int in_function;
+extern int in_logico;
 extern int nLine;
 extern char identifiers[10*MAX_VARIABLE];
 extern char functionArguments[10*MAX_VARIABLE];
@@ -552,7 +553,6 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 {
   if(strcmp(currentScope, "main") == 0)
     { 
-      //printf("%s %d\n", identifiers, currentRelationPos);
       char* returnVariable = strtok(identifiers, " ");
       if (returnVariable != NULL)
       {
@@ -561,10 +561,22 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	{
 	  printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
 	}
+	else if((varRelations[0] == 2 || varRelations[0] == 1) && currentRelationPos > 1) //caracter ou literal
+	{
+	  printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
+	}
 	else if(!verifyRelationship(varRelations, currentRelationPos))
 	{
 	  //printRelationship(varRelations, currentRelationPos);
 	  printf("Valores incompativeis na linha %d.\n", nLine);
+	}
+	else if(in_logico==1)
+	{
+	  if((((variable*)(identifier_temp->info))->type) != 4)
+	  {
+	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+	  }
+	  in_logico=0;
 	}
 	else if(((variable*)(identifier_temp->info))->type != varRelations[0])
 	{	
@@ -602,6 +614,10 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	  {
 	    printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
 	  }
+	  else if((varRelations[0] == 2 || varRelations[0] == 1) && currentRelationPos > 1) //caracter ou literal
+	  {
+	    printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
+	  }
 	  else if(((variable*)(identifier_temp->info))->type != varRelations[0])
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
@@ -620,7 +636,7 @@ token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BL
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
 token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_AUXILIAR token_fimpara | token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
  
-LOGICOS: token_e | token_ou;
+LOGICOS: {in_logico = 1;} token_e | token_ou {in_logico=1;};
 ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
 EXPR: SIEXPR 
 | EXPR COMPARACOES SIEXPR
