@@ -28,7 +28,7 @@ início
 d := 10;
 c := 20;
 p := 10.10;
-soma3(p);
+//soma3(p);
 p := 20.20;
 retorne p;
 fim
@@ -40,7 +40,7 @@ variáveis
 	g : real;
 	char : caracter;
 	lit : literal;
-	z : lógico;
+	z,oi : lógico;
 	//mat : matriz[2] de inteiros; 
 fim-variáveis
 
@@ -66,9 +66,14 @@ início
 	//f := (10.10e+10 - 10.10)*10.10 - 10;
 	//g := -10.10e+10;
 	//char := 'c';
-	lit := "isso daqui é um texto" + "aqui";
+	lit := "isso daqui é um texto";
 	//z := verdadeiro;
 	//z := 10;
-	z := c>d e f<g; //erro
+	f := 20.20;
+	g := 10.10;
+	d := 10.10;
+	oi := verdadeiro;
+	a := b>(a+b+a);
+	z := b>a e (c<d) e (a>(b+a) ou (c<(d+c)));
 	//mat := {[1,2],[2,1]};
 fim

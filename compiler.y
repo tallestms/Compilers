@@ -13,6 +13,7 @@
 
 extern int in_function;
 extern int in_logico;
+extern int in_comparacao;
 extern int nLine;
 extern char identifiers[10*MAX_VARIABLE];
 extern char functionArguments[10*MAX_VARIABLE];
@@ -20,6 +21,7 @@ extern char currentType[10];
 extern char currentIdentifier[100];
 extern int varRelations[100];
 int currentRelationPos = 0;
+int currentRelationComparison = 0;
 char currentScope[MAX_FUNCTION] = "main";
 char currentFunction[MAX_FUNCTION];
 int currentFunctionArity = 0;
@@ -543,13 +545,18 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
      // printf("%d \n", currentTypeInt);
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
+      ++currentRelationComparison;
   }
   strcpy(functionArguments, "\0");
   strcpy(identifiers, "\0");
   currentRelationPos = 0;
   in_function = 0;
 } token_pontov
-| token_identificador token_atribuicao EXPR
+| token_identificador token_atribuicao 
+{
+currentRelationComparison = 0;
+}
+EXPR
 {
   if(strcmp(currentScope, "main") == 0)
     { 
@@ -565,11 +572,6 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	{
 	  printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
 	}
-	else if(!verifyRelationship(varRelations, currentRelationPos))
-	{
-	  //printRelationship(varRelations, currentRelationPos);
-	  printf("Valores incompativeis na linha %d.\n", nLine);
-	}
 	else if(in_logico==1)
 	{
 	  if((((variable*)(identifier_temp->info))->type) != 4)
@@ -578,6 +580,12 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	  }
 	  in_logico=0;
 	}
+	else if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
+	{
+	  //printRelationship(varRelations, currentRelationPos);
+	  printf("Valores incompativeis na linha %d.\n", nLine);
+	}
+
 	else if(((variable*)(identifier_temp->info))->type != varRelations[0])
 	{	
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
@@ -588,6 +596,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	  ((variable*)(identifier_temp->info))->used=1;
 	}
 	currentRelationPos = 0;
+	in_comparacao = 0;
 	strcpy(identifiers, "\0");
 	}
       }
@@ -618,6 +627,14 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	  {
 	    printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
 	  }
+	  else if(in_logico==1)
+	  {
+	  if((((variable*)(identifier_temp->info))->type) != 4)
+	  {
+	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+	  }
+	  in_logico=0;
+	  }
 	  else if(((variable*)(identifier_temp->info))->type != varRelations[0])
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
@@ -636,11 +653,62 @@ token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BL
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
 token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_AUXILIAR token_fimpara | token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
  
-LOGICOS: {in_logico = 1;} token_e | token_ou {in_logico=1;};
+LOGICOS: 
+{in_logico = 1;}
+{
+  if (in_comparacao = 1)
+  {	
+    //printf("%d %d\n", currentRelationPos, currentRelationComparison);
+    //printRelationship(varRelations, currentRelationComparison);
+    if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
+	{
+	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	}
+    currentRelationComparison=0;
+    in_comparacao = 0;
+  }
+}
+token_e |
+
+{in_logico = 1;}
+{
+  if (in_comparacao = 1)
+  {	
+    //printf("%d %d\n", currentRelationPos, currentRelationComparison);
+    //printRelationship(varRelations, currentRelationComparison);
+    if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
+	{
+	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	}
+    currentRelationComparison=0;
+    in_comparacao = 0;
+  }
+}
+token_ou;
+
 ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
 EXPR: SIEXPR 
+
 | EXPR COMPARACOES SIEXPR
-| EXPR LOGICOS SIEXPR;
+{
+    if (in_comparacao = 1)
+  {	
+    //printf("%d %d\n", currentRelationPos, currentRelationComparison);
+    //printRelationship(varRelations, currentRelationComparison);
+    if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
+	{
+	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	}
+    currentRelationComparison=0;
+    in_comparacao = 1
+    
+    
+    
+    ;
+  }
+}
+| EXPR LOGICOS SIEXPR 
+;
 
 /*
  *
@@ -667,6 +735,7 @@ SINALFATOR:  token_numreal_comsinal
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
+    ++currentRelationComparison;
     //printf("real com sinal\n");
   }
 }
@@ -677,6 +746,7 @@ SINALFATOR:  token_numreal_comsinal
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
+    ++currentRelationComparison;
     //printf("real com sinal\n");
   }
 
@@ -690,6 +760,7 @@ FATOR: SINALFATOR
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
+    ++currentRelationComparison;
     //printf("real com sinal\n");
   }
 }
@@ -700,6 +771,7 @@ FATOR: SINALFATOR
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
+    ++currentRelationComparison;
     //printf("real com sinal\n");
   }
 }
@@ -726,6 +798,7 @@ e se ela foi declarada.
       int currentTypeInt = ((variable*)(identifier_temp->info))->type;
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
+      ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
    }
@@ -751,6 +824,7 @@ e se ela foi declarada.
       int currentTypeInt = ((variable*)(identifier_temp->info))->type;
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
+      ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
     }
@@ -775,6 +849,7 @@ e se ela foi declarada.
       int currentTypeInt = ((variable*)(identifier_temp->info))->type;
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
+      ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
     //printf("identificador\n");
@@ -800,6 +875,7 @@ e se ela foi declarada.
       int currentTypeInt = ((variable*)(identifier_temp->info))->type;
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
+      ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
     //printf("identificador\n");
@@ -813,6 +889,7 @@ e se ela foi declarada.
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
+    ++currentRelationComparison;
   }
   
 }
@@ -823,6 +900,7 @@ e se ela foi declarada.
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
+    ++currentRelationComparison;
   }
 }
 | token_abrep EXPR token_fechap 
@@ -833,6 +911,7 @@ e se ela foi declarada.
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
+    ++currentRelationComparison;
   }
 }
 | token_falso 
@@ -842,6 +921,7 @@ e se ela foi declarada.
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
+    ++currentRelationComparison;
   }
 }
 | token_identificador
@@ -956,6 +1036,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
       }
       ++currentRelationPos;
+      ++currentRelationComparison;
   strcpy(functionArguments, "\0");
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;

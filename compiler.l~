@@ -7,7 +7,8 @@
 
 int nLine=1;
 int in_function = 0;
-int in_logic = 0;
+int in_logico = 0;
+int in_comparacao = 0;
 char identifiers[10*MAX_VARIABLE];
 char functionArguments[10*MAX_VARIABLE];
 int varRelations[100];
@@ -97,11 +98,11 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "++"						{return token_maismais;}
 "--"						{return token_menosmenos;}
 ":="						{return token_atribuicao;}
-">"						{return token_maior;}
-"<"						{return token_menor;}
-">="						{return token_maiori;}
-"<="						{return token_menori;}
-"="						{return token_igual;}
+">"						{in_comparacao = 1; return token_maior;}
+"<"						{in_comparacao = 1; return token_menor;}
+">="						{in_comparacao = 1; return token_maiori;}
+"<="						{in_comparacao = 1; return token_menori;}
+"="						{in_comparacao = 1; return token_igual;}
 "<>"						{return token_diferente;}
 "&&"						{return token_el;}
 "||"						{return token_oul;}

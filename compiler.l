@@ -8,6 +8,7 @@
 int nLine=1;
 int in_function = 0;
 int in_logico = 0;
+int in_comparacao = 0;
 char identifiers[10*MAX_VARIABLE];
 char functionArguments[10*MAX_VARIABLE];
 int varRelations[100];
@@ -97,15 +98,12 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "++"						{return token_maismais;}
 "--"						{return token_menosmenos;}
 ":="						{return token_atribuicao;}
-">"						{return token_maior;}
-"<"						{return token_menor;}
-">="						{return token_maiori;}
-"<="						{return token_menori;}
-"="						{return token_igual;}
-"<>"						{return token_diferente;}
-"&&"						{return token_el;}
-"||"						{return token_oul;}
-"!"						{return token_negacao;}
+">"						{in_comparacao = 1; return token_maior;}
+"<"						{in_comparacao = 1; return token_menor;}
+">="						{in_comparacao = 1; return token_maiori;}
+"<="						{in_comparacao = 1; return token_menori;}
+"="						{in_comparacao = 1; return token_igual;}
+"<>"						{in_comparacao = 1; return token_diferente;}
 {caracter}					{if(in_function == 1){strcat(functionArguments, "caracter"); strcat(functionArguments, " ");} strcpy(currentType, "caracter");return token_variavel_caracter;}
 {string}					{if(in_function == 1){strcat(functionArguments, "literal"); strcat(functionArguments, " ");} strcpy(currentType, "literal");return token_string;}
 {identificador}					{strcpy(currentIdentifier, yytext); if(in_function!=1){strcat(identifiers, yytext); strcat(identifiers, " ");} if(in_function == 1){strcat(functionArguments, yytext); strcat(functionArguments, " ");} return token_identificador;}
