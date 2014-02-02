@@ -46,19 +46,19 @@ fim-variáveis
 
 início
 	a := 10;
-	//b := 20;
+	b := 20;
 	//a := 10 + 10 + b;
 	//c := 20.20;
 	//b := 20 + b + b;
 	//c := soma2(a,b); 
 	//soma2(a,b);
 	//a := soma2(a,b,c); 
-	soma(10);
-	soma3(a);
+	//soma(10);
+	//soma3(a);
 	a := 10;
-	c := 10.10 + 20.10;
-	b := 10;
-	//c := soma(10);
+	//c := 10.10 + 20.10;
+	//b := 10;
+	a := soma(10+10); // nao aceita esse tipo na linguagem vai se fuder ai ja eh demais
 	//c := 10.10;
 	//d := -10.10 + 10;
 	//adsad := 20;
@@ -66,9 +66,10 @@ início
 	//f := (10.10e+10 - 10.10)*10.10 - 10;
 	//g := -10.10e+10;
 	//char := 'c';
-	lit := "isso daqui é um texto";
+	//lit := "isso daqui é um texto";
 	//z := verdadeiro;
 	//z := 10;
+	c := 10.10;
 	f := 20.20;
 	g := 10.10;
 	d := 10.10;

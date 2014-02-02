@@ -27,6 +27,7 @@ char currentScope[MAX_FUNCTION] = "main";
 char currentFunction[MAX_FUNCTION];
 int currentFunctionArity = 0;
 char returnFunctionType[10];
+int switchType;
 List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
@@ -665,7 +666,65 @@ currentRelationPos=0;
 }
 token_faca BLOCO_AUXILIAR token_fimpara | 
 
-token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
+token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep token_identificador
+{
+  if(strcmp(currentScope, "main")==0)
+  {
+    List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
+    if(identifier_temp==NULL)
+    {
+      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+    }
+    else if(((variable*)(identifier_temp->info))->used == 0)
+      printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
+    else
+    {  
+    if(in_function!=1)
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
+      ++currentRelationComparison;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+    }
+   }
+  }
+  else
+  //Caso em que escopo nao e funcao global, portanto precisa-se utilizar o tipo de variavel (nome_variavel nome_funcao)
+  {
+  char auxVariable[MAX_VARIABLE+MAX_FUNCTION+1];
+  strcpy(auxVariable, currentIdentifier);
+  strcat(auxVariable, " ");
+  strcat(auxVariable, currentScope);
+   List *identifier_temp = lookupStringVariable(hashVariables, auxVariable);
+    if(identifier_temp==NULL)
+    {
+      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+    }
+    else if(((variable*)(identifier_temp->info))->used == 0)
+      printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
+    else
+    {  
+    if(in_function!=1)
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
+      ++currentRelationComparison;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+    }
+    }
+    //printf("identificador\n");
+  }
+}
+token_fechap 
+{
+if(varRelations[0] != 2 && varRelations[0] != 4)
+  switchType = varRelations[0];
+else
+  switchType = 5;
+}
+BLOCO_SWITCH;
  
 LOGICOS: 
 {in_logico = 1;}
@@ -1089,8 +1148,27 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   in_function = 0;
   };
 
-FATOR_CASE: SINALFATOR | token_numinteiro | token_numreal | token_variavel_caracter; 
-
+FATOR_CASE: SINALFATOR | token_numinteiro
+{
+  if(switchType != 0 && switchType !=5)
+  {
+    printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
+  }
+}
+| token_numreal 
+{
+  if(switchType != 3 && switchType != 5)
+  {
+    printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
+  }
+  }
+| token_variavel_caracter
+{
+  if(switchType != 1 && switchType !=5)
+  {
+    printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
+  }
+};
 MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac | token_abrecol BLOCO_MATRIZ token_fechacol;
 MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol BLOCO_MATRIZ token_fechacol | token_abrecol BLOCO_MATRIZ token_fechacol;
 BLOCO_MATRIZ: FATOR | BLOCO_MATRIZ token_virgula FATOR;

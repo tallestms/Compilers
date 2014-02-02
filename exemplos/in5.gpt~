@@ -96,9 +96,9 @@ início
 	 c
 	 */
 	 
-	 valor := mes("20/05/2013") > mes(data_atual) e dia(data(ontem)) < 5 ou ano(data_atual) > 2012 e not(a>b e b>a);
+	 //valor := mes("20/05/2013") > mes(data_atual) e dia(data(ontem)) < 5 ou ano(data_atual) > 2012 e not(a>b e b>a);
 	 
-	 //a := soma(mmc(a,b,c)+1) + (b*(c+1+(c+2)));
+	 a := soma(mmc(a,b,c)+1) + (b*(c+1+(c+2)));
 	 
 	 
 	 
