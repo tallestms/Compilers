@@ -58,7 +58,7 @@ início
 	a := 10;
 	c := 10.10 + 20.10;
 	b := 10;
-	//c := soma(10); //verificar a função dentro da expressao
+	//c := soma(10);
 	//c := 10.10;
 	//d := -10.10 + 10;
 	//adsad := 20;
@@ -74,7 +74,8 @@ início
 	d := 10.10;
 	oi := verdadeiro;
 	a := b>(a+b+a);
-	a := b>(soma(a)+a); //erro
+	a := b>(soma(a)+a);
+	z := soma(a)>soma(b); //nao deveria dar erro
 	z := b>a e (c<d) e (a>(b+soma(a)) ou (c<(d+c)));
 	//mat := {[1,2],[2,1]};
 fim

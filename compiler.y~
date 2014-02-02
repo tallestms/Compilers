@@ -14,6 +14,7 @@
 extern int in_function;
 extern int in_logico;
 extern int in_comparacao;
+extern int in_condicional;
 extern int nLine;
 extern char identifiers[10*MAX_VARIABLE];
 extern char functionArguments[10*MAX_VARIABLE];
@@ -572,7 +573,7 @@ EXPR
 	{
 	  printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
 	}
-	else if(in_logico==1)
+	else if(in_logico==1 && in_condicional == 0)
 	{
 	  if((((variable*)(identifier_temp->info))->type) != 4)
 	  {
@@ -596,6 +597,7 @@ EXPR
 	  ((variable*)(identifier_temp->info))->used=1;
 	}
 	currentRelationPos = 0;
+	in_comparacao = 0;
 	strcpy(identifiers, "\0");
 	}
       }
@@ -626,7 +628,7 @@ EXPR
 	  {
 	    printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
 	  }
-	  else if(in_logico==1)
+	  else if(in_logico==1 && in_condicional == 0)
 	  {
 	  if((((variable*)(identifier_temp->info))->type) != 4)
 	  {
@@ -646,20 +648,35 @@ EXPR
 	}
       }
    }
-token_pontov |
+token_pontov {
+currentRelationComparison = 0;
+}|
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
-token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap token_pontov | token_enquanto token_abrep EXPR token_fechap token_faca BLOCO_AUXILIAR token_fimequanto | 
+token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap {in_condicional=0;} token_pontov | 
+token_enquanto token_abrep EXPR token_fechap {in_condicional=0;}  token_faca BLOCO_AUXILIAR token_fimequanto | 
 token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_AUXILIAR token_fimpara | token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
  
 LOGICOS: 
 {in_logico = 1;}
 {
-  if (in_comparacao = 1)
+  if (in_comparacao = 1 && in_condicional == 0)
   {	
     //printf("%d %d\n", currentRelationPos, currentRelationComparison);
     //printRelationship(varRelations, currentRelationComparison);
     if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
+	{
+	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	}
+    currentRelationComparison=0;
+    in_comparacao = 0;
+  }
+  else if (in_condicional == 1)
+  {	
+    //printf("%d %d\n", currentRelationPos, currentRelationComparison);
+    //printf("%s", identifiers);
+    //printRelationship(varRelations, currentRelationComparison);
+    if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
 	}
@@ -671,11 +688,23 @@ token_e |
 
 {in_logico = 1;}
 {
-  if (in_comparacao = 1)
+  if (in_comparacao = 1 && in_condicional == 0)
   {	
     //printf("%d %d\n", currentRelationPos, currentRelationComparison);
     //printRelationship(varRelations, currentRelationComparison);
     if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
+	{
+	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	}
+    currentRelationComparison=0;
+    in_comparacao = 0;
+  }
+    else if (in_condicional == 1)
+  {	
+    //printf("%d %d\n", currentRelationPos, currentRelationComparison);
+    //printf("%s", identifiers);
+    //printRelationship(varRelations, currentRelationComparison);
+    if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
 	}
@@ -690,7 +719,7 @@ EXPR: SIEXPR
 
 | EXPR COMPARACOES SIEXPR
 {
-    if (in_comparacao = 1)
+    if (in_comparacao = 1 && in_condicional == 0)
   {	
     //printf("%d %d\n", currentRelationPos, currentRelationComparison);
     //printRelationship(varRelations, currentRelationComparison);
@@ -699,11 +728,19 @@ EXPR: SIEXPR
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
 	}
     currentRelationComparison=0;
-    in_comparacao = 1
-    
-    
-    
-    ;
+    in_comparacao = 1;
+  }
+    else if (in_condicional == 1)
+  {
+    //printf("%d %d ", currentRelationPos, currentRelationComparison);
+    //printf("%s\n", identifiers);
+    //printRelationship(varRelations, currentRelationComparison);
+    if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
+	{
+	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	}
+    currentRelationComparison=0;
+    in_comparacao = 1;
   }
 }
 | EXPR LOGICOS SIEXPR 

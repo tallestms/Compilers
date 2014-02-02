@@ -74,7 +74,8 @@ início
 	d := 10.10;
 	oi := verdadeiro;
 	a := b>(a+b+a);
-	a := b>(soma(a)+a); //erro
-	z := falso e b>a e (c<d) e (a>(b+soma(a)) ou (c<(d+c)));
+	a := b>(soma(a)+a);
+	z := soma(a)>soma(b); //nao deveria dar erro
+	z := b>a e (c<d) e (a>(b+soma(a)) ou (c<(d+c)));
 	//mat := {[1,2],[2,1]};
 fim

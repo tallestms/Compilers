@@ -9,6 +9,7 @@ int nLine=1;
 int in_function = 0;
 int in_logico = 0;
 int in_comparacao = 0;
+int in_condicional = 0;
 char identifiers[10*MAX_VARIABLE];
 char functionArguments[10*MAX_VARIABLE];
 int varRelations[100];
@@ -55,8 +56,8 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "caso"						{return token_caso;}
 "de"						{return token_de;}
 "e"						{return token_e;}
-"enquanto"					{return token_enquanto;}
-"então"						{return token_entao;}
+"enquanto"					{in_condicional=1; return token_enquanto;}
+"então"						{in_condicional=0; in_logico=0; return token_entao;}
 "faça"						{return token_faca;}
 "falso"						{if(in_function == 1){strcat(functionArguments, "lógico"); strcat(functionArguments, " ");} strcpy(currentType, "lógico");return token_falso;}
 "fim"						{return token_fim;}
@@ -84,7 +85,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "reais"						{return token_reais;}
 "real"						{strcpy(currentType, yytext); return token_real;}
 "retorne"					{return token_retorne;}
-"se"						{return token_se;}
+"se"						{in_condicional=1; return token_se;}
 "seleciona"					{return token_seleciona;}
 "fim-seleciona"					{return token_fimseleciona;}
 "senão"						{return token_senao;}
