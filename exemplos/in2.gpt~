@@ -3,13 +3,15 @@ algoritmo idade2;
 variáveis
 	idade : inteiro;
 	nome : literal;
-	x : inteiro;
+	x,fat : inteiro;
 	res : inteiro;
 	a,b:real;
 fim-variáveis
 
 início
+
 	x := 10;
+	fat := 10;
 	res := 10;
 	a:=10.10;
 	b:=10.20;
@@ -17,23 +19,34 @@ início
 	//imprima(nome, ", digite sua idade:");
 	idade := 10;
 	se (idade >= 18 e idade < 10 e idade > 10) então
-	  idade := 10;
+	  idade := 10.10;
 	fim-se
-	
+			res := res + x + 10.10 + 10.10;
+
 	enquanto (x <> 10) faça
-		res := res * x;
+		res := res + x + 10.10 + 10.10;
 		x := x - 1;
 	fim-enquanto
+
+	x := 10;
+	res := 20;
 	
 	enquanto (x <> 0) faça
-		res := res*x;
-		a := a + b;
+		res := res*x+10.10;
 	fim-enquanto
-	
+/*	
 	faça 
 		res := res*x;
 		x := x - 1;
-	enquanto (x > verdadeiro); 	
+	enquanto (x > 1); 	
+	
+	para (x de fat até 10 passo 10) faça
+			faça 
+			    res := res*x+10.10;
+			    a := a + b+10.10;
+			enquanto (x > 1); 
+	fim-para
+		
 	
 	/*
 	// Exemplo de uso de SWITCH
@@ -54,6 +67,5 @@ início
 		padrão:
 			parar;
 	fim-seleciona
-	*/
-	
+*/	
 fim

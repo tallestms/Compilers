@@ -75,7 +75,7 @@ início
 	oi := verdadeiro;
 	a := b>(a+b+a);
 	a := b>(soma(a)+a);
-	z := soma(a)>soma(b); //nao deveria dar erro
+	z := soma(a)>soma(b); //nao deveria dar erro, falta fazer SWITCH e FOR
 	z := b>a e (c<d) e (a>(b+soma(a)) ou (c<(d+c)));
 	//mat := {[1,2],[2,1]};
 fim

@@ -58,7 +58,7 @@ início
 	a := 10;
 	c := 10.10 + 20.10;
 	b := 10;
-	//c := soma(10); //verificar a função dentro da expressao
+	//c := soma(10);
 	//c := 10.10;
 	//d := -10.10 + 10;
 	//adsad := 20;

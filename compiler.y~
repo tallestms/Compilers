@@ -561,6 +561,8 @@ EXPR
 {
   if(strcmp(currentScope, "main") == 0)
     { 
+    	printRelationship(varRelations, currentRelationPos);
+	printf("%d\n", in_comparacao);
       char* returnVariable = strtok(identifiers, " ");
       if (returnVariable != NULL)
       {
@@ -586,7 +588,6 @@ EXPR
 	  //printRelationship(varRelations, currentRelationPos);
 	  printf("Valores incompativeis na linha %d.\n", nLine);
 	}
-
 	else if(((variable*)(identifier_temp->info))->type != varRelations[0])
 	{	
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
@@ -654,8 +655,19 @@ currentRelationComparison = 0;
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
 token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap {in_condicional=0;} token_pontov | 
-token_enquanto token_abrep EXPR token_fechap {in_condicional=0;}  token_faca BLOCO_AUXILIAR token_fimequanto | 
-token_para token_abrep token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap token_faca BLOCO_AUXILIAR token_fimpara | token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
+token_enquanto token_abrep EXPR token_fechap {in_condicional=0;currentRelationPos=0;strcpy(identifiers,"\0");} token_faca BLOCO_AUXILIAR token_fimequanto | 
+token_para token_abrep {strcpy(identifiers,"\0"); currentRelationPos=0;} token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap  
+{
+if(!verifyRelationship(varRelations, currentRelationPos))
+  {
+    printf("Valores incompativeis na linha %d\n", nLine);
+  }
+strcpy(identifiers,"\0"); 
+currentRelationPos=0;
+}
+token_faca BLOCO_AUXILIAR token_fimpara | 
+
+token_seleciona token_abrep token_identificador token_fechap BLOCO_SWITCH;
  
 LOGICOS: 
 {in_logico = 1;}
@@ -740,7 +752,7 @@ EXPR: SIEXPR
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
 	}
     currentRelationComparison=0;
-    in_comparacao = 1;
+    //in_comparacao = 1;
   }
 }
 | EXPR LOGICOS SIEXPR 
