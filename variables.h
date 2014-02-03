@@ -15,6 +15,7 @@ struct variable_t {
   int type;
   void *value;
   int used;
+  int matrix;
 };
 typedef struct variable_t variable;
 
@@ -38,7 +39,7 @@ variable* createVariable();
  * Input: ponteiro para variavel e seus atributos(nome, escopo e etc)
  * Output: nada
  */
-void setVariable(variable* var, char* name, char* scope, int type);
+void setVariable(variable* var, char* name, char* scope, int type, int matrix);
 int convertType(char *type);
 int convertTypeRelation(char *type);
 #endif /* VARIABLES_H_ */

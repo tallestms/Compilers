@@ -28,6 +28,7 @@ char currentFunction[MAX_FUNCTION];
 int currentFunctionArity = 0;
 char returnFunctionType[10];
 int switchType;
+extern int isMatrix;
 List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
@@ -117,12 +118,14 @@ hashTable* hashFunction = NULL;
 %%
 PROG:  token_algoritmo token_identificador token_pontov BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
+  verifyMatrix(hashVariables);
   //verifyUsed(hashVariables);
 }
 |
 token_algoritmo token_identificador
 token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
+  verifyMatrix(hashVariables);
   //verifyUsed(hashVariables);
 }
 ;
@@ -142,7 +145,8 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, varName, currentScope, intVarType);  
+	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  isMatrix = 0;  //Próxima variável entrar como não matriz
  	  addInfoVariable(hashVariables, varName, newVar);
 	}
 	else
@@ -167,7 +171,8 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, auxVariable, currentScope, intVarType);
+	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);  
 	}
 	else
@@ -189,14 +194,15 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
       {
       if(lookupStringVariable(hashVariables, varName)==NULL)
       {
-	variable* newVar = createVariable();
-	int intVarType = convertType(currentType);
-	setVariable(newVar, varName, currentScope, intVarType);
-	addInfoVariable(hashVariables, varName, newVar);
+		variable* newVar = createVariable();
+		int intVarType = convertType(currentType);
+		setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+		isMatrix = 0;  //Próxima variável entrar como não matriz
+		addInfoVariable(hashVariables, varName, newVar);
       }  
       else
       {
-	printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
+		printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
       }
       varName = strtok(NULL, " ");
     }
@@ -215,8 +221,9 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, auxVariable, currentScope, intVarType);
-  	  addInfoVariable(hashVariables, auxVariable, newVar);
+	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  isMatrix = 0;  //Próxima variável entrar como não matriz
+	  addInfoVariable(hashVariables, auxVariable, newVar);
 	} 
 	else
 	{
@@ -395,8 +402,9 @@ VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS
     {
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
-      setVariable(newVar, varName, currentScope, intVarType);
-      addInfoVariable(hashVariables, varName, newVar);
+      setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	isMatrix = 0;  //Próxima variável entrar como não matriz
+	addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
     }
     else
@@ -417,7 +425,8 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
     {
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
-      setVariable(newVar, varName, currentScope, intVarType);
+      setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	isMatrix = 0;  //Próxima variável entrar como não matriz
       addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
     }
