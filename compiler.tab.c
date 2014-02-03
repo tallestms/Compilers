@@ -583,14 +583,14 @@ static const yytype_uint16 yyrline[] =
      279,   309,   309,   309,   311,   310,   334,   333,   357,   357,
      358,   358,   360,   360,   361,   362,   363,   363,   364,   364,
      366,   367,   369,   368,   379,   377,   386,   408,   430,   438,
-     439,   440,   442,   448,   441,   558,   562,   557,   654,   655,
-     656,   656,   657,   657,   658,   659,   658,   669,   670,   721,
-     669,   730,   731,   730,   758,   759,   758,   786,   786,   786,
-     787,   789,   815,   825,   825,   825,   825,   825,   825,   827,
-     828,   829,   830,   830,   832,   847,   859,   859,   859,   859,
-     859,   860,   861,   872,   883,   939,   990,  1001,  1011,  1012,
-    1022,  1033,  1032,  1151,  1151,  1158,  1165,  1172,  1172,  1173,
-    1173,  1174,  1174
+     439,   440,   442,   448,   441,   559,   563,   558,   655,   656,
+     657,   657,   658,   658,   659,   660,   659,   670,   671,   722,
+     670,   731,   732,   731,   759,   760,   759,   787,   787,   787,
+     788,   790,   816,   826,   826,   826,   826,   826,   826,   828,
+     829,   830,   831,   831,   833,   848,   860,   860,   860,   860,
+     860,   861,   862,   873,   884,   940,   991,  1002,  1012,  1013,
+    1023,  1034,  1033,  1161,  1161,  1168,  1175,  1182,  1182,  1183,
+    1183,  1184,  1184
 };
 #endif
 
@@ -2210,13 +2210,14 @@ yyreduce:
   strcpy(identifiers, "\0");
   currentRelationPos = 0;
   in_function = 0;
+  
 }
     break;
 
   case 65:
 
 /* Line 1806 of yacc.c  */
-#line 558 "compiler.y"
+#line 559 "compiler.y"
     {
 currentRelationComparison = 0;
 }
@@ -2225,7 +2226,7 @@ currentRelationComparison = 0;
   case 66:
 
 /* Line 1806 of yacc.c  */
-#line 562 "compiler.y"
+#line 563 "compiler.y"
     {
   if(strcmp(currentScope, "main") == 0)
     { 
@@ -2254,7 +2255,7 @@ currentRelationComparison = 0;
 	  //printRelationship(varRelations, currentRelationPos);
 	  printf("Valores incompativeis na linha %d.\n", nLine);
 	}
-	else if(((variable*)(identifier_temp->info))->type != varRelations[0])
+	else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
 	{	
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	 // printf("Tipo da varivel: %d -> Tipo da expressao: %d.\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
@@ -2303,7 +2304,7 @@ currentRelationComparison = 0;
 	  }
 	  in_logico=0;
 	  }
-	  else if(((variable*)(identifier_temp->info))->type != varRelations[0])
+	  else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	  //  printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
@@ -2320,7 +2321,7 @@ currentRelationComparison = 0;
   case 67:
 
 /* Line 1806 of yacc.c  */
-#line 651 "compiler.y"
+#line 652 "compiler.y"
     {
 currentRelationComparison = 0;
 }
@@ -2329,28 +2330,28 @@ currentRelationComparison = 0;
   case 70:
 
 /* Line 1806 of yacc.c  */
-#line 656 "compiler.y"
+#line 657 "compiler.y"
     {in_condicional=0;}
     break;
 
   case 72:
 
 /* Line 1806 of yacc.c  */
-#line 657 "compiler.y"
+#line 658 "compiler.y"
     {in_condicional=0;currentRelationPos=0;strcpy(identifiers,"\0");}
     break;
 
   case 74:
 
 /* Line 1806 of yacc.c  */
-#line 658 "compiler.y"
+#line 659 "compiler.y"
     {strcpy(identifiers,"\0"); currentRelationPos=0;}
     break;
 
   case 75:
 
 /* Line 1806 of yacc.c  */
-#line 659 "compiler.y"
+#line 660 "compiler.y"
     {
 if(!verifyRelationship(varRelations, currentRelationPos))
   {
@@ -2364,14 +2365,14 @@ currentRelationPos=0;
   case 77:
 
 /* Line 1806 of yacc.c  */
-#line 669 "compiler.y"
+#line 670 "compiler.y"
     {strcpy(identifiers, "\0"); currentRelationPos=0;}
     break;
 
   case 78:
 
 /* Line 1806 of yacc.c  */
-#line 670 "compiler.y"
+#line 671 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2427,7 +2428,7 @@ currentRelationPos=0;
   case 79:
 
 /* Line 1806 of yacc.c  */
-#line 721 "compiler.y"
+#line 722 "compiler.y"
     {
 if(varRelations[0] != 2 && varRelations[0] != 4)
   switchType = varRelations[0];
@@ -2439,14 +2440,14 @@ else
   case 81:
 
 /* Line 1806 of yacc.c  */
-#line 730 "compiler.y"
+#line 731 "compiler.y"
     {in_logico = 1;}
     break;
 
   case 82:
 
 /* Line 1806 of yacc.c  */
-#line 731 "compiler.y"
+#line 732 "compiler.y"
     {
   if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -2477,14 +2478,14 @@ else
   case 84:
 
 /* Line 1806 of yacc.c  */
-#line 758 "compiler.y"
+#line 759 "compiler.y"
     {in_logico = 1;}
     break;
 
   case 85:
 
 /* Line 1806 of yacc.c  */
-#line 759 "compiler.y"
+#line 760 "compiler.y"
     {
   if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -2515,7 +2516,7 @@ else
   case 91:
 
 /* Line 1806 of yacc.c  */
-#line 790 "compiler.y"
+#line 791 "compiler.y"
     {
     if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -2546,7 +2547,7 @@ else
   case 104:
 
 /* Line 1806 of yacc.c  */
-#line 833 "compiler.y"
+#line 834 "compiler.y"
     {
   /*
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
@@ -2566,7 +2567,7 @@ else
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 848 "compiler.y"
+#line 849 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2583,7 +2584,7 @@ else
   case 112:
 
 /* Line 1806 of yacc.c  */
-#line 862 "compiler.y"
+#line 863 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2599,7 +2600,7 @@ else
   case 113:
 
 /* Line 1806 of yacc.c  */
-#line 873 "compiler.y"
+#line 874 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2615,7 +2616,7 @@ else
   case 114:
 
 /* Line 1806 of yacc.c  */
-#line 889 "compiler.y"
+#line 890 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2671,7 +2672,7 @@ else
   case 115:
 
 /* Line 1806 of yacc.c  */
-#line 940 "compiler.y"
+#line 941 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2727,7 +2728,7 @@ else
   case 116:
 
 /* Line 1806 of yacc.c  */
-#line 991 "compiler.y"
+#line 992 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2743,7 +2744,7 @@ else
   case 117:
 
 /* Line 1806 of yacc.c  */
-#line 1002 "compiler.y"
+#line 1003 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2758,7 +2759,7 @@ else
   case 119:
 
 /* Line 1806 of yacc.c  */
-#line 1013 "compiler.y"
+#line 1014 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2773,7 +2774,7 @@ else
   case 120:
 
 /* Line 1806 of yacc.c  */
-#line 1023 "compiler.y"
+#line 1024 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2788,7 +2789,7 @@ else
   case 121:
 
 /* Line 1806 of yacc.c  */
-#line 1033 "compiler.y"
+#line 1034 "compiler.y"
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2799,7 +2800,7 @@ else
   case 122:
 
 /* Line 1806 of yacc.c  */
-#line 1039 "compiler.y"
+#line 1040 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -2895,17 +2896,26 @@ else
 	functionTypes=functionTypes->next;
 	}
     }
-  }
-    
       int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
      // printf("%d \n", currentTypeInt);
       varRelations[currentRelationPos] = currentTypeInt;
-      if(currentTypeInt==5)
-      {
-	printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
-      }
       ++currentRelationPos;
       ++currentRelationComparison;
+  }
+      if(identifier_temp!=NULL)
+      {
+	int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
+      // printf("%d \n", currentTypeInt);
+	varRelations[currentRelationPos] = currentTypeInt;
+	if(currentTypeInt==5)
+	{
+	  printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
+	  // printf("%d \n", currentTypeInt);
+	  varRelations[currentRelationPos] = currentTypeInt;
+	  ++currentRelationPos;
+	  ++currentRelationComparison;
+	}
+      }
   strcpy(functionArguments, "\0");
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;
@@ -2916,7 +2926,7 @@ else
   case 124:
 
 /* Line 1806 of yacc.c  */
-#line 1152 "compiler.y"
+#line 1162 "compiler.y"
     {
   if(switchType != 0 && switchType !=5)
   {
@@ -2928,7 +2938,7 @@ else
   case 125:
 
 /* Line 1806 of yacc.c  */
-#line 1159 "compiler.y"
+#line 1169 "compiler.y"
     {
   if(switchType != 3 && switchType != 5)
   {
@@ -2940,7 +2950,7 @@ else
   case 126:
 
 /* Line 1806 of yacc.c  */
-#line 1166 "compiler.y"
+#line 1176 "compiler.y"
     {
   if(switchType != 1 && switchType !=5)
   {
@@ -2952,7 +2962,7 @@ else
 
 
 /* Line 1806 of yacc.c  */
-#line 2956 "compiler.tab.c"
+#line 2966 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3183,7 +3193,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 1177 "compiler.y"
+#line 1187 "compiler.y"
 
 
 #include "lex.yy.c"
@@ -3194,6 +3204,8 @@ main(){
       yyparse();
       freeTable(hashVariables);
       freeTableFunction(hashFunction);
+      if(!currentParameters)
+	destroyList(currentParameters);
 }
 
 /* rotina chamada por yyparse quando encontra erro */

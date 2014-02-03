@@ -553,6 +553,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   strcpy(identifiers, "\0");
   currentRelationPos = 0;
   in_function = 0;
+  
 } token_pontov
 | token_identificador token_atribuicao 
 {
@@ -587,7 +588,7 @@ EXPR
 	  //printRelationship(varRelations, currentRelationPos);
 	  printf("Valores incompativeis na linha %d.\n", nLine);
 	}
-	else if(((variable*)(identifier_temp->info))->type != varRelations[0])
+	else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
 	{	
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	 // printf("Tipo da varivel: %d -> Tipo da expressao: %d.\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
@@ -636,7 +637,7 @@ EXPR
 	  }
 	  in_logico=0;
 	  }
-	  else if(((variable*)(identifier_temp->info))->type != varRelations[0])
+	  else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	  //  printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
@@ -1131,17 +1132,26 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	functionTypes=functionTypes->next;
 	}
     }
-  }
-    
       int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
      // printf("%d \n", currentTypeInt);
       varRelations[currentRelationPos] = currentTypeInt;
-      if(currentTypeInt==5)
-      {
-	printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
-      }
       ++currentRelationPos;
       ++currentRelationComparison;
+  }
+      if(identifier_temp!=NULL)
+      {
+	int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
+      // printf("%d \n", currentTypeInt);
+	varRelations[currentRelationPos] = currentTypeInt;
+	if(currentTypeInt==5)
+	{
+	  printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
+	  // printf("%d \n", currentTypeInt);
+	  varRelations[currentRelationPos] = currentTypeInt;
+	  ++currentRelationPos;
+	  ++currentRelationComparison;
+	}
+      }
   strcpy(functionArguments, "\0");
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;
@@ -1184,6 +1194,8 @@ main(){
       yyparse();
       freeTable(hashVariables);
       freeTableFunction(hashFunction);
+      if(!currentParameters)
+	destroyList(currentParameters);
 }
 
 /* rotina chamada por yyparse quando encontra erro */
