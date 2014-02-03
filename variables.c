@@ -92,7 +92,7 @@ void verifyMatrix(hashTable *hashtable)
         while(list!=NULL) {
             temp = list;
             list = list->next;
-            printf("%s -> %d\n",((variable*)(temp->info))->name,((variable*)(temp->info))->matrix); 
+            printf("%s -> %d -> %d\n",((variable*)(temp->info))->name,((variable*)(temp->info))->matrix,((variable*)(temp->info))->type); 
         }
     }
 }

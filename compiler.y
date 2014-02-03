@@ -21,6 +21,7 @@ extern char functionArguments[10*MAX_VARIABLE];
 extern char currentType[10];
 extern char currentIdentifier[100];
 extern int varRelations[100];
+char currentVariable[MAX_VARIABLE + MAX_FUNCTION + 2];
 int currentRelationPos = 0;
 int currentRelationComparison = 0;
 char currentScope[MAX_FUNCTION] = "main";
@@ -325,6 +326,10 @@ BLOCO_FUNCAO_RETORNO: token_retorne token_identificador
 	List *returned_variable = lookupStringVariable(hashVariables, aux);	
 	if(returned_variable != NULL){
 		List *current_function = lookupStringFunction(hashFunction, currentScope);
+		int variableIsMatrix = ((variable*)(returned_variable->info))->matrix;
+		if(variableIsMatrix){
+			printf("Funcoes nao podem retornar matrizes. Erro linha %d", nLine);
+		}
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
@@ -348,6 +353,10 @@ token_pontov | REPETICAO_COMANDO token_retorne token_identificador
 	List *returned_variable = lookupStringVariable(hashVariables, aux);	
 	if(returned_variable != NULL){
 		List *current_function = lookupStringFunction(hashFunction, currentScope);
+		int variableIsMatrix = ((variable*)(returned_variable->info))->matrix;
+		if(variableIsMatrix){
+			printf("Funcoes nao podem retornar matrizes. Erro linha %d", nLine);
+		}
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
@@ -568,6 +577,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 | token_identificador token_atribuicao 
 {
 currentRelationComparison = 0;
+strcpy(currentVariable, currentIdentifier);
 }
 EXPR
 {
@@ -580,6 +590,9 @@ EXPR
 	if(identifier_temp==NULL)
 	{
 	  printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
+	} 
+	else if (((variable*)(identifier_temp->info))->matrix != isMatrix){
+		printf("Erro semântico na linha %d. Matriz e nao matriz sendo atribuidas.\n", nLine);
 	}
 	else if((varRelations[0] == 2 || varRelations[0] == 1) && currentRelationPos > 1) //caracter ou literal
 	{
@@ -611,6 +624,7 @@ EXPR
 	in_comparacao = 0;
 	strcpy(identifiers, "\0");
 	}
+	isMatrix = 0; //Limpando
       }
    else
     {
@@ -635,6 +649,9 @@ EXPR
 	  {
 	    printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
 	  }
+	  else if (((variable*)(identifier_temp->info))->matrix != isMatrix){
+		printf("Erro semântico na linha %d. Matriz e nao matriz sendo atribuidas.\n", nLine);
+	  }
 	  else if((varRelations[0] == 2 || varRelations[0] == 1) && currentRelationPos > 1) //caracter ou literal
 	  {
 	    printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
@@ -654,6 +671,7 @@ EXPR
 	  }
 	  else
 	    ((variable*)(identifier_temp->info))->used=1;
+	  isMatrix = 0; //Limpando
 	}
 	currentRelationPos = 0;
 	}
@@ -1182,9 +1200,35 @@ FATOR_CASE: SINALFATOR | token_numinteiro
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
   }
 };
-MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac | token_abrecol BLOCO_MATRIZ token_fechacol;
+MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac 
+{
+	isMatrix = 1;
+}
+ | token_abrecol BLOCO_MATRIZ token_fechacol
+ {
+	isMatrix = 1; 
+ };
 MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol BLOCO_MATRIZ token_fechacol | token_abrecol BLOCO_MATRIZ token_fechacol;
-BLOCO_MATRIZ: FATOR | BLOCO_MATRIZ token_virgula FATOR;
+BLOCO_MATRIZ: FATOR {
+	if (in_function != 1 ){
+		List *identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+		if(identifier_temp != NULL){
+			if (((variable*)(identifier_temp->info))->type != varRelations[0]){
+				printf("Tipo errado associado a matriz na linha %d\n",nLine);
+			} 
+		}
+	} else {
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		List *identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+		if(identifier_temp != NULL){
+			if (((variable*)(identifier_temp->info))->type != varRelations[0]){
+				printf("Tipo errado associado a matriz na linha %d\n",nLine);
+			} 
+		}
+	}
+		
+}| BLOCO_MATRIZ token_virgula FATOR;
 
 //BLOCO_ARGUMENTOS: /*Empty*/ | EXPR | BLOCO_ARGUMENTOS token_virgula EXPR;
 %%

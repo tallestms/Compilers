@@ -26,9 +26,11 @@ variáveis
 fim-variáveis
 
 início
-
+	
 	idade := 22;
       a := soma(idade,idade);
+	
+	z := [1,2.0];
 	
 	atualizaGlobal(value);
 	
