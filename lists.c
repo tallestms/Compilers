@@ -116,10 +116,6 @@ void destroyList(List *l)
 	{
 		aux = l;
 		l = l->next;
-		if(!emptyList(aux->info))
-		{
-			free(aux->info);
-		}
 		free(aux);
 		destroyList(l);
 	}

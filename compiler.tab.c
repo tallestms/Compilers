@@ -579,18 +579,18 @@ static const yytype_uint16 yyrline[] =
 {
        0,   118,   118,   123,   129,   130,   130,   132,   182,   231,
      231,   231,   231,   231,   231,   240,   240,   244,   245,   246,
-     246,   246,   246,   246,   248,   248,   248,   250,   249,   280,
-     279,   309,   309,   309,   311,   310,   334,   333,   357,   357,
-     358,   358,   360,   360,   361,   362,   363,   363,   364,   364,
-     366,   367,   369,   368,   379,   377,   386,   408,   430,   438,
-     439,   440,   442,   448,   441,   559,   563,   558,   655,   656,
-     657,   657,   658,   658,   659,   660,   659,   670,   671,   722,
-     670,   731,   732,   731,   759,   760,   759,   787,   787,   787,
-     788,   790,   816,   826,   826,   826,   826,   826,   826,   828,
-     829,   830,   831,   831,   833,   848,   860,   860,   860,   860,
-     860,   861,   862,   873,   884,   940,   991,  1002,  1012,  1013,
-    1023,  1034,  1033,  1161,  1161,  1168,  1175,  1182,  1182,  1183,
-    1183,  1184,  1184
+     246,   246,   246,   246,   248,   248,   248,   250,   249,   281,
+     280,   310,   310,   310,   312,   311,   335,   334,   358,   358,
+     359,   359,   361,   361,   362,   363,   364,   364,   365,   365,
+     367,   368,   370,   369,   380,   378,   387,   409,   431,   439,
+     440,   441,   443,   449,   442,   560,   564,   559,   656,   657,
+     658,   658,   659,   659,   660,   661,   660,   671,   672,   723,
+     671,   732,   733,   732,   760,   761,   760,   788,   788,   788,
+     789,   791,   817,   820,   820,   820,   820,   820,   820,   822,
+     823,   824,   825,   825,   827,   842,   854,   854,   854,   854,
+     854,   855,   856,   867,   878,   934,   985,   996,  1006,  1007,
+    1017,  1028,  1027,  1155,  1155,  1162,  1169,  1176,  1176,  1177,
+    1177,  1178,  1178
 };
 #endif
 
@@ -1891,6 +1891,7 @@ yyreduce:
     else
     {
       printf("Erro semantico na linha %d. Funcao %s redeclarada.\n", nLine, currentIdentifier);
+      destroyList(currentParameters);
     }
 
   strcpy(identifiers, "\0");
@@ -1900,7 +1901,7 @@ yyreduce:
   case 28:
 
 /* Line 1806 of yacc.c  */
-#line 267 "compiler.y"
+#line 268 "compiler.y"
     {
   List *identifier_temp = lookupStringFunction(hashFunction, currentScope); //Procurando funcao dentro da hash de funcoes
   if(identifier_temp!=NULL)
@@ -1918,9 +1919,9 @@ yyreduce:
   case 29:
 
 /* Line 1806 of yacc.c  */
-#line 280 "compiler.y"
+#line 281 "compiler.y"
     {
-    currentParameters = startList();
+    currentParameters = startList(); //Sempre inicia uma nova lista de parametros.
     strcpy(currentScope, currentIdentifier); //O escopo passa a ser a funcao.
     if(lookupStringFunction(hashFunction, currentIdentifier) == NULL)
     {
@@ -1940,7 +1941,7 @@ yyreduce:
   case 30:
 
 /* Line 1806 of yacc.c  */
-#line 297 "compiler.y"
+#line 298 "compiler.y"
     {
   List *identifier_temp = lookupStringFunction(hashFunction, currentScope);
   if(identifier_temp!=NULL)
@@ -1958,7 +1959,7 @@ yyreduce:
   case 34:
 
 /* Line 1806 of yacc.c  */
-#line 311 "compiler.y"
+#line 312 "compiler.y"
     {
 	//foi retornada uma variável, verificar tipo de retorno
 	char aux[MAX_VARIABLE + MAX_FUNCTION + 1];
@@ -1986,7 +1987,7 @@ yyreduce:
   case 36:
 
 /* Line 1806 of yacc.c  */
-#line 334 "compiler.y"
+#line 335 "compiler.y"
     {
 	//foi retornada uma variável, verificar tipo de retorno
 	char aux[MAX_VARIABLE + MAX_FUNCTION + 1];
@@ -2014,7 +2015,7 @@ yyreduce:
   case 52:
 
 /* Line 1806 of yacc.c  */
-#line 369 "compiler.y"
+#line 370 "compiler.y"
     {
 // Em tipos_variaveis ira retornar o tipo de retorno da funcao, a qual sera acrescentada.
   List *aux = lookupStringFunction(hashFunction, currentScope);
@@ -2026,7 +2027,7 @@ yyreduce:
   case 54:
 
 /* Line 1806 of yacc.c  */
-#line 379 "compiler.y"
+#line 380 "compiler.y"
     {
   List *aux = lookupStringFunction(hashFunction, currentScope);
   if(aux!=NULL)
@@ -2037,7 +2038,7 @@ yyreduce:
   case 56:
 
 /* Line 1806 of yacc.c  */
-#line 387 "compiler.y"
+#line 388 "compiler.y"
     {
     currentFunctionArity++; //Variavel global controlando aridade sendo incrementada.
     char varName[MAX_FUNCTION+MAX_VARIABLE+1];
@@ -2063,7 +2064,7 @@ yyreduce:
   case 57:
 
 /* Line 1806 of yacc.c  */
-#line 409 "compiler.y"
+#line 410 "compiler.y"
     {
     currentFunctionArity++;
     char varName[MAX_FUNCTION+MAX_VARIABLE+1];
@@ -2090,7 +2091,7 @@ yyreduce:
   case 62:
 
 /* Line 1806 of yacc.c  */
-#line 442 "compiler.y"
+#line 443 "compiler.y"
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2101,7 +2102,7 @@ yyreduce:
   case 63:
 
 /* Line 1806 of yacc.c  */
-#line 448 "compiler.y"
+#line 449 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -2217,7 +2218,7 @@ yyreduce:
   case 65:
 
 /* Line 1806 of yacc.c  */
-#line 559 "compiler.y"
+#line 560 "compiler.y"
     {
 currentRelationComparison = 0;
 }
@@ -2226,7 +2227,7 @@ currentRelationComparison = 0;
   case 66:
 
 /* Line 1806 of yacc.c  */
-#line 563 "compiler.y"
+#line 564 "compiler.y"
     {
   if(strcmp(currentScope, "main") == 0)
     { 
@@ -2321,7 +2322,7 @@ currentRelationComparison = 0;
   case 67:
 
 /* Line 1806 of yacc.c  */
-#line 652 "compiler.y"
+#line 653 "compiler.y"
     {
 currentRelationComparison = 0;
 }
@@ -2330,28 +2331,28 @@ currentRelationComparison = 0;
   case 70:
 
 /* Line 1806 of yacc.c  */
-#line 657 "compiler.y"
+#line 658 "compiler.y"
     {in_condicional=0;}
     break;
 
   case 72:
 
 /* Line 1806 of yacc.c  */
-#line 658 "compiler.y"
+#line 659 "compiler.y"
     {in_condicional=0;currentRelationPos=0;strcpy(identifiers,"\0");}
     break;
 
   case 74:
 
 /* Line 1806 of yacc.c  */
-#line 659 "compiler.y"
+#line 660 "compiler.y"
     {strcpy(identifiers,"\0"); currentRelationPos=0;}
     break;
 
   case 75:
 
 /* Line 1806 of yacc.c  */
-#line 660 "compiler.y"
+#line 661 "compiler.y"
     {
 if(!verifyRelationship(varRelations, currentRelationPos))
   {
@@ -2365,14 +2366,14 @@ currentRelationPos=0;
   case 77:
 
 /* Line 1806 of yacc.c  */
-#line 670 "compiler.y"
+#line 671 "compiler.y"
     {strcpy(identifiers, "\0"); currentRelationPos=0;}
     break;
 
   case 78:
 
 /* Line 1806 of yacc.c  */
-#line 671 "compiler.y"
+#line 672 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2428,7 +2429,7 @@ currentRelationPos=0;
   case 79:
 
 /* Line 1806 of yacc.c  */
-#line 722 "compiler.y"
+#line 723 "compiler.y"
     {
 if(varRelations[0] != 2 && varRelations[0] != 4)
   switchType = varRelations[0];
@@ -2440,14 +2441,14 @@ else
   case 81:
 
 /* Line 1806 of yacc.c  */
-#line 731 "compiler.y"
+#line 732 "compiler.y"
     {in_logico = 1;}
     break;
 
   case 82:
 
 /* Line 1806 of yacc.c  */
-#line 732 "compiler.y"
+#line 733 "compiler.y"
     {
   if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -2478,14 +2479,14 @@ else
   case 84:
 
 /* Line 1806 of yacc.c  */
-#line 759 "compiler.y"
+#line 760 "compiler.y"
     {in_logico = 1;}
     break;
 
   case 85:
 
 /* Line 1806 of yacc.c  */
-#line 760 "compiler.y"
+#line 761 "compiler.y"
     {
   if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -2516,7 +2517,7 @@ else
   case 91:
 
 /* Line 1806 of yacc.c  */
-#line 791 "compiler.y"
+#line 792 "compiler.y"
     {
     if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -2547,7 +2548,7 @@ else
   case 104:
 
 /* Line 1806 of yacc.c  */
-#line 834 "compiler.y"
+#line 828 "compiler.y"
     {
   /*
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
@@ -2567,7 +2568,7 @@ else
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 849 "compiler.y"
+#line 843 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2584,7 +2585,7 @@ else
   case 112:
 
 /* Line 1806 of yacc.c  */
-#line 863 "compiler.y"
+#line 857 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2600,7 +2601,7 @@ else
   case 113:
 
 /* Line 1806 of yacc.c  */
-#line 874 "compiler.y"
+#line 868 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2616,7 +2617,7 @@ else
   case 114:
 
 /* Line 1806 of yacc.c  */
-#line 890 "compiler.y"
+#line 884 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2672,7 +2673,7 @@ else
   case 115:
 
 /* Line 1806 of yacc.c  */
-#line 941 "compiler.y"
+#line 935 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -2728,7 +2729,7 @@ else
   case 116:
 
 /* Line 1806 of yacc.c  */
-#line 992 "compiler.y"
+#line 986 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2744,7 +2745,7 @@ else
   case 117:
 
 /* Line 1806 of yacc.c  */
-#line 1003 "compiler.y"
+#line 997 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2759,7 +2760,7 @@ else
   case 119:
 
 /* Line 1806 of yacc.c  */
-#line 1014 "compiler.y"
+#line 1008 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2774,7 +2775,7 @@ else
   case 120:
 
 /* Line 1806 of yacc.c  */
-#line 1024 "compiler.y"
+#line 1018 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -2789,7 +2790,7 @@ else
   case 121:
 
 /* Line 1806 of yacc.c  */
-#line 1034 "compiler.y"
+#line 1028 "compiler.y"
     {
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2800,7 +2801,7 @@ else
   case 122:
 
 /* Line 1806 of yacc.c  */
-#line 1040 "compiler.y"
+#line 1034 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -2926,7 +2927,7 @@ else
   case 124:
 
 /* Line 1806 of yacc.c  */
-#line 1162 "compiler.y"
+#line 1156 "compiler.y"
     {
   if(switchType != 0 && switchType !=5)
   {
@@ -2938,7 +2939,7 @@ else
   case 125:
 
 /* Line 1806 of yacc.c  */
-#line 1169 "compiler.y"
+#line 1163 "compiler.y"
     {
   if(switchType != 3 && switchType != 5)
   {
@@ -2950,7 +2951,7 @@ else
   case 126:
 
 /* Line 1806 of yacc.c  */
-#line 1176 "compiler.y"
+#line 1170 "compiler.y"
     {
   if(switchType != 1 && switchType !=5)
   {
@@ -2962,7 +2963,7 @@ else
 
 
 /* Line 1806 of yacc.c  */
-#line 2966 "compiler.tab.c"
+#line 2967 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3193,7 +3194,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 1187 "compiler.y"
+#line 1181 "compiler.y"
 
 
 #include "lex.yy.c"

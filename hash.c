@@ -153,8 +153,10 @@ void freeTableFunction(hashTable *hashtable)
         while(list!=NULL) {
             temp = list;
             list = list->next;
-	    if(!((List*)((function*)temp->info)->parameters))
+	    if(((List*)((function*)temp->info)->parameters)!=NULL)
+	    {
 	      destroyList(((List*)((function*)temp->info)->parameters));
+	    }
             free(temp->info);
             free(temp);
         }

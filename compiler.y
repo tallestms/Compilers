@@ -259,6 +259,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
     else
     {
       printf("Erro semantico na linha %d. Funcao %s redeclarada.\n", nLine, currentIdentifier);
+      destroyList(currentParameters);
     }
 
   strcpy(identifiers, "\0");
@@ -278,7 +279,7 @@ FUNCAO
 }
 | token_funcao token_identificador //Mesma coisa do de cima.
 {
-    currentParameters = startList();
+    currentParameters = startList(); //Sempre inicia uma nova lista de parametros.
     strcpy(currentScope, currentIdentifier); //O escopo passa a ser a funcao.
     if(lookupStringFunction(hashFunction, currentIdentifier) == NULL)
     {
@@ -815,13 +816,6 @@ EXPR: SIEXPR
 }
 | EXPR LOGICOS SIEXPR 
 ;
-
-/*
- *
- *Tarefa: Fazer funcionar analise semantica juntando logicos
- *
- */
-
  
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
 

@@ -58,7 +58,7 @@ início
 	fim-enquanto
 	
 	res := 1;
-	para (x de fat até 1 passo -1) faça
+	para (x de fat até 1.0 passo -1) faça
 		res := res*x;
 		a := a + b;
 	fim-para
@@ -96,9 +96,9 @@ início
 	 c
 	 */
 	 
-	 //valor := mes("20/05/2013") > mes(data_atual) e dia(data(ontem)) < 5 ou ano(data_atual) > 2012 e not(a>b e b>a);
+	 valor := mes("20/05/2013") > mes(data_atual) e dia(data(ontem)) < 5 ou ano(data_atual) > 2012 e (a>b e b>a);
 	 
-	 //a := soma(mmc(a,b,c)+1) + (b*(c+1+(c+2)));
+	 a := soma(mmc(a,b,c)) + (b*(c+1+(c+2)));
 	 
 	 
 	 

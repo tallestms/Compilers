@@ -73,13 +73,12 @@ início
 	f := 20.20;
 	g := 10.10;
 	d := 10.10;
-	a := soma(a);
+	//a := soma(a);
 	oi := verdadeiro;
 	a := b>(a+b+a);
-	a := b>(soma(a)+a);
+	//a := b>(soma(a)+a);
 	b := 10;
 	z := a > b;
-	z := soma(a)>soma5(c,f); 
-	z := b>a e (c<d) e (a>(b+soma(a)) ou (c<(d+c)));
+	//z := b>a e (c<d) e (a>(b+soma(a)) ou (c<(d+c)));
 	//mat := {[1,2],[2,1]};
 fim
