@@ -32,6 +32,7 @@ char returnFunctionType[10];
 int switchType;
 int countLine = 0;
 int countColum = 0;
+int typeAttribute;
 extern int isMatrix;
 int dimension, dim1, dim2;
 List* currentParameters = NULL;
@@ -82,6 +83,7 @@ hashTable* hashFunction = NULL;
 %token token_logico
 %token token_logicos
 %token token_matriz
+%token token_minimo
 %token token_nao
 %token token_ou
 %token token_padrao
@@ -121,14 +123,14 @@ hashTable* hashFunction = NULL;
 %start PROG
 
 %%
-PROG:  token_algoritmo token_identificador token_pontov BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
+PROG:  token_algoritmo token_identificador token_pontov {strcpy(identifiers, "\0");} BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
   //verifyMatrix(hashVariables);
   //verifyUsed(hashVariables);
 }
 |
 token_algoritmo token_identificador
-token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
+token_pontov {strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
   //verifyMatrix(hashVariables);
   //verifyUsed(hashVariables);
@@ -176,7 +178,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
+	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);  
 	}
@@ -226,7 +228,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
+	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);
 	} 
@@ -378,7 +380,9 @@ token_pontov;
 BLOCO_FUNCAO: /*Empty*/ | REPETICAO_COMANDO;
 REPETICAO_COMANDO: COMANDO | REPETICAO_COMANDO COMANDO;
 
-BLOCO_IMPRIMA: BLOCO_IMPRIMA token_virgula FATOR | FATOR;
+BLOCO_IMPRIMA: FATOR 
+{
+};
 BLOCO_SWITCH:  BLOCO_SWITCH_AUX BLOCO_SWITCH | 
 BLOCO_SWITCH_AUX FIM_BLOCO_SWITCH;
 FIM_BLOCO_SWITCH: token_padrao token_doisp BLOCO_AUXILIAR token_parar token_pontov token_fimseleciona | token_fimseleciona ;
@@ -457,15 +461,18 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
  *Tarefa: Fazer funcoes primitivas.
  *
  */
-COMANDO: 
+COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | 
-token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
-token_identificador token_atribuicao token_leia token_abrep token_fechap token_pontov | 
+//token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
+token_identificador token_atribuicao token_leia token_abrep token_identificador token_fechap token_pontov |
+token_leia token_abrep token_identificador token_fechap token_pontov | 
 token_identificador
 {
-  //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
+
+ //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
     in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
+  
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
@@ -580,8 +587,19 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 } token_pontov
 | token_identificador token_atribuicao 
 {
-currentRelationComparison = 0;
-strcpy(currentVariable, currentIdentifier);
+
+  currentRelationComparison = 0;
+  char* IdentifierTemp = (char*)malloc(sizeof(identifiers));
+  strcpy(IdentifierTemp, identifiers);
+  IdentifierTemp = strtok(IdentifierTemp, " ");
+  List *identifier_temp = lookupStringVariable(hashVariables, IdentifierTemp);
+  if(identifier_temp != NULL)
+    typeAttribute = ((variable *)(identifier_temp->info))->type;
+  else
+    typeAttribute = 5;
+      
+  free(IdentifierTemp);
+  strcpy(currentVariable, currentIdentifier);
 }
 EXPR
 {
@@ -1057,9 +1075,89 @@ e se ela foi declarada.
 }
 | token_identificador
 {
+
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
     in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
+//printRelationship(varRelations, currentRelationPos);
+List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
+  if(identifier_temp!=NULL)
+  {
+    if(strcmp(currentIdentifier, "maximo")==0)
+    {
+
+      if (typeAttribute==0)
+      {
+	strcpy(currentFunction, "maximo");
+	strcat(currentFunction, " ");
+	strcat(currentFunction, "inteiro");
+      }
+      else if (typeAttribute==3)
+      {
+	strcpy(currentFunction, "maximo");
+	strcat(currentFunction, " ");
+	strcat(currentFunction, "real");
+      }
+      else if (typeAttribute==1)
+      {
+	strcpy(currentFunction, "maximo");
+	strcat(currentFunction, " ");
+	strcat(currentFunction, "caracter");
+      }
+      else
+      {
+	printf("Retorno nao valido na funcao maximo na linha %d\n", nLine);
+	in_function = 0;
+      }
+     }
+     if(strcmp(currentIdentifier, "minimo")==0)
+     {
+      if (typeAttribute==0)
+      {
+	strcpy(currentFunction, "minimo");
+	strcat(currentFunction, " ");
+	strcat(currentFunction, "inteiro");
+      }
+      else if (typeAttribute==3)
+      {
+	strcpy(currentFunction, "minimo");
+	strcat(currentFunction, " ");
+	strcat(currentFunction, "real");
+      }
+      else if (typeAttribute==1)
+      {
+	strcpy(currentFunction, "minimo");
+	strcat(currentFunction, " ");
+	strcat(currentFunction, "caracter");
+      }
+      else
+      {
+	printf("Retorno nao valido na funcao minimo na linha %d\n", nLine);
+	in_function = 0;
+      }
+     }
+     if(strcmp(currentIdentifier, "media")==0)
+     {
+      if (typeAttribute==0)
+      {
+	strcpy(currentFunction, "media");
+	strcat(currentFunction, " ");
+	strcat(currentFunction, "inteiro");
+      }
+      else if (typeAttribute==3)
+      {
+	strcpy(currentFunction, "media");
+	strcat(currentFunction, " ");
+	strcat(currentFunction, "real");
+      }
+      else
+      {
+	printf("Retorno nao valido na funcao media na linha %d\n", nLine);
+	in_function = 0;
+      }
+     }
+  }
+ 
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
@@ -1320,19 +1418,160 @@ BLOCO_MATRIZ: FATOR
 
 #include "lex.yy.c"
 
+void createPrimitives()
+{
+  //maximo, aridade 2, inteiro
+  function* newFunction = createFunction();
+  char functionAux[100];
+  strcpy(functionAux, "maximo");
+  setFunction(newFunction, functionAux,5, 0, NULL, 0);
+  addInfoFunction(hashFunction, functionAux, newFunction);
+
+
+  //maximo, aridade 2, inteiro
+  newFunction = createFunction();
+  strcpy(functionAux, "\0");
+  strcpy(functionAux, "maximo");
+  strcat(functionAux, " ");
+  strcat(functionAux, "inteiro");
+  addInfoFunction(hashFunction, functionAux, newFunction);
+  
+  List*argumentsFunction = startList();
+  argumentsFunction = insertList(argumentsFunction, (void*)0);
+  argumentsFunction = insertList(argumentsFunction, (void*)0);
+  setFunction(newFunction, functionAux,0, 2, argumentsFunction, 1);
+
+  
+  //maximo, aridade 2, real
+  newFunction = createFunction();
+  strcpy(functionAux, "\0");
+  strcpy(functionAux, "maximo");
+  strcat(functionAux, " ");
+  strcat(functionAux, "real");
+  addInfoFunction(hashFunction, functionAux, newFunction);
+  
+  argumentsFunction = startList();
+  argumentsFunction = insertList(argumentsFunction, (void*)3);
+  argumentsFunction = insertList(argumentsFunction, (void*)3);
+  setFunction(newFunction, functionAux,3, 2, argumentsFunction, 1);
+  
+  //maximo, aridade 2, caracter
+  newFunction = createFunction();
+  strcpy(functionAux, "\0");
+  strcpy(functionAux, "maximo");
+  strcat(functionAux, " ");
+  strcat(functionAux, "caracter");
+  addInfoFunction(hashFunction, functionAux, newFunction);
+  
+  argumentsFunction = startList();
+  argumentsFunction = insertList(argumentsFunction, (void*)1);
+  argumentsFunction = insertList(argumentsFunction, (void*)1);
+  setFunction(newFunction, functionAux,1, 2, argumentsFunction, 1);
+  
+  //minimo, aridade 2, garantir que nao haja conflito
+  newFunction = createFunction();
+  strcpy(functionAux, "minimo");
+  setFunction(newFunction, functionAux,0, 0, NULL, 0);
+  addInfoFunction(hashFunction, functionAux, newFunction);
+
+
+  //minimo, aridade 2, inteiro
+  newFunction = createFunction();
+  strcpy(functionAux, "\0");
+  strcpy(functionAux, "minimo");
+  strcat(functionAux, " ");
+  strcat(functionAux, "inteiro");
+  addInfoFunction(hashFunction, functionAux, newFunction);
+  
+  argumentsFunction = startList();
+  argumentsFunction = insertList(argumentsFunction, (void*)0);
+  argumentsFunction = insertList(argumentsFunction, (void*)0);
+  setFunction(newFunction, functionAux,0, 2, argumentsFunction, 1);
+
+  
+  //maximo, aridade 2, real
+  newFunction = createFunction();
+  strcpy(functionAux, "\0");
+  strcpy(functionAux, "minimo");
+  strcat(functionAux, " ");
+  strcat(functionAux, "real");
+  addInfoFunction(hashFunction, functionAux, newFunction);
+  
+  argumentsFunction = startList();
+  argumentsFunction = insertList(argumentsFunction, (void*)3);
+  argumentsFunction = insertList(argumentsFunction, (void*)3);
+  setFunction(newFunction, functionAux,3, 2, argumentsFunction, 1);
+  
+  //maximo, aridade 2, caracter
+  newFunction = createFunction();
+  strcpy(functionAux, "\0");
+  strcpy(functionAux, "minimo");
+  strcat(functionAux, " ");
+  strcat(functionAux, "caracter");
+  addInfoFunction(hashFunction, functionAux, newFunction);
+  
+  argumentsFunction = startList();
+  argumentsFunction = insertList(argumentsFunction, (void*)1);
+  argumentsFunction = insertList(argumentsFunction, (void*)1);
+  setFunction(newFunction, functionAux,1, 2, argumentsFunction, 1);
+  
+  //media, aridade 2, garantir que nao haja conflito
+  newFunction = createFunction();
+  strcpy(functionAux, "media");
+  setFunction(newFunction, functionAux,0, 0, NULL, 0);
+  addInfoFunction(hashFunction, functionAux, newFunction);
+
+  //media, aridade 2, inteiro
+  newFunction = createFunction();
+  strcpy(functionAux, "\0");
+  strcpy(functionAux, "media");
+  strcat(functionAux, " ");
+  strcat(functionAux, "inteiro");
+  addInfoFunction(hashFunction, functionAux, newFunction);
+  
+  argumentsFunction = startList();
+  argumentsFunction = insertList(argumentsFunction, (void*)0);
+  argumentsFunction = insertList(argumentsFunction, (void*)0);
+  setFunction(newFunction, functionAux,0, 2, argumentsFunction, 1);
+
+  //media, aridade 2, real
+  newFunction = createFunction();
+  strcpy(functionAux, "\0");
+  strcpy(functionAux, "media");
+  strcat(functionAux, " ");
+  strcat(functionAux, "real");
+  addInfoFunction(hashFunction, functionAux, newFunction);
+  
+  argumentsFunction = startList();
+  argumentsFunction = insertList(argumentsFunction, (void*)3);
+  argumentsFunction = insertList(argumentsFunction, (void*)3);
+  setFunction(newFunction, functionAux,3, 2, argumentsFunction, 1);
+  
+  //imprime, aridade 1, garantir que nao haja conflito
+  newFunction = createFunction();
+  strcpy(functionAux, "imprima");
+  addInfoFunction(hashFunction, functionAux, newFunction);
+  setFunction(newFunction, functionAux,5, 1, NULL, 1);
+
+  //leia, aridade 1, garantir que nao haja conflito
+  newFunction = createFunction();
+  strcpy(functionAux, "leia");
+  addInfoFunction(hashFunction, functionAux, newFunction);
+  setFunction(newFunction, functionAux,5, 1, NULL, 1);
+
+}
+
 main(){
       hashVariables = createHash(MAX_HASH);
       hashFunction = createHash(MAX_HASH);
+      createPrimitives();
       yyparse();
       freeTable(hashVariables);
       freeTableFunction(hashFunction);
-      if(!currentParameters)
-	destroyList(currentParameters);
 }
 
 /* rotina chamada por yyparse quando encontra erro */
 yyerror (void){
 	printf("Erro na Linha: %d\n", nLine);
 }
-
 

@@ -51,9 +51,22 @@ int convertType(char *type)
     return 4;
   else
   {
-    printf("Crazy thing in converting type: %s\n", type);
-    exit(1);
+    return 6; //Tipo em que aceita qualquer tipo de variavel.
   }
+}
+
+void convertTypeReverse(int type, char *aux)
+{
+  if(type==0)
+    strcpy(aux, "inteiro");
+  else if(type==1)
+    strcpy(aux, "caracter");
+  else if(type==2)
+    strcpy(aux, "literal");
+  else if(type==3)
+    strcpy(aux, "real");
+  else if(type==4)
+    strcpy(aux, "lógico");
 }
 
 void verifyUsed(hashTable *hashtable)
@@ -67,13 +80,23 @@ void verifyUsed(hashTable *hashtable)
     /* Free the memory for every item in the table, including the 
      * strings themselves.
      */
-    printf("Tabela de uso:\n");
+    //printf("Tabela de uso:\n");
     for(i=0; i<hashtable->size; i++) {
         list = hashtable->table[i];
         while(list!=NULL) {
             temp = list;
             list = list->next;
-            printf("%s -> %d\n",((variable*)(temp->info))->name,((variable*)(temp->info))->used); 
+	    if(((variable*)(temp->info))->used == 0)
+	    {
+	      char* varAux;
+	      varAux = strtok(((variable*)(temp->info))->name, " ");
+	      printf("Variavel %s nao foi utilizada durante o programa", ((variable*)(temp->info))->name);
+	      if(varAux = (strtok(NULL, " ")))
+		printf(" na funcao %s.\n", varAux);
+	      else
+		printf(".\n");
+	    }
+            //printf("%s -> %d\n",((variable*)(temp->info))->name,((variable*)(temp->info))->used); 
         }
     }
 }
