@@ -42,4 +42,5 @@ variable* createVariable();
 void setVariable(variable* var, char* name, char* scope, int type, int matrix);
 int convertType(char *type);
 int convertTypeRelation(char *type);
+void convertTypeReverse(int type, char *aux);
 #endif /* VARIABLES_H_ */

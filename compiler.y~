@@ -30,6 +30,12 @@ int currentFunctionArity = 0;
 char returnFunctionType[10];
 int switchType;
 int typeAttribute;
+
+int a = 0;
+int currentRelationPosInFunction = 0;
+int currentRelationComparisonInFunction = 0;
+int varRelationsInFunction[100];
+
 extern int isMatrix;
 List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
@@ -461,14 +467,14 @@ COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | 
 //token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_leia token_abrep token_identificador token_fechap token_pontov |
-token_leia token_abrep token_identificador token_fechap token_pontov |
+token_leia token_abrep token_identificador token_fechap token_pontov | 
 token_identificador
 {
 
  //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
     in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
-  
+  currentRelationPosInFunction = 0;
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
@@ -734,6 +740,14 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
       ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
+    else
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelationsInFunction[currentRelationPos] = currentTypeInt;
+      ++currentRelationPosInFunction;
+      ++currentRelationComparisonInFunction;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+    }
    }
   }
   else
@@ -758,6 +772,14 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
       ++currentRelationComparison;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+    }
+    else
+    {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelationsInFunction[currentRelationPos] = currentTypeInt;
+      ++currentRelationPosInFunction;
+      ++currentRelationComparisonInFunction;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
     }
@@ -830,7 +852,29 @@ token_e |
 }
 token_ou;
 
-ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
+ARGUMENTOS_FUNCAO: EXPR 
+{
+    List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
+    if(identifier_temp != NULL)	//else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
+    {
+      if(!verifyRelationship(varRelationsInFunction, currentRelationPosInFunction))
+      {
+	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+      }
+      else if(varRelationsInFunction[0] != ((function*)identifier_temp->info)->returnType);
+      {
+	printf("Tipo associado a funcao %s na posicao %d esta errado na linha %d.\n", currentFunction, a, nLine);
+      }
+    }
+    a++;
+}
+| ARGUMENTOS_FUNCAO token_virgula EXPR
+{
+  if(in_function)
+    a++;
+}
+| /*Empty*/;
+
 EXPR: SIEXPR 
 
 | EXPR COMPARACOES SIEXPR
@@ -883,6 +927,14 @@ SINALFATOR:  token_numreal_comsinal
     ++currentRelationComparison;
     //printf("real com sinal\n");
   }
+   else 
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
+    //printf("real com sinal\n");
+  }
 }
 | token_numinteiro_comsinal
 {
@@ -892,6 +944,14 @@ SINALFATOR:  token_numreal_comsinal
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
+    //printf("real com sinal\n");
+  }
+   else 
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
     //printf("real com sinal\n");
   }
 
@@ -908,6 +968,14 @@ FATOR: SINALFATOR
     ++currentRelationComparison;
     //printf("real com sinal\n");
   }
+   else 
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
+    //printf("real com sinal\n");
+  }
 }
 | token_numreal 
 {
@@ -917,6 +985,14 @@ FATOR: SINALFATOR
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
+    //printf("real com sinal\n");
+  }
+   else 
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
     //printf("real com sinal\n");
   }
 }
@@ -946,6 +1022,14 @@ e se ela foi declarada.
       ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
+     else 
+  {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
+    //printf("real com sinal\n");
+  }
    }
   }
   else
@@ -972,6 +1056,14 @@ e se ela foi declarada.
       ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
+         else 
+  {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
+    //printf("real com sinal\n");
+  }
     }
     //printf("identificador\n");
   }
@@ -997,6 +1089,14 @@ e se ela foi declarada.
       ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
+         else 
+  {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
+    //printf("real com sinal\n");
+  }
     //printf("identificador\n");
     }
   }
@@ -1023,6 +1123,14 @@ e se ela foi declarada.
       ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
+         else 
+  {
+      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+      varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
+    //printf("real com sinal\n");
+  }
     //printf("identificador\n");
     }
   }
@@ -1036,6 +1144,14 @@ e se ela foi declarada.
     ++currentRelationPos;
     ++currentRelationComparison;
   }
+     else 
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
+    //printf("real com sinal\n");
+  }
   
 }
 | token_string 
@@ -1046,6 +1162,14 @@ e se ela foi declarada.
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
+  }
+     else 
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
+    //printf("real com sinal\n");
   }
 }
 | token_abrep EXPR token_fechap 
@@ -1058,6 +1182,14 @@ e se ela foi declarada.
     ++currentRelationPos;
     ++currentRelationComparison;
   }
+     else 
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
+    //printf("real com sinal\n");
+  }
 }
 | token_falso 
 {
@@ -1068,6 +1200,14 @@ e se ela foi declarada.
     ++currentRelationPos;
     ++currentRelationComparison;
   }
+     else 
+  {
+    int currentTypeInt = convertType(currentType);
+    varRelationsInFunction[currentRelationPos] = currentTypeInt;
+    ++currentRelationPosInFunction;
+    ++currentRelationComparisonInFunction;
+    //printf("real com sinal\n");
+  }
 }
 | token_identificador
 {
@@ -1075,6 +1215,7 @@ e se ela foi declarada.
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
     in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
+    currentRelationPosInFunction = 0;
 //printRelationship(varRelations, currentRelationPos);
 List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   if(identifier_temp!=NULL)
@@ -1155,6 +1296,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   }
  
 }
+//token_abrep {a=0;} ARGUMENTOS_FUNCAO {printf("%d %s\n", a, currentFunction); a=0;}token_fechap
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
@@ -1251,24 +1393,43 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	functionTypes=functionTypes->next;
 	}
     }
+    if(in_function!=1)
+    {
       int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
      // printf("%d \n", currentTypeInt);
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
       ++currentRelationComparison;
+      }
+      else
+      {
+	      int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
+     // printf("%d \n", currentTypeInt);
+      varRelationsInFunction[currentRelationPos] = currentTypeInt;
+      ++currentRelationPosInFunction;
+      ++currentRelationComparisonInFunction;
+      }
   }
       if(identifier_temp!=NULL)
       {
 	int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
       // printf("%d \n", currentTypeInt);
 	varRelations[currentRelationPos] = currentTypeInt;
-	if(currentTypeInt==5)
+	if(currentTypeInt==5 && !in_function)
 	{
 	  printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
 	  // printf("%d \n", currentTypeInt);
 	  varRelations[currentRelationPos] = currentTypeInt;
 	  ++currentRelationPos;
 	  ++currentRelationComparison;
+	}
+	else if(currentTypeInt == 5 && in_function)
+	{
+	  int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
+	  // printf("%d \n", currentTypeInt);
+	  varRelationsInFunction[currentRelationPos] = currentTypeInt;
+	  ++currentRelationPosInFunction;
+	  ++currentRelationComparisonInFunction;
 	}
       }
   strcpy(functionArguments, "\0");

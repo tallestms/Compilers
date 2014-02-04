@@ -52,6 +52,20 @@ int convertType(char *type)
   }
 }
 
+void convertTypeReverse(int type, char *aux)
+{
+  if(type==0)
+    strcpy(aux, "inteiro");
+  else if(type==1)
+    strcpy(aux, "caracter");
+  else if(type==2)
+    strcpy(aux, "literal");
+  else if(type==3)
+    strcpy(aux, "real");
+  else if(type==4)
+    strcpy(aux, "lógico");
+}
+
 void verifyUsed(hashTable *hashtable)
 {
     int i;

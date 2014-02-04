@@ -52,6 +52,22 @@ int convertType(char *type)
   }
 }
 
+void convertTypeReverse(int type, char *aux)
+{
+  if(type==0)
+    strcpy(aux, "inteiro");
+  else if(type==1)
+    strcpy(aux, "caracter");
+  else if(type==2)
+    strcpy(aux, "literal");
+  else if(type==3)
+    strcpy(aux, "real");
+  else if(type==4)
+    strcpy(aux, "lógico");
+  
+  return aux;
+}
+
 void verifyUsed(hashTable *hashtable)
 {
     int i;
@@ -77,7 +93,7 @@ void verifyUsed(hashTable *hashtable)
 	      if(varAux = (strtok(NULL, " ")))
 		printf(" na funcao %s.\n", varAux);
 	      else
-		printf("\n");
+		printf(".\n");
 	    }
             //printf("%s -> %d\n",((variable*)(temp->info))->name,((variable*)(temp->info))->used); 
         }

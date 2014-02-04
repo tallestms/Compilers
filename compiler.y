@@ -461,7 +461,7 @@ COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov | 
 //token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_leia token_abrep token_identificador token_fechap token_pontov |
-token_leia token_abrep token_identificador token_fechap token_pontov |
+token_leia token_abrep token_identificador token_fechap token_pontov | 
 token_identificador
 {
 

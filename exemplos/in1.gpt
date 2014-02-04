@@ -1,6 +1,6 @@
 algoritmo declaracao_de_variaveis;
 
-função soma(a : inteiro):inteiro
+função soma(a : inteiro):real
 d,c: inteiro;
 re : real;
 início
@@ -9,7 +9,7 @@ c := 20;
 d := 20;
 a := 10 + c; //retornando c como nao declarado e não a
 //ada := 20.5;
-retorne c;
+retorne re;
 fim
 
 função soma3(a:inteiro)
@@ -18,16 +18,33 @@ p: real;
 início
 d := 10;
 c := 20;
+a := 10;
 p := 20.20;
  //chamada de funcao dentro de outra funcao
 fim
 
-função soma2(a:real, b:real):real
+função soma2(a:real, b:real):inteiro
+c,d: inteiro;
+p: real;
+início
+a := 10.10;
+b := 20.20;
+d := 10;
+c := 20;
+p := 10.10;
+soma3(c);
+p := 20.20;
+retorne c;
+fim
+
+função sinistro(b:real, a:lógico):real
 c,d: inteiro;
 p: real;
 início
 d := 10;
 c := 20;
+a := verdadeiro;
+b := 10.10;
 p := 10.10;
 soma3(c);
 p := 20.20;
@@ -41,7 +58,7 @@ variáveis
 	g : real;
 	char : caracter;
 	lit : literal;
-	z,oi : lógico;
+	z : lógico;
 	mat : matriz[2] de inteiros; 
 fim-variáveis
 
@@ -51,29 +68,35 @@ início
 	c := 10.10;
 	d := 20.20 + c;
 	a := maximo(a,b) > 10;
-	c := minimo(c,d) < (10.10 + media(c,d));
-	c := minimo(c,d) < (10.10 + media(c,b)); //erro
+	c := minimo(c,d) < (10.10 + media(c,10.10));
+	c := minimo(c,d) < (10.10 + media(10,c)); //erro por causa de 10
+	c := minimo(c,d) < (10.10 + media(c,b)); //erro por causa do media(c,b)
 	c := media(c,d);
-	maximo(); // bug do compilador -> deixar explico amanha pq
-	minimo(); // bug do compilador -> deixar
-	media(); // bugs do compilador -> deixar
+	//maximo(); // bug do compilador -> deixar (tira no relatorio!)
+	//minimo(); // bug do compilador -> deixar
+	//media(); // bug do compilador -> deixar
+	z := verdadeiro;
 	
+	c := sinistro(d, z);
 	c := 20.20;
-	//b := minimo(a,c);
-	//c := media(a,c);
+	b := minimo(a,b);
+	c := media(d,c);
 	//a := 10 + 10 + b;
 	//c := 20.20;
 	//b := 20 + b + b;
 	//c := soma2(a,b); 
-	//soma2(a,b);
+	a := soma2(c,d);
 	//a := soma2(a,b,c); 
 	//soma(10);
 	//soma3(a);
 	a := 10;
 	c := 10.10 + 20.10;
 	b := 10;
-	a := soma(10+10); // nao aceita este tipo na linguagem, deve declarar variavel antes a := 10+10 e passar variavel
+	//a := soma(10,20,30);
+	//a := soma(10,20);
+	a := soma(b); 
 	a := soma(a);
+	//a := soma(a);
 	c := 10.10;
 	//d := -10.10 + 10;
 	//adsad := 20;
@@ -93,9 +116,9 @@ início
 	//a := soma(a);
 	//oi := verdadeiro;
 	a := b>(a+b+a);
-	a := b>(soma(a)+a);
+	//a := b>(soma(a)+a);
 	b := 10;
 	z := a > b;
-	z := b>a e (c<d) e (a>(b+soma(a)) ou (c<(d+c)));
+	//z := b>a e (c<d) e (a>(b+soma(a,b)) ou (c<(d+c)));
 	mat := {[1,2],[2,1]};
 fim
