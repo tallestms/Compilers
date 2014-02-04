@@ -172,9 +172,11 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	strcat(auxVariable, currentScope);
 	if(lookupStringVariable(hashVariables, auxVariable)==NULL)
 	{
+		printf("%s\n", auxVariable);
+
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);  
 	}
@@ -224,7 +226,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);
 	} 

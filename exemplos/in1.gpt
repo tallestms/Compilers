@@ -1,11 +1,12 @@
 algoritmo declaracao_de_variaveis;
 
 função soma(a : inteiro):inteiro
-c,d: inteiro;
+d,c: inteiro;
 re : real;
 início
 re := 10.10;
 c := 20;
+d := 20;
 a := 10 + c; //retornando c como nao declarado e não a
 //ada := 20.5;
 retorne c;
@@ -28,7 +29,7 @@ início
 d := 10;
 c := 20;
 p := 10.10;
-//soma3(p);
+soma3(c);
 p := 20.20;
 retorne p;
 fim
