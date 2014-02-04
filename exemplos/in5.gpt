@@ -15,7 +15,7 @@ função soma2(x: inteiro, y: inteiro) : lógico
   início
   x:=10; //verificar erro de tipo de x
   y:=11;
-  //res := x>y; //y nao declarado?
+  res := x>y; //y nao declarado?
   retorne res;
   fim
 
@@ -30,7 +30,9 @@ início
 	idade := 22;
       a := soma(idade,idade);
 	
-	z := {[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]};
+	z := {[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]};
+	
+	z[2][3] := 20 + 7;
 	
 	atualizaGlobal(value);
 	
