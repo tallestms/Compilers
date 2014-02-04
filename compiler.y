@@ -21,6 +21,7 @@ extern char functionArguments[10*MAX_VARIABLE];
 extern char currentType[10];
 extern char currentIdentifier[100];
 extern int varRelations[100];
+extern int currentNumber;
 char currentVariable[MAX_VARIABLE + MAX_FUNCTION + 2];
 int currentRelationPos = 0;
 int currentRelationComparison = 0;
@@ -29,7 +30,10 @@ char currentFunction[MAX_FUNCTION];
 int currentFunctionArity = 0;
 char returnFunctionType[10];
 int switchType;
+int countLine = 0;
+int countColum = 0;
 extern int isMatrix;
+int dimension, dim1, dim2;
 List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
@@ -119,14 +123,14 @@ hashTable* hashFunction = NULL;
 %%
 PROG:  token_algoritmo token_identificador token_pontov BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
-  verifyMatrix(hashVariables);
+  //verifyMatrix(hashVariables);
   //verifyUsed(hashVariables);
 }
 |
 token_algoritmo token_identificador
 token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
-  verifyMatrix(hashVariables);
+  //verifyMatrix(hashVariables);
   //verifyUsed(hashVariables);
 }
 ;
@@ -146,7 +150,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
  	  addInfoVariable(hashVariables, varName, newVar);
 	}
@@ -172,7 +176,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);  
 	}
@@ -197,7 +201,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
       {
 		variable* newVar = createVariable();
 		int intVarType = convertType(currentType);
-		setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+		setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 		isMatrix = 0;  //Próxima variável entrar como não matriz
 		addInfoVariable(hashVariables, varName, newVar);
       }  
@@ -222,7 +226,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);
 	} 
@@ -249,8 +253,8 @@ VARIAVEIS_IDENTIFICADORES: token_identificador | VARIAVEIS_IDENTIFICADORES token
   
 
 
-INICIALIZAR_MATRIZ: token_matriz token_abrecol token_numinteiro token_fechacol token_abrecol token_numinteiro token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ | 
-	token_matriz token_abrecol token_numinteiro token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ;
+INICIALIZAR_MATRIZ: token_matriz token_abrecol token_numinteiro token_fechacol token_abrecol {dim1 = currentNumber;} token_numinteiro {dim2 = currentNumber;} token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ {dimension=2;} | 
+	token_matriz token_abrecol token_numinteiro token_fechacol token_de {dim1 = currentNumber;} TIPOS_VARIAVEIS_MATRIZ {dimension=1;};
 TIPOS_VARIAVEIS_MATRIZ: token_inteiros | token_caracteres | token_literais | token_reais | token_logicos;
 
 BLOCO:  /*Empty*/ | BLOCO COMANDO | BLOCO token_abrec BLOCO token_fechac;
@@ -411,7 +415,7 @@ VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS
     {
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
-      setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+      setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	isMatrix = 0;  //Próxima variável entrar como não matriz
 	addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
@@ -434,7 +438,7 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
     {
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
-      setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+      setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	isMatrix = 0;  //Próxima variável entrar como não matriz
       addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
@@ -1200,35 +1204,116 @@ FATOR_CASE: SINALFATOR | token_numinteiro
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
   }
 };
-MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac 
+MATRIZ: token_abrec {countLine=0;} MATRIZ_VARIAS_COLUNAS {
+	List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		int numLine = ((variable*)(identifier_temp->info))->nLine;
+		if(countLine != numLine) {
+			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+		}
+	}
+} token_fechac 
 {
 	isMatrix = 1;
 }
- | token_abrecol BLOCO_MATRIZ token_fechacol
+ | token_abrecol {countColum=0;} BLOCO_MATRIZ {
+	List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		int numLine = ((variable*)(identifier_temp->info))->nLine;
+		if(countLine != numLine) {
+			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+		}
+	}
+}token_fechacol
  {
 	isMatrix = 1; 
  };
-MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol BLOCO_MATRIZ token_fechacol | token_abrecol BLOCO_MATRIZ token_fechacol;
-BLOCO_MATRIZ: FATOR {
-	if (in_function != 1 ){
-		List *identifier_temp = lookupStringVariable(hashVariables, currentVariable);
-		if(identifier_temp != NULL){
-			if (((variable*)(identifier_temp->info))->type != varRelations[0]){
-				printf("Tipo errado associado a matriz na linha %d\n",nLine);
-			} 
-		}
-	} else {
+MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol {countColum=0;} BLOCO_MATRIZ 
+{
+countLine++;
+List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
 		strcat(currentVariable, " ");
 		strcat(currentVariable, currentScope);
-		List *identifier_temp = lookupStringVariable(hashVariables, currentVariable);
-		if(identifier_temp != NULL){
-			if (((variable*)(identifier_temp->info))->type != varRelations[0]){
-				printf("Tipo errado associado a matriz na linha %d\n",nLine);
-			} 
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		int numColum = ((variable*)(identifier_temp->info))->nColum;
+		if(countColum != numColum) {
+			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
 		}
 	}
-		
-}| BLOCO_MATRIZ token_virgula FATOR;
+}token_fechacol | token_abrecol 
+{countColum=0;} BLOCO_MATRIZ {
+	countLine++;
+	List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		if (((variable*)(identifier_temp->info))->nColum != countColum){
+			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);	
+		}
+	}
+}
+token_fechacol;
+
+BLOCO_MATRIZ: FATOR 
+{
+	List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		if (((variable*)(identifier_temp->info))->type != varRelations[0]){
+			printf("Tipo errado associado a matriz na linha %d\n",nLine);
+		} 
+	}
+	countColum++;
+}
+	
+| BLOCO_MATRIZ token_virgula FATOR 
+
+{
+	List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		if (((variable*)(identifier_temp->info))->type != varRelations[0]){
+			printf("Tipo errado associado a matriz na linha %d\n",nLine);
+		}
+	}	
+	countColum++;
+};
 
 //BLOCO_ARGUMENTOS: /*Empty*/ | EXPR | BLOCO_ARGUMENTOS token_virgula EXPR;
 %%

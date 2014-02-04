@@ -10,7 +10,7 @@ variable* createVariable()
     return newVar;
 }
 
-void setVariable(variable* var, char* name, char* scope, int type, int matrix)
+void setVariable(variable* var, char* name, char* scope, int type, int matrix, int dimension, int colum, int line)
 {
   if (var == NULL)
   {
@@ -24,6 +24,9 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix)
     var->type = type;
     var->used = 0;    
     var->matrix = matrix;
+    var->dimension = dimension;
+    var->nColum = colum;
+    var->nLine = line;
   }
 }
 

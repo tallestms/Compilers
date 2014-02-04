@@ -14,6 +14,7 @@ char identifiers[10*MAX_VARIABLE];
 char functionArguments[10*MAX_VARIABLE];
 int varRelations[100];
 char currentType[10];
+int currentNumber = 0;
 char currentIdentifier[100];
 int isMatrix = 0;
 %}
@@ -49,7 +50,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 {real_signed}					{if(in_function == 1){strcat(functionArguments, "real"); strcat(functionArguments, " ");} strcpy(currentType, "real"); return token_numreal_comsinal;}
 {real}						{if(in_function == 1){strcat(functionArguments, "real"); strcat(functionArguments, " ");} strcpy(currentType, "real"); return token_numreal;}
 {int_dec_signed}				{if(in_function == 1){strcat(functionArguments, "inteiro"); strcat(functionArguments, " ");} strcpy(currentType, "inteiro"); return token_numinteiro_comsinal;}
-{int_dec}					{if(in_function == 1){strcat(functionArguments, "inteiro"); strcat(functionArguments, " ");} strcpy(currentType, "inteiro"); return token_numinteiro;}
+{int_dec}					{currentNumber = atoi((char*)yytext); if(in_function == 1){strcat(functionArguments, "inteiro"); strcat(functionArguments, " ");} strcpy(currentType, "inteiro"); return token_numinteiro;}
 "algoritmo"					{return token_algoritmo;}
 "até"						{return token_ate;}
 "caracter"					{strcpy(currentType, yytext); return token_caracter;}

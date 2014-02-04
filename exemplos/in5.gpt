@@ -5,7 +5,7 @@ função soma(x: inteiro, y: inteiro) : inteiro
   início
   x:=20;
   y:=1;
-  res := (x+y >= (2-x)) e (y>-x);
+  //res := (x+y >= (2-x)) e (y>-x); //verificar erro de x não declarada
   //retorne res;
   retorne x;
   fim
@@ -13,9 +13,9 @@ função soma(x: inteiro, y: inteiro) : inteiro
 função soma2(x: inteiro, y: inteiro) : lógico
   res : lógico;
   início
-  x:=10;
+  x:=10; //verificar erro de tipo de x
   y:=11;
-  res := x>y;
+  //res := x>y; //y nao declarado?
   retorne res;
   fim
 
@@ -30,7 +30,7 @@ início
 	idade := 22;
       a := soma(idade,idade);
 	
-	z := [1,2.0];
+	z := {[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]};
 	
 	atualizaGlobal(value);
 	
