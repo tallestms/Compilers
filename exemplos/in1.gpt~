@@ -52,9 +52,9 @@ início
 	d := 20.20 + c;
 	a := maximo(a,b) > 10;
 	c := minimo(c,d) < (10.10 + media(c,d));
-	//c := minimo(c,d) < (10.10 + media(c,b)); //erro
+	c := minimo(c,d) < (10.10 + media(c,b)); //erro
 	c := media(c,d);
-	maximo(); // bug do compilador -> deixar
+	maximo(); // bug do compilador -> deixar explico amanha pq
 	minimo(); // bug do compilador -> deixar
 	media(); // bugs do compilador -> deixar
 	
@@ -72,27 +72,30 @@ início
 	a := 10;
 	c := 10.10 + 20.10;
 	b := 10;
-	//a := soma(10+10); // nao aceita este tipo na linguagem, deve declarar variavel antes a := 10+10 e passar variavel
+	a := soma(10+10); // nao aceita este tipo na linguagem, deve declarar variavel antes a := 10+10 e passar variavel
+	a := soma(a);
 	c := 10.10;
-	d := -10.10 + 10;
-	adsad := 20;
-	d := funcao(f,g);
-	f := (10.10e+10 - 10.10)*10.10 - 10;
+	//d := -10.10 + 10;
+	//adsad := 20;
+	//d := funcao(f,g);
+	//f := (10.10e+10 - 10.10)*10.10 - 10;
 	g := -10.10e+10;
 	char := 'c';
 	lit := "isso daqui é um texto";
 	z := verdadeiro;
-	z := 10;
+	//z := 10;
 	c := 10.10;
 	f := 20.20;
 	g := 10.10;
 	d := 10.10;
+        imprima(z);
+        leia(z);
 	//a := soma(a);
-	oi := verdadeiro;
+	//oi := verdadeiro;
 	a := b>(a+b+a);
 	a := b>(soma(a)+a);
 	b := 10;
 	z := a > b;
-	z := b>a e (c<d) e (a>(b+soma(a)) ou (c<(d+c)));
+	z := b>a e (c<b) e (a>(b+soma(a)) ou (c<(d+c)));
 	mat := {[1,2],[2,1]};
 fim

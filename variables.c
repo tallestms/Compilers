@@ -63,13 +63,23 @@ void verifyUsed(hashTable *hashtable)
     /* Free the memory for every item in the table, including the 
      * strings themselves.
      */
-    printf("Tabela de uso:\n");
+    //printf("Tabela de uso:\n");
     for(i=0; i<hashtable->size; i++) {
         list = hashtable->table[i];
         while(list!=NULL) {
             temp = list;
             list = list->next;
-            printf("%s -> %d\n",((variable*)(temp->info))->name,((variable*)(temp->info))->used); 
+	    if(((variable*)(temp->info))->used == 0)
+	    {
+	      char* varAux;
+	      varAux = strtok(((variable*)(temp->info))->name, " ");
+	      printf("Variavel %s nao foi utilizada durante o programa", ((variable*)(temp->info))->name);
+	      if(varAux = (strtok(NULL, " ")))
+		printf(" na funcao %s.\n", varAux);
+	      else
+		printf(".\n");
+	    }
+            //printf("%s -> %d\n",((variable*)(temp->info))->name,((variable*)(temp->info))->used); 
         }
     }
 }
