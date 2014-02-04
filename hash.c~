@@ -89,6 +89,7 @@ int addInfoVariable(hashTable *hashtable, char*str, void *info)
 
 int addInfoFunction(hashTable *hashtable, char*str, void *info)
 {
+    printf("%s\n", str);
     List *newList;
     List *currentList;
     unsigned int hashval = hash(hashtable, str);
@@ -155,7 +156,6 @@ void freeTableFunction(hashTable *hashtable)
             list = list->next;
 	    if(((List*)((function*)temp->info)->parameters)!=NULL)
 	    {
-	      printf("aeee");
 	      destroyList(((List*)((function*)temp->info)->parameters));
 	    }
             free(temp->info);

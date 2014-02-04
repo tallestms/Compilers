@@ -47,6 +47,19 @@ fim-variáveis
 início
 	a := 10;
 	b := 20;
+	c := 10.10;
+	d := 20.20 + c;
+	a := maximo(a,b) > 10;
+	c := minimo(c,d) < (10.10 + media(c,d));
+	//c := minimo(c,d) < (10.10 + media(c,b)); //erro
+	c := media(c,d);
+	maximo(); // bug do compilador -> deixar
+	minimo(); // bug do compilador -> deixar
+	media(); // bugs do compilador -> deixar
+	
+	c := 20.20;
+	//b := minimo(a,c);
+	//c := media(a,c);
 	//a := 10 + 10 + b;
 	//c := 20.20;
 	//b := 20 + b + b;
@@ -58,7 +71,7 @@ início
 	a := 10;
 	//c := 10.10 + 20.10;
 	//b := 10;
-	//a := soma(10+10); // nao aceita esse tipo na linguagem vai se fuder ai ja eh demais
+	//a := soma(10+10); // nao aceita este tipo na linguagem, deve declarar variavel antes a := 10+10 e passar variavel
 	//c := 10.10;
 	//d := -10.10 + 10;
 	//adsad := 20;

@@ -47,8 +47,7 @@ int convertType(char *type)
     return 4;
   else
   {
-    printf("Crazy thing in converting type: %s\n", type);
-    exit(1);
+    return 6; //Tipo em que aceita qualquer tipo de variavel.
   }
 }
 
