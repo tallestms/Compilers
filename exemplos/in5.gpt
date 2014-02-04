@@ -3,26 +3,34 @@ algoritmo declaracao_de_variaveis;
 função soma(x: inteiro, y: inteiro) : inteiro
   res : lógico;
   início
-  res := (a+b >= (2-a)) e (a>-b);
-  retorne res;
+  x:=20;
+  y:=1;
+  res := (x+y >= (2-x)) e (y>-x);
+  //retorne res;
+  retorne x;
   fim
   
 função soma2(x: inteiro, y: inteiro) : lógico
   res : lógico;
   início
-  res := (a+b >= (2-a)) e (a>-b);
+  x:=10;
+  y:=11;
+  res := x>y;
   retorne res;
   fim
 
 variáveis
 	x, y : caracter;
 	z : matriz[5][5] de inteiros;
-	idade: inteiro;
+	idade, a: inteiro;
 fim-variáveis
 
 início
-
-      a := soma();
+	
+	idade := 22;
+      a := soma(idade,idade);
+	
+	z := [1,2.0];
 	
 	atualizaGlobal(value);
 	

@@ -10,7 +10,7 @@ variable* createVariable()
     return newVar;
 }
 
-void setVariable(variable* var, char* name, char* scope, int type)
+void setVariable(variable* var, char* name, char* scope, int type, int matrix)
 {
   if (var == NULL)
   {
@@ -23,6 +23,7 @@ void setVariable(variable* var, char* name, char* scope, int type)
     strcpy(var->scope, scope);
     var->type = type;
     var->used = 0;    
+    var->matrix = matrix;
   }
 }
 
@@ -69,6 +70,28 @@ void verifyUsed(hashTable *hashtable)
             temp = list;
             list = list->next;
             printf("%s -> %d\n",((variable*)(temp->info))->name,((variable*)(temp->info))->used); 
+        }
+    }
+}
+
+void verifyMatrix(hashTable *hashtable)
+{
+    int i;
+    List *list, *temp;
+
+    if (hashtable==NULL) 
+      return;
+
+    /* Free the memory for every item in the table, including the 
+     * strings themselves.
+     */
+    printf("Tabela de uso:\n");
+    for(i=0; i<hashtable->size; i++) {
+        list = hashtable->table[i];
+        while(list!=NULL) {
+            temp = list;
+            list = list->next;
+            printf("%s -> %d -> %d\n",((variable*)(temp->info))->name,((variable*)(temp->info))->matrix,((variable*)(temp->info))->type); 
         }
     }
 }

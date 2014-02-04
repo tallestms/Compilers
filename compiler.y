@@ -21,6 +21,7 @@ extern char functionArguments[10*MAX_VARIABLE];
 extern char currentType[10];
 extern char currentIdentifier[100];
 extern int varRelations[100];
+char currentVariable[MAX_VARIABLE + MAX_FUNCTION + 2];
 int currentRelationPos = 0;
 int currentRelationComparison = 0;
 char currentScope[MAX_FUNCTION] = "main";
@@ -29,6 +30,7 @@ int currentFunctionArity = 0;
 char returnFunctionType[10];
 int switchType;
 int typeAttribute;
+extern int isMatrix;
 List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
@@ -119,12 +121,14 @@ hashTable* hashFunction = NULL;
 %%
 PROG:  token_algoritmo token_identificador token_pontov BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
+  //verifyMatrix(hashVariables);
   //verifyUsed(hashVariables);
 }
 |
 token_algoritmo token_identificador
 token_pontov BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
+  //verifyMatrix(hashVariables);
   //verifyUsed(hashVariables);
 }
 ;
@@ -144,7 +148,8 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, varName, currentScope, intVarType);  
+	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  isMatrix = 0;  //Próxima variável entrar como não matriz
  	  addInfoVariable(hashVariables, varName, newVar);
 	}
 	else
@@ -165,11 +170,13 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	strcpy(auxVariable, varName);
 	strcat(auxVariable, " ");
 	strcat(auxVariable, currentScope);
+	printf("%s", auxVariable);
 	if(lookupStringVariable(hashVariables, auxVariable)==NULL)
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, auxVariable, currentScope, intVarType);
+	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);  
 	}
 	else
@@ -191,14 +198,15 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
       {
       if(lookupStringVariable(hashVariables, varName)==NULL)
       {
-	variable* newVar = createVariable();
-	int intVarType = convertType(currentType);
-	setVariable(newVar, varName, currentScope, intVarType);
-	addInfoVariable(hashVariables, varName, newVar);
+		variable* newVar = createVariable();
+		int intVarType = convertType(currentType);
+		setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+		isMatrix = 0;  //Próxima variável entrar como não matriz
+		addInfoVariable(hashVariables, varName, newVar);
       }  
       else
       {
-	printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
+		printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
       }
       varName = strtok(NULL, " ");
     }
@@ -217,8 +225,9 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, auxVariable, currentScope, intVarType);
-  	  addInfoVariable(hashVariables, auxVariable, newVar);
+	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  isMatrix = 0;  //Próxima variável entrar como não matriz
+	  addInfoVariable(hashVariables, auxVariable, newVar);
 	} 
 	else
 	{
@@ -320,6 +329,10 @@ BLOCO_FUNCAO_RETORNO: token_retorne token_identificador
 	List *returned_variable = lookupStringVariable(hashVariables, aux);	
 	if(returned_variable != NULL){
 		List *current_function = lookupStringFunction(hashFunction, currentScope);
+		int variableIsMatrix = ((variable*)(returned_variable->info))->matrix;
+		if(variableIsMatrix){
+			printf("Funcoes nao podem retornar matrizes. Erro linha %d", nLine);
+		}
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
@@ -343,6 +356,10 @@ token_pontov | REPETICAO_COMANDO token_retorne token_identificador
 	List *returned_variable = lookupStringVariable(hashVariables, aux);	
 	if(returned_variable != NULL){
 		List *current_function = lookupStringFunction(hashFunction, currentScope);
+		int variableIsMatrix = ((variable*)(returned_variable->info))->matrix;
+		if(variableIsMatrix){
+			printf("Funcoes nao podem retornar matrizes. Erro linha %d", nLine);
+		}
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
@@ -397,8 +414,9 @@ VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS
     {
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
-      setVariable(newVar, varName, currentScope, intVarType);
-      addInfoVariable(hashVariables, varName, newVar);
+      setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	isMatrix = 0;  //Próxima variável entrar como não matriz
+	addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
     }
     else
@@ -419,7 +437,8 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
     {
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
-      setVariable(newVar, varName, currentScope, intVarType);
+      setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	isMatrix = 0;  //Próxima variável entrar como não matriz
       addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
     }
@@ -564,17 +583,18 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 | token_identificador token_atribuicao 
 {
 
-currentRelationComparison = 0;
-char* IdentifierTemp = (char*)malloc(sizeof(identifiers));
-strcpy(IdentifierTemp, identifiers);
-IdentifierTemp = strtok(IdentifierTemp, " ");
-List *identifier_temp = lookupStringVariable(hashVariables, IdentifierTemp);
-if(identifier_temp != NULL)
-  typeAttribute = ((variable *)(identifier_temp->info))->type;
-else
-  typeAttribute = 5;
-    
-free(IdentifierTemp);
+  currentRelationComparison = 0;
+  char* IdentifierTemp = (char*)malloc(sizeof(identifiers));
+  strcpy(IdentifierTemp, identifiers);
+  IdentifierTemp = strtok(IdentifierTemp, " ");
+  List *identifier_temp = lookupStringVariable(hashVariables, IdentifierTemp);
+  if(identifier_temp != NULL)
+    typeAttribute = ((variable *)(identifier_temp->info))->type;
+  else
+    typeAttribute = 5;
+      
+  free(IdentifierTemp);
+  strcpy(currentVariable, currentIdentifier);
 }
 EXPR
 {
@@ -587,6 +607,9 @@ EXPR
 	if(identifier_temp==NULL)
 	{
 	  printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
+	} 
+	else if (((variable*)(identifier_temp->info))->matrix != isMatrix){
+		printf("Erro semântico na linha %d. Matriz e nao matriz sendo atribuidas.\n", nLine);
 	}
 	else if((varRelations[0] == 2 || varRelations[0] == 1) && currentRelationPos > 1) //caracter ou literal
 	{
@@ -618,6 +641,7 @@ EXPR
 	in_comparacao = 0;
 	strcpy(identifiers, "\0");
 	}
+	isMatrix = 0; //Limpando
       }
    else
     {
@@ -642,6 +666,9 @@ EXPR
 	  {
 	    printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
 	  }
+	  else if (((variable*)(identifier_temp->info))->matrix != isMatrix){
+		printf("Erro semântico na linha %d. Matriz e nao matriz sendo atribuidas.\n", nLine);
+	  }
 	  else if((varRelations[0] == 2 || varRelations[0] == 1) && currentRelationPos > 1) //caracter ou literal
 	  {
 	    printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
@@ -661,6 +688,7 @@ EXPR
 	  }
 	  else
 	    ((variable*)(identifier_temp->info))->used=1;
+	  isMatrix = 0; //Limpando
 	}
 	currentRelationPos = 0;
 	}
@@ -1269,9 +1297,35 @@ FATOR_CASE: SINALFATOR | token_numinteiro
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
   }
 };
-MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac | token_abrecol BLOCO_MATRIZ token_fechacol;
+MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac 
+{
+	isMatrix = 1;
+}
+ | token_abrecol BLOCO_MATRIZ token_fechacol
+ {
+	isMatrix = 1; 
+ };
 MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol BLOCO_MATRIZ token_fechacol | token_abrecol BLOCO_MATRIZ token_fechacol;
-BLOCO_MATRIZ: FATOR | BLOCO_MATRIZ token_virgula FATOR;
+BLOCO_MATRIZ: FATOR {
+	if (in_function != 1 ){
+		List *identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+		if(identifier_temp != NULL){
+			if (((variable*)(identifier_temp->info))->type != varRelations[0]){
+				printf("Tipo errado associado a matriz na linha %d\n",nLine);
+			} 
+		}
+	} else {
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		List *identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+		if(identifier_temp != NULL){
+			if (((variable*)(identifier_temp->info))->type != varRelations[0]){
+				printf("Tipo errado associado a matriz na linha %d\n",nLine);
+			} 
+		}
+	}
+		
+}| BLOCO_MATRIZ token_virgula FATOR;
 
 //BLOCO_ARGUMENTOS: /*Empty*/ | EXPR | BLOCO_ARGUMENTOS token_virgula EXPR;
 %%

@@ -15,6 +15,7 @@ char functionArguments[10*MAX_VARIABLE];
 int varRelations[100];
 char currentType[10];
 char currentIdentifier[100];
+int isMatrix = 0;
 %}
 
 /* definição de dígito */
@@ -52,7 +53,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "algoritmo"					{return token_algoritmo;}
 "até"						{return token_ate;}
 "caracter"					{strcpy(currentType, yytext); return token_caracter;}
-"caracteres"					{return token_caracteres;}
+"caracteres"					{strcpy(currentType, "caracter"); return token_caracteres;}
 "caso"						{return token_caso;}
 "de"						{return token_de;}
 "e"						{return token_e;}
@@ -69,20 +70,20 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "imprima"					{return token_imprima;}
 "início"					{return token_inicio;}
 "inteiro"					{strcpy(currentType, yytext); return token_inteiro;} 
-"inteiros"					{return token_inteiros;}
+"inteiros"					{strcpy(currentType, "inteiro"); return token_inteiros;}
 "leia"						{return token_leia;}
-"literais"					{return token_literais;}
+"literais"					{strcpy(currentType, "literal"); return token_literais;}
 "literal"					{strcpy(currentType, yytext); return token_literal;}
 "lógico"					{strcpy(currentType, yytext); return token_logico;}
-"lógicos"					{return token_logicos;}
-"matriz"					{return token_matriz;}
+"lógicos"					{strcpy(currentType, "lógico"); return token_logicos;}
+"matriz"					{isMatrix = 1; return token_matriz;}
 "não"						{return token_nao;}
 "ou"						{return token_ou;}
 "padrão"					{return token_padrao;}
 "para"						{return token_para;}
 "parar"						{return token_parar;}
 "passo"						{return token_passo;}
-"reais"						{return token_reais;}
+"reais"						{strcpy(currentType, "real"); return token_reais;}
 "real"						{strcpy(currentType, yytext); return token_real;}
 "retorne"					{return token_retorne;}
 "se"						{in_condicional=1; return token_se;}
