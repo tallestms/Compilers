@@ -17,9 +17,9 @@ início
 	a:=10.10;
 	b:=10.20;
 	//imprima("Digite seu nome:");
-	//imprima(nome, ", digite sua idade:");
+	//imprima("a");
 	idade := 10;
-	se (idade >= 18 e idade < 10 e a>10.10 e verdadeiro) então
+	se (idade >= 18 e idade<10 e a>10.10 e verdadeiro) então
 	  idade := 10.10;
 	fim-se
 			res := res + x + 10.10 + 10.10;

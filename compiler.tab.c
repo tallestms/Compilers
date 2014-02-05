@@ -2207,6 +2207,20 @@ yyreduce:
 }
     break;
 
+  case 63:
+
+/* Line 1806 of yacc.c  */
+#line 465 "compiler.y"
+    {strcpy(identifiers, "\0"); currentRelationPos = 0;}
+    break;
+
+  case 65:
+
+/* Line 1806 of yacc.c  */
+#line 468 "compiler.y"
+    {strcpy(identifiers, "\0"); currentRelationPos = 0;}
+    break;
+
   case 66:
 
 /* Line 1806 of yacc.c  */
@@ -3477,7 +3491,7 @@ List *identifier_temp = NULL;
 
 
 /* Line 1806 of yacc.c  */
-#line 3481 "compiler.tab.c"
+#line 3495 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
