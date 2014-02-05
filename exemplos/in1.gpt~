@@ -121,5 +121,6 @@ início
 	z := a > b;
 	z := b>a e (c<d) e (a>(b+soma2(c,f)) ou (c<(d+c)));
 	mat := {[1,2],[2,1]};
-	mat[1][1] := 3 + soma2(c,f) + soma(a);
+	mat[1][1] := 3 + soma2(c,f) + soma(a); 
+	mat[1][1] := 3 + soma2(c,f) + soma(a); //incompativel pois soma(a) retorna real
 fim
