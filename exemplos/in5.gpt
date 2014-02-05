@@ -77,7 +77,7 @@ início
 	//matA[1][1] := z[0][0]; //Dando erro pq ainda não está implementado
 	
 	matB[1][0] := 1;
-	matC[3] := 5.0; //erro ao avaliar tipo, ou da matriz ou da expressao;;
+	matC[3] := 5.0;
 
 	res := 1; //não sei o que está acontecendo, sempre no primeiro dá pau, deve ter esquecido alguma flag sem limpar
 	a := 10;

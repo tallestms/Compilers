@@ -126,14 +126,15 @@ hashTable* hashFunction = NULL;
 PROG:  token_algoritmo token_identificador token_pontov {strcpy(identifiers, "\0");} BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
   //verifyMatrix(hashVariables);
-  //verifyUsed(hashVariables);
+  verifyUsed(hashVariables);
+
 }
 |
 token_algoritmo token_identificador
 token_pontov {strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
  // verifyMatrix(hashVariables);
-  //verifyUsed(hashVariables);
+  verifyUsed(hashVariables);
 }
 ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
@@ -420,6 +421,7 @@ VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
       setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
+      newVar->used = 1;
 	isMatrix = 0;  //Próxima variável entrar como não matriz
 	addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
@@ -443,6 +445,7 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
       setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
+            newVar->used = 1;
 	isMatrix = 0;  //Próxima variável entrar como não matriz
       addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
@@ -605,6 +608,14 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		if(((variable*)(currVariable->info))->nColum <= currentNumber ){
 			printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
 		}
+		else
+		{
+		   int currentTypeInt = ((variable *)(currVariable->info))->type;
+		  // printf("%d \n", currentTypeInt);
+		  varRelations[currentRelationPos] = currentTypeInt;
+		  ++currentRelationPos;
+		  ++currentRelationComparison;
+		}
 	}else{
 		printf("Variavel nao declarada na linha %d\n",nLine);
 	}
@@ -619,6 +630,9 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 			printf("Atribuição de tipos invalidos na linha %d.\n", nLine);
 		}
 	}
+  strcpy(identifiers, "\0");
+  currentRelationPos = 0;
+  in_function = 0;
 } token_pontov
 | token_identificador token_abrecol token_numinteiro token_fechacol token_abrecol {
 	strcpy(currentVariable, currentIdentifier);
@@ -662,6 +676,9 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 			printf("Atribuição de tipos invalidos na linha %d.\n", nLine);
 		}
 	}
+  strcpy(identifiers, "\0");
+  currentRelationPos = 0;
+  in_function = 0;
 } token_pontov
 | token_identificador token_atribuicao 
 {
