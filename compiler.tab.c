@@ -2072,18 +2072,18 @@ yyreduce:
 		List *current_function = lookupStringFunction(hashFunction, currentScope);
 		int variableIsMatrix = ((variable*)(returned_variable->info))->matrix;
 		if(variableIsMatrix){
-			printf("Funcoes nao podem retornar matrizes. Erro linha %d", nLine);
+			printf("Funcoes nao podem retornar matrizes. Erro linha %d.\n", nLine);
 		}
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
-			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d na linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d na linha %d.\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
 		}
 		if ( ((variable*)(returned_variable->info))->used == 0) {
-			printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
+			printf("Variavel %s nao foi inicializada na linha %d.\n", currentIdentifier, nLine);
 		}
 	} else {
-		printf("Variavel %s não declarada na linha %d\n", currentIdentifier, nLine);
+		printf("Variavel %s não declarada na linha %d.\n", currentIdentifier, nLine);
 	}
 	strcpy(identifiers, "\0");
 }
@@ -2104,18 +2104,18 @@ yyreduce:
 		List *current_function = lookupStringFunction(hashFunction, currentScope);
 		int variableIsMatrix = ((variable*)(returned_variable->info))->matrix;
 		if(variableIsMatrix){
-			printf("Funcoes nao podem retornar matrizes. Erro linha %d", nLine);
+			printf("Funcoes nao podem retornar matrizes. Erro na linha %d.\n", nLine);
 		}
 		int typeReturnedFunction = ((function*)(current_function->info))->returnType;
 		int typeReturnedVariable = ((variable*)(returned_variable->info))->type; 
 		if ( typeReturnedFunction != typeReturnedVariable ) {
-			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d na linha %d\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
+			printf("Funcao %s espera um retorno do tipo %d e a variavel %s e do tipo %d na linha %d.\n", currentScope, typeReturnedFunction, currentIdentifier, typeReturnedVariable, nLine);
 		}
 		if ( ((variable*)(returned_variable->info))->used == 0) {
 			printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
 		}
 	} else {
-		printf("Variavel %s não declarada na linha %d\n", currentIdentifier, nLine);
+		printf("Variavel %s não declarada na linha %d.\n", currentIdentifier, nLine);
 	}
 	strcpy(identifiers, "\0");
 }
