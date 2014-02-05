@@ -1,0 +1,308 @@
+\documentclass[a4paper,12pt]{report}
+\usepackage[latin1]{inputenc} 
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{Compiladores\\Trabalho 3 - Analisador Sem\^antico}
+\author{Jackson Willian Brito; Talles Tatagiba Martins de Souza}
+\date{Fevereiro, 2014}
+\maketitle
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\renewcommand{\thesection}{\arabic{section}} 
+
+\begin{abstract}
+Neste relat\'orio explica-se como \'e o funcionamento do analisador sem\^antio para a disciplina Compiladores assim como as considera\c{c}\~oes feitas pelos autores do trabalho a fim de garantir integridade na linguagem.
+\end{abstract}
+
+\section{Introdu\c{c}\~ao}
+
+Da literatura, temos a defini\c{c}\~ao de um compilador como sendo um programa que recebe um programa escrito em uma linguagem
+fonte e o transforma em um programa em uma linguagem destino. Os programas fonte e alvo t\^em o mesmo significado. Uma caracter\'istica
+imprescind\'ivel de um compilador \'e a capacidade de detectar e reportar erros.
+
+O processo de compila\c{c}\~ao pode ser subdividido nas etapas de an\'alise e s\'intese. A etapa de an\'alise pode ser subdividida em 
+3 fases, s\~ao elas: l\'exica, sint\'atica e sem\^antica. Neste trabalho abordamos a fase sem\^antica da etapa de an\'alise.
+
+\section{Analisador Sem\^antico}
+
+A an\'alise sem\^antica consiste na varredura do programa de entrada representa de fato
+um programa v\'alido na linguagem fonte atentando-se as regras de escrita da linguagem e 
+as restri\c{c}\~oes de tipos e operadores. Nesta etapa s\~ao constru\'idas as estruturas de
+controles de varia\'aveis e fun\c{c}\~oes nas quais constar\~ao dados sem\^anticos tais como
+escopo, tipo, aridade, entre outros que ser\~ao analisados. Caso o arquivo fonte n\~ao esteja 
+escrito de maneira semanticamente correta na linguagem fonte deve-se
+reportar um erro indicando a linha na qual est\'a a diverg\^encia entre o escrito e o que 
+se esperava para que estivesse, o programa, corretamente redigido na linguagem esperada.
+
+\'E de suma import\^ancia frizar que ao contr\'ario da etapa de an\'alise lé\'exica e 
+sint\'atica, nas quais fizemos uso de ferramentas computacionais para realiza\c{c}\~ao das 
+mesmas, nesta etapa, apesar do uso das ferramentas como suporte, toda a l\'ogica de análise
+foi desenvolvida por n\'os.
+
+As particularidades da linguagem aceita pelo nosso compilador ser\~ao pormenorizadas ao 
+decorrer deste relat\'orio.
+
+\section{Ajustes no Analisador L\'exico}
+  
+Para desenvolvermos a etapa de an\'alise sem\^antica foi feita a a inser\c{c}\~ao, 
+no analisador l\'exico, de trechos de c\'odigo onde flags e conte\'udos de tokens s\~ao 
+repassados em vari\'aveis globais para que possamos utilizar os valores nos trechos de 
+c\'odigo inseridos no corpo do arquivo .y que ´onde se encontram definidas os procedimentos 
+de an\'alise aplic\'aveis a cada sequ\^encia reconhecida.
+
+\section{Ajustes no Analisador Sint\'atico}
+
+A gram\'atica que desenvolvemos na parte 2 do trabalho, apesar de consistente n\~ao possuia
+todo o poder necess\'ario para a reconhecimento de uma linguagem com as principais
+funcionalidades apresentadas pelas linguagens modernas como se prop\~oe a ser a nossa. Portanto
+alguns pequenos ajustes foram feitos.
+
+\subsection{Declara\c{c}\~oes de fun\c{c}\~oes}
+
+As declara\c{c}\~oes de fun\c{c}\~oes n\~ao estavam aceitando mais de um comando 
+seu corpo. Limita\c{c}\~ao muito simples de resolver alterando para receber blocos de comandos.
+
+\subsection{Atribui\c{c}\~ao a posi\c{c}\~ao em matrizes}
+
+Entre as diversas considera\c{c}\~oes feitas haviamos nos esquecido de aceitar atribui\c{c}\~ao
+de matrizes por posi\c{c}\~ao. Para resolver esse conflito, fez-se necess\'ario adicionar no 
+analisador sint\'atico a express\~ao de atribui\c{c}\~ao a posi\c{c}\~ao de matrizes como um 
+poss\'ivel comando.
+
+\subsection{Posi\c{c}\~ao de matrizes como termos de fun\c{c}\~oes}
+
+Outro objeto de esquecimento foi aceitar referencia a posi\c{c}\~oes de matrizes como 
+vari\'aveis. Para resolver esse conflito, fez-se necess\'ario adicionar no analisador 
+sint\'atico a express\~ao de refer\^encia a posi\c{c}\~ao de matrizes como uma express\~ao
+v\'alida.
+
+\section{A linguagem reconhecida}
+
+Ao fim da fase de an\'alise sem\^antica temos por fim uma visão integral e consisa do que pode 
+ser escrito na linguagem e consequentemente interpretado pelo nosso compilador. 
+Abaixo seguem as especificidades da nossa linguagem e como o analisador
+trata cada caso espec\'ifico.
+
+\subsection{Express\~oes}
+
+Conforme especifica\c{c}\~ao express\~oes n\~ao incluem, exceto em atribui\c{c}\~oes, literais 
+ou caracteres. Mas incluem vari\'aveis, acessos a posi\c{c}\~oes de matrizes, chamadas de 
+fun\c{c}\~oes e n\'umeros inteiros e reais, todos precedidos ou não de sinais indicativo de 
+n\'umero negativo. Ainda reconhece express\~oes l\'ogicas com operadoes de comparação e 
+operadores l\'ogicos.
+
+\'E v\'alido ressaltar que todos os operadores definidos ($+$,$-$,$*$,$/$,$<$,$>$,$e$, $ou$ e 
+outros) s\'o podem ser executados sobre operandos de mesmo tipo e para os tipos que não sejam
+caracter ou literal, ou matrizes de qualquer tipo sem sele\c{c}\~ao posi\c{c}\~ao.
+
+\subsection{Estruturas de sele\c{c}\~ao e repeti\c{c}\~ao}
+
+Estruturas de sele\c{c}\~ao aceitam express\c{c}\~oes que retornem valores l\'ogicos, seja 
+apenas uma vari\'avel, as palavras reservadas $verdadeiro$ e $falso$ ou express\~oes complexas
+cujo resultado seja um l\'ogico.
+
+Comandos de la\c{c}o avaliam express\~oes \'ogicas similarmente \`a estutura de sele\c{c}\~ao
+na parte condicional.
+
+\'E de bom tom frizarmos que para o comando $selecione$ os tipos inseridos dentro de um $caso$ 
+devem ser o mesmo da vari\'vel usada para compara\c{c}\~ao, caso contr\'ario, pela pr\'opria 
+restri\c{c}\~ao feita em express\~oes, a compara\c{c}\~ao n\~ao poder\'a ser feita, sendo assim 
+um erro sem\^antico que ser\'a acusado pelo nosso compilador. Ainda nessa caminho, as 
+itera\c{c}\~oes autom\'aticas do la\c{c}o $fa$\c{c}$a$ devem ser definidas sobre os mesmo
+tipos, tamb\'em respeitando as restri\c{c}\~oes impostas ao operador de 
+adi\c{c}\~ao/subtra\c{c}\~ao.
+
+\subsection{Declara\c{c}\~ao de vari\'aveis}
+
+Na parte de declara\c{c}\~ao de vari\'aveis o analisador sem\^antico gera a tabela com as 
+vari\'aveis criadas e retorna erro em caso de encontrar duas declara\c{c}\~oes da mesma
+vari\'avel, independentemente de haver mudan\c{c}a de tipo ou n\~ao.
+
+\subsection{Inicializa\c{c}\~ao de vari\'aveis}
+
+Nosso analisador sem\^antico faz ainda a verifica\c{c}\~ao de vari\'aveis que foram declaradas
+mas n\~ao chegaram a ser inicializadas, gerando assim um erro quando da sua utiliza\c{c}\~ao em
+alguma express\~ao (evitando lixos de mem\'oria) e emitindo um warning quando, excluindo o 
+bloco de declara\c{c}\~ao, n\~ao aparece em parte alguma dentro do seu escopo.
+
+\subsection{Declara\c{c}\~ao de fun\c{c}\~ao}
+
+Fun\c{c}\~oes devem ser declaradas no topo do programa e sempre antes de serem efetivamente
+utilizadas. Fun\c{c}\~oes que tenham retorno devem apresentar o comando retorne como \'ultimo
+comando da fun\c{c}\~a, ap\'os o fechamento de todos os blocos intermedi\'arios.
+Sabemos que \'e uma limita\c{c}\~ao bastante expressiva, mas resultante de uma escolha infeliz
+realizada nas partes anteriores que, quando percebida, n\~ao dispunha mais de tempo h\'abil 
+para que os ajustes necess\'arios fossem realizados. Assim, nesta entrega o deixamos com essa
+limita\c{c}\~ao e nos propomos a corrig\'i-lo para a pr\'oxima, e definitiva, parte como um 
+ajuste necess\'ario \`a etapa de s\'intese.
+
+\subsection{Aridades de fun\c{c}\~ao}
+
+Ao verificar a declara\c{c}\~ao de uma fun\c{c}\~ao \'e feito ainda a contagem dos par\^ametros 
+que a mesma recebe definido assim sua aridade que \'e conferida a cada invoca\c{c}\~ao da mesma
+acusando erro em caso de falta ou excesso de par\^amer
+
+\subsection{Atribui\c{c}\~ao \`a variaveis}
+
+No momento da atribui\c{c}\~ao de uma express\~ao a uma vari\'avel faz-se a checagem dos tipo 
+da vari\'avel e da express\~ao para saber se s\~ao compat\'iveis o que s\'o pode ocorrer se a 
+vari\'avel em quest\~ao tiver sido previamente declarada no bloco em que est\'a sendo 
+utilizada, que \'e o alvo da primeira verifica\c{c}\~ao feita.
+
+\subsection{Matrizes}
+
+Matrizes, nesta etapa, s\~ao tratadas como um tipo especial de vari\'avel, tendo na sua 
+estrutura uma flag indicando que se trata de uma matriz e as informa\c{c}\~oes referente a 
+dimens\~ao e n\'umero de linhas e colunas. Conforme resti\c{c}\~ao j\'a documentada na entrega
+referente ao analisador sint\'atico
+
+\subsubsection{Inicializa\c{c}\~ao}
+
+A inicializa\c{c}\~ao de um vetor (matriz de dimens\~ao 1) deve ser realizada da seguinte 
+forma:
+
+\begin{verbatim}
+	//Exemplo para um vetor de 5 inteiros
+	mat = [1,2,3,4,5];
+\end{verbatim}
+
+J\'a para uma matriz de dimens\~ao 2 deve-se proceder da seguinte maneira:
+
+\begin{verbatim}
+	//Exemplo para uma matriz[5][2] de inteiros
+	mat = {[1,2,3,4,5],[6,7,8,9,10]};
+\end{verbatim}
+
+\subsubsection{Atribui\c{c}\~ao a posi\c{c}\~ao espec\'ifica}
+
+Pode-se atribuir uma express\~ao, cujo resultado seja do mesmo tipo da matriz, a uma posi\c{c}\~ao espec\'ifica da matriz da formar mostrada a seguir:
+
+\begin{verbatim}
+	//Exemplo para uma matriz de inteiros
+	mat[0][0] := 10+7;
+\end{verbatim}
+
+Ressaltando que neste momento \'e feita verifica\c{c}\~ao do tamanho de cada dimens\~ao da
+matriz, evitando assim atribui\c{c}\~oes a espa\c{c}os de mem\'oria err\^oneos.
+
+\subsubsection{Uso em express\~oes}
+
+Pode-se utilizar, como uma vari\'avel comum, numa express\~ao uma posi\c{c}\~ao espec\'ifica 
+da matriz como segue:
+
+\begin{verbatim}
+	//Exemplo para uma matriz de inteiros
+    //variavel a  inteira
+	a := 10 + mat[0][0];
+\end{verbatim}
+
+\section{Casos de teste}
+
+Conforme solicitado na especifica\c{c}\~ao do trabalho enviamos no diret\'orio exemplos 15
+exemplos de programas escrito na linguagem portugol aceita pelo nosso compilador. 
+Destes, 5 escritos de forma correta, 5 apresentando erros sint\'aticos e 5 com erros 
+sem\^anticos.
+
+
+\subsection{Testes corretos}
+
+\subsubsection{in1.gpt}
+
+Neste arquivo testa-se o bloco de declara\c{c}\~ao de vari\'aveis, bem como atribui\c{c}\~oes.
+
+\subsubsection{in2.gpt}
+
+Neste arquivo testa-se as fun\c{c}\~oes primitivas leia() e imprima(ARGUMENTOS) e as estrutura 
+de sele\c{c}\~ao se-ent\~ao-sen\~ao aninhado e um seleciona.
+
+\subsubsection{in3.gpt}
+
+Aqui aparecem as estruturas de repeti\c{c}\~ao enquanto, fa\c{c}a-enquanto e para.
+
+\subsubsection{in4.gpt}
+
+Exemplo de um programa vazio.
+
+\subsubsection{in5.gpt}
+
+Exemplo com declara\c{c}\~ao e uso de fun\c{c}\~oes e aninhamento de comandos de 
+sele\c{c}\~ao e repeti\c{c}\~ao.
+
+
+\subsection{Testes com erro: sintaxe}
+
+Os testes com erros s\~ao essencialmente os testes corretos com algum erro 
+introduzido propositalmente
+e abaixo descritos.
+
+\subsubsection{inerr1.gpt}
+
+Introduzido erro na linha 10. Falta um : entre a variavel e o tipo.
+
+\subsubsection{inerr2.gpt}
+
+Introduzido erro na linha 28. Falta fechar aspas.
+
+\subsubsection{inerr3.gpt}
+
+Introduzido erro na linha 15. Foi trocado o simbolo de diferente <> por !=.
+
+\subsubsection{inerr4.gpt}
+
+Introduzido erro na linha 1. Foi removido o nome do algoritmo.
+
+\subsubsection{inerr5.gpt}
+
+Introduzido erro na linha 102. Foi acrescentado o : mas nao foi especificado o tipo de retorno.
+
+\subsection{Testes com erro: sem\^antica}
+
+Os testes com erros s\~ao essencialmente os testes corretos com algum erro 
+introduzido propositalmente e abaixo descritos.
+
+\subsubsection{inerr6.gpt}
+
+
+\subsubsection{inerr7.gpt}
+
+
+\subsubsection{inerr8.gpt}
+
+
+\subsubsection{inerr9.gpt}
+
+
+\subsubsection{inerr10.gpt}
+
+Falta fazer os exemplos errados desses e verificar compatibilidade dos corretos e 
+errados anteriores..
+\\
+
+\'E importante lembrar que em certos casos como a falta de ponto-e-v\'irgula ou delimitadores
+de repeti\c{c}\~ao tais 
+como fim-se, n\~ao necessariamente o erro ocorrer\'a na linha em que esta falta ocorre. 
+Isto se deve ao fato de que o compilador 
+ir\'a procurar o delimitador at\'e o final do programa por exemplo.
+Isto \'e comum em qualquer compilador moderno e portanto n\~ao \'e um erro.
+
+\section{Conclus\~ao}
+
+Ao fim deste trabalho solidificou-se o conhecimento em rela\c{c}\~ao a fase de 
+an\'alise sem\^antica do processo de compila\c{c}\~ao atrav\'es da programa\c{c}\~o 
+do comportamento de cada senten\c{c}a. Sedimentando assim os conhecimentos abordados
+na teoria da aula de Compiladores e habilitando-nos para o passo seguinte na 
+elabora\c{c}\~ao de um compilador: a etapa de s\'intese.
+
+\end{document}

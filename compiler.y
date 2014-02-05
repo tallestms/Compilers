@@ -132,7 +132,7 @@ PROG:  token_algoritmo token_identificador token_pontov {strcpy(identifiers, "\0
 token_algoritmo token_identificador
 token_pontov {strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
-  //verifyMatrix(hashVariables);
+ // verifyMatrix(hashVariables);
   //verifyUsed(hashVariables);
 }
 ;
@@ -691,9 +691,6 @@ EXPR
 	{
 	  printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
 	} 
-	else if (((variable*)(identifier_temp->info))->matrix != isMatrix){
-		printf("Erro semântico na linha %d. Matriz e nao matriz sendo atribuidas.\n", nLine);
-	}
 	else if((varRelations[0] == 2 || varRelations[0] == 1) && currentRelationPos > 1) //caracter ou literal
 	{
 	  printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
@@ -724,8 +721,7 @@ EXPR
 	in_comparacao = 0;
 	strcpy(identifiers, "\0");
 	}
-	isMatrix = 0; //Limpando
-      }
+	}
    else
     {
       char* varName = strtok(identifiers, " "); //Pegando o primeiro caracter
@@ -749,9 +745,6 @@ EXPR
 	  {
 	    printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
 	  }
-	  else if (((variable*)(identifier_temp->info))->matrix != isMatrix){
-		printf("Erro semântico na linha %d. Matriz e nao matriz sendo atribuidas.\n", nLine);
-	  }
 	  else if((varRelations[0] == 2 || varRelations[0] == 1) && currentRelationPos > 1) //caracter ou literal
 	  {
 	    printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
@@ -771,8 +764,7 @@ EXPR
 	  }
 	  else
 	    ((variable*)(identifier_temp->info))->used=1;
-	  isMatrix = 0; //Limpando
-	}
+	  }
 	currentRelationPos = 0;
 	}
       }

@@ -12,6 +12,7 @@ início
 	//x := leia();
 	fat := 7.0;
 	x := 1;
+	res := 2;
 	enquanto (x <> 0) faça
 		res := res * x;
 		x := x - 1;
@@ -22,8 +23,8 @@ início
 	//imprima("Segunda versão do programa fatorial. Digite um número:");
 	//fat := leia();
 	res := 1;
-	para (x de fat até 1 passo -1) faça
-		res := res * x;
+	para (x de res até 1 passo -1) faça
+		fat := fat * 10.0;
 	fim-para
 	//imprima("fatorial de ",fat," é igual a ",res);
 
@@ -34,6 +35,5 @@ início
 	faça 
 		res := res*x;
 		x := x - 1;
-	enquanto (x > fat); 	
-	imprima("fatorial de ",fat," é igual a ",res);
+	enquanto (x > res); 
 fim

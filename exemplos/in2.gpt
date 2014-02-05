@@ -7,10 +7,11 @@ variáveis
 	res : inteiro;
 	a,b : real;
 	z : lógico;
+	mat : matriz[5][2] de inteiros;
 fim-variáveis
 
 início
-
+	mat := {[1,2,3,4,5],[6,7,8,9,10]};
 	x := 10;
 	fat := 10;
 	res := 10;
@@ -21,15 +22,15 @@ início
 	idade := 10;
 	se (idade >= 18 e idade<10 e a>10.10 e verdadeiro) então
 	  fat := 10;
-	  idade := 10.10;
+	  idade := 10;
 	senão
-	  idade := 10.10;
+	  idade := 11;
 	fim-se
-			res := res + x + 10.10 + 10.10;
+			res := res + x + 10-10;
 			z := x>fat e res > fat;
 
 	enquanto (x <> 10) faça
-		res := res + x + 10.10 + 10.10;
+		res := res + x;
 		x := x - 1;
 		idade := 10;
 	fim-enquanto
@@ -38,7 +39,7 @@ início
 	res := 20;
 	
 	enquanto (x <> 0) faça
-		res := res*x+10.10;
+		res := res*x+10;
 	fim-enquanto
 	
 	faça 
@@ -48,7 +49,7 @@ início
 	
 	para (x de fat até 10 passo 10) faça
 			faça 
-			    res := res*x+10.10;
+			    res := res*x+11;
 			    a := a + b+10.10;
 			enquanto (x > 1); 
 	fim-para
