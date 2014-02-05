@@ -92,8 +92,8 @@ início
 	fim-seleciona
 	
 	a := "bcde" + "asdasdasdas";
-	x := leia();
-	b := imprima(a,b,c);
+	x := leia(a);
+	imprima(a);
 	a := {[1,2,3,4,5,6,7],[1,2,3,4,5,6,7],[1,2,3,4,5,6,7]};
 	b := {[1,2,3,4,5]};
 	c := [1,2,3,4,5];

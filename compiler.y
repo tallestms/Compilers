@@ -594,16 +594,16 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
 		if(((variable*)(currVariable->info))->used!=1){
-			printf("Erro, variavel nao inicializada na linha %d\n", nLine);
+			printf("Erro, variavel nao inicializada na linha %d.\n", nLine);
 		}
 		if(((variable*)(currVariable->info))->matrix!=1){
-			printf("Erro na linha %d, %s nao e uma matriz\n", nLine, ((variable*)(currVariable->info))->name);
+			printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(currVariable->info))->name);
 		}
 		if(((variable*)(currVariable->info))->dimension != 1){
-			printf("Erro na linha %d, %s possui dimensao 2\n", nLine, ((variable*)(currVariable->info))->name);
+			printf("Erro na linha %d, %s possui dimensao 2.\n", nLine, ((variable*)(currVariable->info))->name);
 		}
 		if(((variable*)(currVariable->info))->nColum <= currentNumber ){
-			printf("Erro na linha %d, %s possui %d posicoes\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
+			printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
 		}
 	}else{
 		printf("Variavel nao declarada na linha %d\n",nLine);
@@ -611,8 +611,12 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 } EXPR {
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
-		if(((variable*)(currVariable->info))->type!=varRelations[0]){
-			printf("Atribuição de tipos invalidos na linha %d\n", nLine);
+		if(!verifyRelationship(varRelations, currentRelationPos))
+		{
+		  printf("Tipos incompativeis na linha %d\n", nLine);
+		}
+		else if(((variable*)(currVariable->info))->type!=varRelations[0]){
+			printf("Atribuição de tipos invalidos na linha %d.\n", nLine);
 		}
 	}
 } token_pontov
@@ -625,33 +629,37 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
 		if(((variable*)(currVariable->info))->used!=1){
-			printf("Erro, variavel nao inicializada na linha %d\n", nLine);
+			printf("Erro, variavel nao inicializada na linha %d.\n", nLine);
 		}
 		if(((variable*)(currVariable->info))->matrix!=1){
-			printf("Erro na linha %d, %s nao e uma matriz\n", nLine, ((variable*)(currVariable->info))->name);
+			printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(currVariable->info))->name);
 		}
 		if(((variable*)(currVariable->info))->dimension != 2){
-			printf("Erro na linha %d, %s possui dimensao 1\n", nLine, ((variable*)(currVariable->info))->name);
+			printf("Erro na linha %d, %s possui dimensao 1.\n", nLine, ((variable*)(currVariable->info))->name);
 		}
 		if(((variable*)(currVariable->info))->nColum <= currentNumber ){
-			printf("Erro na linha %d, %s possui %d colunas apenas\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
+			printf("Erro na linha %d, %s possui %d colunas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
 		}
 	}else{
-		printf("Variavel nao declarada na linha %d\n",nLine);
+		printf("Variavel nao declarada na linha %d.\n",nLine);
 	}
 }
  token_numinteiro {
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
 		if(((variable*)(currVariable->info))->nLine <= currentNumber ){
-			printf("Erro na linha %d, %s possui %d linhas apenas\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
+			printf("Erro na linha %d, %s possui %d linhas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
 		}
 	}
 } token_fechacol token_atribuicao EXPR {
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
-		if(((variable*)(currVariable->info))->type!=varRelations[0]){
-			printf("Atribuição de tipos invalidos na linha %d\n", nLine);
+		if(!verifyRelationship(varRelations, currentRelationPos))
+		{
+		  printf("Tipos incompativeis na linha %d.\n", nLine);
+		}
+		else if(((variable*)(currVariable->info))->type!=varRelations[0]){
+			printf("Atribuição de tipos invalidos na linha %d.\n", nLine);
 		}
 	}
 } token_pontov

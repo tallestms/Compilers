@@ -21,6 +21,7 @@ extern char functionArguments[10*MAX_VARIABLE];
 extern char currentType[10];
 extern char currentIdentifier[100];
 extern int varRelations[100];
+extern int currentNumber;
 char currentVariable[MAX_VARIABLE + MAX_FUNCTION + 2];
 int currentRelationPos = 0;
 int currentRelationComparison = 0;
@@ -29,14 +30,11 @@ char currentFunction[MAX_FUNCTION];
 int currentFunctionArity = 0;
 char returnFunctionType[10];
 int switchType;
+int countLine = 0;
+int countColum = 0;
 int typeAttribute;
-
-int a = 0;
-int currentRelationPosInFunction = 0;
-int currentRelationComparisonInFunction = 0;
-int varRelationsInFunction[100];
-
 extern int isMatrix;
+int dimension, dim1, dim2;
 List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
@@ -128,14 +126,14 @@ hashTable* hashFunction = NULL;
 PROG:  token_algoritmo token_identificador token_pontov {strcpy(identifiers, "\0");} BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
   //verifyMatrix(hashVariables);
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 }
 |
 token_algoritmo token_identificador
 token_pontov {strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
   //verifyMatrix(hashVariables);
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 }
 ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
@@ -154,7 +152,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+	  setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
  	  addInfoVariable(hashVariables, varName, newVar);
 	}
@@ -180,7 +178,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix); 
+	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);  
 	}
@@ -205,7 +203,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
       {
 		variable* newVar = createVariable();
 		int intVarType = convertType(currentType);
-		setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+		setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 		isMatrix = 0;  //Próxima variável entrar como não matriz
 		addInfoVariable(hashVariables, varName, newVar);
       }  
@@ -230,7 +228,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	{
 	  variable* newVar = createVariable();
 	  int intVarType = convertType(currentType);
-	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix); 
+	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);
 	} 
@@ -257,8 +255,8 @@ VARIAVEIS_IDENTIFICADORES: token_identificador | VARIAVEIS_IDENTIFICADORES token
   
 
 
-INICIALIZAR_MATRIZ: token_matriz token_abrecol token_numinteiro token_fechacol token_abrecol token_numinteiro token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ | 
-	token_matriz token_abrecol token_numinteiro token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ;
+INICIALIZAR_MATRIZ: token_matriz token_abrecol token_numinteiro token_fechacol token_abrecol {dim1 = currentNumber;} token_numinteiro {dim2 = currentNumber;} token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ {dimension=2;} | 
+	token_matriz token_abrecol token_numinteiro token_fechacol token_de {dim1 = currentNumber;} TIPOS_VARIAVEIS_MATRIZ {dimension=1;};
 TIPOS_VARIAVEIS_MATRIZ: token_inteiros | token_caracteres | token_literais | token_reais | token_logicos;
 
 BLOCO:  /*Empty*/ | BLOCO COMANDO | BLOCO token_abrec BLOCO token_fechac;
@@ -421,7 +419,7 @@ VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS
     {
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
-      setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+      setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	isMatrix = 0;  //Próxima variável entrar como não matriz
 	addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
@@ -444,7 +442,7 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
     {
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
-      setVariable(newVar, varName, currentScope, intVarType, isMatrix); 
+      setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	isMatrix = 0;  //Próxima variável entrar como não matriz
       addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
@@ -474,7 +472,7 @@ token_identificador
  //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
     in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
-  currentRelationPosInFunction = 0;
+  
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
@@ -586,6 +584,84 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   currentRelationPos = 0;
   in_function = 0;
   
+} token_pontov
+| token_identificador token_abrecol token_numinteiro token_fechacol token_atribuicao {
+	strcpy(currentVariable, currentIdentifier);
+	if (strcmp(currentScope, "main")!=0 ){
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+	}
+	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
+	if (currVariable != NULL){
+		if(((variable*)(currVariable->info))->used!=1){
+			printf("Erro, variavel nao inicializada na linha %d.\n", nLine);
+		}
+		if(((variable*)(currVariable->info))->matrix!=1){
+			printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(currVariable->info))->name);
+		}
+		if(((variable*)(currVariable->info))->dimension != 1){
+			printf("Erro na linha %d, %s possui dimensao 2.\n", nLine, ((variable*)(currVariable->info))->name);
+		}
+		if(((variable*)(currVariable->info))->nColum <= currentNumber ){
+			printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
+		}
+	}else{
+		printf("Variavel nao declarada na linha %d\n",nLine);
+	}
+} EXPR {
+	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
+	if (currVariable != NULL){
+		if(!verifyRelationship(varRelations, currentRelationPos))
+		{
+		  printf("Tipos incompativeis na linha %d\n", nLine);
+		}
+		else if(((variable*)(currVariable->info))->type!=varRelations[0]){
+			printf("Atribuição de tipos invalidos na linha %d.\n", nLine);
+		}
+	}
+} token_pontov
+| token_identificador token_abrecol token_numinteiro token_fechacol token_abrecol {
+	strcpy(currentVariable, currentIdentifier);
+	if (strcmp(currentScope, "main")!=0 ){
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+	}
+	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
+	if (currVariable != NULL){
+		if(((variable*)(currVariable->info))->used!=1){
+			printf("Erro, variavel nao inicializada na linha %d.\n", nLine);
+		}
+		if(((variable*)(currVariable->info))->matrix!=1){
+			printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(currVariable->info))->name);
+		}
+		if(((variable*)(currVariable->info))->dimension != 2){
+			printf("Erro na linha %d, %s possui dimensao 1.\n", nLine, ((variable*)(currVariable->info))->name);
+		}
+		if(((variable*)(currVariable->info))->nColum <= currentNumber ){
+			printf("Erro na linha %d, %s possui %d colunas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
+		}
+	}else{
+		printf("Variavel nao declarada na linha %d.\n",nLine);
+	}
+}
+ token_numinteiro {
+	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
+	if (currVariable != NULL){
+		if(((variable*)(currVariable->info))->nLine <= currentNumber ){
+			printf("Erro na linha %d, %s possui %d linhas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
+		}
+	}
+} token_fechacol token_atribuicao EXPR {
+	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
+	if (currVariable != NULL){
+		if(!verifyRelationship(varRelations, currentRelationPos))
+		{
+		  printf("Tipos incompativeis na linha %d\n", nLine);
+		}
+		else if(((variable*)(currVariable->info))->type!=varRelations[0]){
+			printf("Atribuição de tipos invalidos na linha %d\n", nLine);
+		}
+	}
 } token_pontov
 | token_identificador token_atribuicao 
 {
@@ -740,14 +816,6 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
       ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
-    else
-    {
-      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-      varRelationsInFunction[currentRelationPos] = currentTypeInt;
-      ++currentRelationPosInFunction;
-      ++currentRelationComparisonInFunction;
-      // printf("%d %s\n", currentTypeInt, currentIdentifier);
-    }
    }
   }
   else
@@ -772,14 +840,6 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
       ++currentRelationComparison;
-      // printf("%d %s\n", currentTypeInt, currentIdentifier);
-    }
-    else
-    {
-      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-      varRelationsInFunction[currentRelationPos] = currentTypeInt;
-      ++currentRelationPosInFunction;
-      ++currentRelationComparisonInFunction;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
     }
@@ -852,29 +912,7 @@ token_e |
 }
 token_ou;
 
-ARGUMENTOS_FUNCAO: EXPR 
-{
-    List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
-    if(identifier_temp != NULL)	//else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
-    {
-      if(!verifyRelationship(varRelationsInFunction, currentRelationPosInFunction))
-      {
-	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
-      }
-      else if(varRelationsInFunction[0] != ((function*)identifier_temp->info)->returnType);
-      {
-	printf("Tipo associado a funcao %s na posicao %d esta errado na linha %d.\n", currentFunction, a, nLine);
-      }
-    }
-    a++;
-}
-| ARGUMENTOS_FUNCAO token_virgula EXPR
-{
-  if(in_function)
-    a++;
-}
-| /*Empty*/;
-
+ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
 EXPR: SIEXPR 
 
 | EXPR COMPARACOES SIEXPR
@@ -927,14 +965,6 @@ SINALFATOR:  token_numreal_comsinal
     ++currentRelationComparison;
     //printf("real com sinal\n");
   }
-   else 
-  {
-    int currentTypeInt = convertType(currentType);
-    varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
-    //printf("real com sinal\n");
-  }
 }
 | token_numinteiro_comsinal
 {
@@ -944,14 +974,6 @@ SINALFATOR:  token_numreal_comsinal
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
-    //printf("real com sinal\n");
-  }
-   else 
-  {
-    int currentTypeInt = convertType(currentType);
-    varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
     //printf("real com sinal\n");
   }
 
@@ -968,14 +990,6 @@ FATOR: SINALFATOR
     ++currentRelationComparison;
     //printf("real com sinal\n");
   }
-   else 
-  {
-    int currentTypeInt = convertType(currentType);
-    varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
-    //printf("real com sinal\n");
-  }
 }
 | token_numreal 
 {
@@ -985,14 +999,6 @@ FATOR: SINALFATOR
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
-    //printf("real com sinal\n");
-  }
-   else 
-  {
-    int currentTypeInt = convertType(currentType);
-    varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
     //printf("real com sinal\n");
   }
 }
@@ -1022,14 +1028,6 @@ e se ela foi declarada.
       ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
-     else 
-  {
-      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-      varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
-    //printf("real com sinal\n");
-  }
    }
   }
   else
@@ -1056,14 +1054,6 @@ e se ela foi declarada.
       ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
-         else 
-  {
-      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-      varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
-    //printf("real com sinal\n");
-  }
     }
     //printf("identificador\n");
   }
@@ -1089,14 +1079,6 @@ e se ela foi declarada.
       ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
-         else 
-  {
-      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-      varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
-    //printf("real com sinal\n");
-  }
     //printf("identificador\n");
     }
   }
@@ -1123,14 +1105,6 @@ e se ela foi declarada.
       ++currentRelationComparison;
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
-         else 
-  {
-      int currentTypeInt = ((variable*)(identifier_temp->info))->type;
-      varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
-    //printf("real com sinal\n");
-  }
     //printf("identificador\n");
     }
   }
@@ -1144,14 +1118,6 @@ e se ela foi declarada.
     ++currentRelationPos;
     ++currentRelationComparison;
   }
-     else 
-  {
-    int currentTypeInt = convertType(currentType);
-    varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
-    //printf("real com sinal\n");
-  }
   
 }
 | token_string 
@@ -1162,14 +1128,6 @@ e se ela foi declarada.
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
-  }
-     else 
-  {
-    int currentTypeInt = convertType(currentType);
-    varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
-    //printf("real com sinal\n");
   }
 }
 | token_abrep EXPR token_fechap 
@@ -1182,14 +1140,6 @@ e se ela foi declarada.
     ++currentRelationPos;
     ++currentRelationComparison;
   }
-     else 
-  {
-    int currentTypeInt = convertType(currentType);
-    varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
-    //printf("real com sinal\n");
-  }
 }
 | token_falso 
 {
@@ -1200,14 +1150,6 @@ e se ela foi declarada.
     ++currentRelationPos;
     ++currentRelationComparison;
   }
-     else 
-  {
-    int currentTypeInt = convertType(currentType);
-    varRelationsInFunction[currentRelationPos] = currentTypeInt;
-    ++currentRelationPosInFunction;
-    ++currentRelationComparisonInFunction;
-    //printf("real com sinal\n");
-  }
 }
 | token_identificador
 {
@@ -1215,7 +1157,6 @@ e se ela foi declarada.
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
     in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
-    currentRelationPosInFunction = 0;
 //printRelationship(varRelations, currentRelationPos);
 List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   if(identifier_temp!=NULL)
@@ -1296,7 +1237,6 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   }
  
 }
-//token_abrep {a=0;} ARGUMENTOS_FUNCAO {printf("%d %s\n", a, currentFunction); a=0;}token_fechap
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
@@ -1393,43 +1333,24 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	functionTypes=functionTypes->next;
 	}
     }
-    if(in_function!=1)
-    {
       int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
      // printf("%d \n", currentTypeInt);
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
       ++currentRelationComparison;
-      }
-      else
-      {
-	      int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
-     // printf("%d \n", currentTypeInt);
-      varRelationsInFunction[currentRelationPos] = currentTypeInt;
-      ++currentRelationPosInFunction;
-      ++currentRelationComparisonInFunction;
-      }
   }
       if(identifier_temp!=NULL)
       {
 	int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
       // printf("%d \n", currentTypeInt);
 	varRelations[currentRelationPos] = currentTypeInt;
-	if(currentTypeInt==5 && !in_function)
+	if(currentTypeInt==5)
 	{
 	  printf("Na linha %d, a funcao %s nao possui retorno. ", nLine, currentFunction);
 	  // printf("%d \n", currentTypeInt);
 	  varRelations[currentRelationPos] = currentTypeInt;
 	  ++currentRelationPos;
 	  ++currentRelationComparison;
-	}
-	else if(currentTypeInt == 5 && in_function)
-	{
-	  int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
-	  // printf("%d \n", currentTypeInt);
-	  varRelationsInFunction[currentRelationPos] = currentTypeInt;
-	  ++currentRelationPosInFunction;
-	  ++currentRelationComparisonInFunction;
 	}
       }
   strcpy(functionArguments, "\0");
@@ -1459,35 +1380,120 @@ FATOR_CASE: SINALFATOR | token_numinteiro
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
   }
 };
-MATRIZ: token_abrec MATRIZ_VARIAS_COLUNAS token_fechac 
+MATRIZ: token_abrec {countLine=0;} MATRIZ_VARIAS_COLUNAS {
+	List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		int numLine = ((variable*)(identifier_temp->info))->nLine;
+		if(countLine != numLine) {
+			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+		}else{
+			((variable*)(identifier_temp->info))->used = 1;
+		}
+	}
+} token_fechac 
 {
 	isMatrix = 1;
 }
- | token_abrecol BLOCO_MATRIZ token_fechacol
+ | token_abrecol {countColum=0;} BLOCO_MATRIZ {
+	List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		int numLine = ((variable*)(identifier_temp->info))->nLine;
+		if(countLine != numLine) {
+			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+		}else{
+			((variable*)(identifier_temp->info))->used = 1;
+		}
+	}
+}token_fechacol
  {
 	isMatrix = 1; 
  };
-MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol BLOCO_MATRIZ token_fechacol | token_abrecol BLOCO_MATRIZ token_fechacol;
-BLOCO_MATRIZ: FATOR {
-	if (in_function != 1 ){
-		List *identifier_temp = lookupStringVariable(hashVariables, currentVariable);
-		if(identifier_temp != NULL){
-			if (((variable*)(identifier_temp->info))->type != varRelations[0]){
-				printf("Tipo errado associado a matriz na linha %d\n",nLine);
-			} 
-		}
-	} else {
+MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol {countColum=0;} BLOCO_MATRIZ 
+{
+countLine++;
+List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
 		strcat(currentVariable, " ");
 		strcat(currentVariable, currentScope);
-		List *identifier_temp = lookupStringVariable(hashVariables, currentVariable);
-		if(identifier_temp != NULL){
-			if (((variable*)(identifier_temp->info))->type != varRelations[0]){
-				printf("Tipo errado associado a matriz na linha %d\n",nLine);
-			} 
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		int numColum = ((variable*)(identifier_temp->info))->nColum;
+		if(countColum != numColum) {
+			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
 		}
 	}
-		
-}| BLOCO_MATRIZ token_virgula FATOR;
+}token_fechacol | token_abrecol 
+{countColum=0;} BLOCO_MATRIZ {
+	countLine++;
+	List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		if (((variable*)(identifier_temp->info))->nColum != countColum){
+			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);	
+		}
+	}
+}
+token_fechacol;
+
+BLOCO_MATRIZ: FATOR 
+{
+	List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		if (((variable*)(identifier_temp->info))->type != varRelations[0]){
+			printf("Tipo errado associado a matriz na linha %d\n",nLine);
+		} 
+	}
+	countColum++;
+}
+	
+| BLOCO_MATRIZ token_virgula FATOR 
+
+{
+	List *identifier_temp = NULL;
+	if (strcmp(currentScope, "main") == 0 ){
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}else{
+		strcat(currentVariable, " ");
+		strcat(currentVariable, currentScope);
+		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
+	}
+	if(identifier_temp != NULL){
+		if (((variable*)(identifier_temp->info))->type != varRelations[0]){
+			printf("Tipo errado associado a matriz na linha %d\n",nLine);
+		}
+	}	
+	countColum++;
+};
 
 //BLOCO_ARGUMENTOS: /*Empty*/ | EXPR | BLOCO_ARGUMENTOS token_virgula EXPR;
 %%

@@ -3,26 +3,36 @@ algoritmo declaracao_de_variaveis;
 função soma(x: inteiro, y: inteiro) : inteiro
   res : lógico;
   início
-  res := (a+b >= (2-a)) e (a>-b);
-  retorne res;
+  x:=20;
+  y:=1;
+  //res := (x+y >= (2-x)) e (y>-x); //verificar erro de x não declarada
+  //retorne res;
+  retorne x;
   fim
   
 função soma2(x: inteiro, y: inteiro) : lógico
   res : lógico;
   início
-  res := (a+b >= (2-a)) e (a>-b);
+  x:=10; //verificar erro de tipo de x
+  y:=11;
+  res := x>y; //y nao declarado?
   retorne res;
   fim
 
 variáveis
 	x, y : caracter;
 	z : matriz[5][5] de inteiros;
-	idade: inteiro;
+	idade, a: inteiro;
 fim-variáveis
 
 início
-
-      a := soma();
+	
+	idade := 22;
+      a := soma(idade,idade);
+	
+	z := {[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]};
+	
+	z[2][3] := 20 + 7;
 	
 	atualizaGlobal(value);
 	
@@ -82,8 +92,8 @@ início
 	fim-seleciona
 	
 	a := "bcde" + "asdasdasdas";
-	x := leia();
-	b := imprima(a,b,c);
+	x := leia(a);
+	b := imprima(a);
 	a := {[1,2,3,4,5,6,7],[1,2,3,4,5,6,7],[1,2,3,4,5,6,7]};
 	b := {[1,2,3,4,5]};
 	c := [1,2,3,4,5];
@@ -96,7 +106,7 @@ início
 	 c
 	 */
 	 
-	 valor := mes("20/05/2013") > mes(data_atual) e dia(data(ontem)) < 5 ou ano(data_atual) > 2012 e não(a>b e b>a);
+	 valor := mes("20/05/2013") > mes(data_atual) e dia(data(ontem)) < 5 ou ano(data_atual) > 2012 e (a>b e b>a);
 	 
 	 a := soma(mmc(a,b,c)) + (b*(c+1+(c+2)));
 	 

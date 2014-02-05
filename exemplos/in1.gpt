@@ -59,7 +59,7 @@ variáveis
 	char : caracter;
 	lit : literal;
 	z : lógico;
-	mat : matriz[2] de inteiros; 
+	mat : matriz[2][2] de inteiros; 
 fim-variáveis
 
 início
@@ -119,6 +119,8 @@ início
 	//a := b>(soma(a)+a);
 	b := 10;
 	z := a > b;
-	//z := b>a e (c<d) e (a>(b+soma(a,b)) ou (c<(d+c)));
+	z := b>a e (c<d) e (a>(b+soma2(c,f)) ou (c<(d+c)));
 	mat := {[1,2],[2,1]};
+	mat[1][1] := 3 + soma2(c,f) + soma(a); 
+	mat[1][1] := 3 + soma2(c,f) + soma(a); //incompativel pois soma(a) retorna real
 fim
