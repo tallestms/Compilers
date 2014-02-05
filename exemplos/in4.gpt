@@ -1,5 +1,16 @@
-algoritmo vazio;
-
+algoritmo primitivas;
+variáveis
+ a:literal;
+fim-variáveis
 início
-
+	imprima("oi");
+	imprima_ln("oioi");
+	leia(a);
+	leia_ln();
+	maximo(10,20);
+	maximo(10.0,20.0);
+	minimo(10,20);
+	minimo(10.0,20.0);
+	media(10,20);
+	media(10.1,20.2);
 fim
