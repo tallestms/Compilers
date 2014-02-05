@@ -465,7 +465,7 @@ COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
 //token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
 token_identificador token_atribuicao token_leia token_abrep token_identificador token_fechap token_pontov |
-token_leia token_abrep token_identificador token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;}| 
+token_leia token_abrep token_identificador token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
 token_identificador
 {
 
@@ -780,8 +780,7 @@ EXPR
 token_pontov {
 currentRelationComparison = 0;
 }|
-token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_fimse | 
-token_se token_abrep EXPR token_fechap token_entao BLOCO_AUXILIAR token_senao BLOCO_AUXILIAR token_fimse |
+token_se token_abrep EXPR token_fechap {currentRelationPos=0;} token_entao BLOCO_AUXILIAR BLOCO_SENAO_FIMSE  | 
 token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap {in_condicional=0;} token_pontov | 
 token_enquanto token_abrep EXPR token_fechap {in_condicional=0;currentRelationPos=0;strcpy(identifiers,"\0");} token_faca BLOCO_AUXILIAR token_fimequanto | 
 token_para token_abrep {strcpy(identifiers,"\0"); currentRelationPos=0;} token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap  
@@ -854,7 +853,8 @@ else
   switchType = 5;
 }
 BLOCO_SWITCH;
- 
+
+BLOCO_SENAO_FIMSE: token_senao BLOCO_AUXILIAR {currentRelationPos=0;}token_fimse | token_fimse;
 LOGICOS: 
 {in_logico = 1;}
 {

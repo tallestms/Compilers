@@ -17,9 +17,12 @@ início
 	a:=10.10;
 	b:=10.20;
 	imprima("Digite seu nome:");
-	//imprima("a");
+	imprima("a");
 	idade := 10;
 	se (idade >= 18 e idade<10 e a>10.10 e verdadeiro) então
+	  fat := 10;
+	  idade := 10.10;
+	senão
 	  idade := 10.10;
 	fim-se
 			res := res + x + 10.10 + 10.10;
@@ -28,6 +31,7 @@ início
 	enquanto (x <> 10) faça
 		res := res + x + 10.10 + 10.10;
 		x := x - 1;
+		idade := 10;
 	fim-enquanto
 
 	x := 10;
