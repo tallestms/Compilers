@@ -2,11 +2,9 @@ algoritmo idade2;
 
 variáveis
 	idade : inteiro;
-	nome : literal;
 	x,fat : inteiro;
 	res : inteiro;
 	a,b : real;
-	z : lógico;
 	mat : matriz[5][2] de inteiros;
 fim-variáveis
 
@@ -27,7 +25,7 @@ início
 	  idade := 11;
 	fim-se
 			res := res + x + 10-10;
-			z := x>fat e res > fat;
+
 
 	enquanto (x <> 10) faça
 		res := res + x;
