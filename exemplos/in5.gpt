@@ -40,7 +40,7 @@ variáveis
 fim-variáveis
 
 início
-	leia(a);
+	leialn(a);
 
 	idade := 22;
       a := soma(idade,idade);
