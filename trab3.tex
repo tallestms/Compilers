@@ -23,7 +23,7 @@
 \renewcommand{\thesection}{\arabic{section}} 
 
 \begin{abstract}
-Neste relat\'orio explica-se como \'e o funcionamento do analisador sem\^antio para a disciplina Compiladores assim como as considera\c{c}\~oes feitas pelos autores do trabalho a fim de garantir integridade na linguagem.
+Neste relat\'orio explica-se como \'e o funcionamento do analisador sem\^antico para a disciplina Compiladores assim como as considera\c{c}\~oes feitas pelos autores do trabalho a fim de garantir integridade na linguagem.
 \end{abstract}
 
 \section{Introdu\c{c}\~ao}
@@ -46,9 +46,9 @@ escrito de maneira semanticamente correta na linguagem fonte deve-se
 reportar um erro indicando a linha na qual est\'a a diverg\^encia entre o escrito e o que 
 se esperava para que estivesse, o programa, corretamente redigido na linguagem esperada.
 
-\'E de suma import\^ancia frizar que ao contr\'ario da etapa de an\'alise lé\'exica e 
+\'E de suma import\^ancia frizar que ao contr\'ario da etapa de an\'alise l\'exica e 
 sint\'atica, nas quais fizemos uso de ferramentas computacionais para realiza\c{c}\~ao das 
-mesmas, nesta etapa, apesar do uso das ferramentas como suporte, toda a l\'ogica de análise
+mesmas, nesta etapa, apesar do uso das ferramentas como suporte, toda a l\'ogica de an\'alise
 foi desenvolvida por n\'os.
 
 As particularidades da linguagem aceita pelo nosso compilador ser\~ao pormenorizadas ao 
@@ -59,7 +59,7 @@ decorrer deste relat\'orio.
 Para desenvolvermos a etapa de an\'alise sem\^antica foi feita a a inser\c{c}\~ao, 
 no analisador l\'exico, de trechos de c\'odigo onde flags e conte\'udos de tokens s\~ao 
 repassados em vari\'aveis globais para que possamos utilizar os valores nos trechos de 
-c\'odigo inseridos no corpo do arquivo .y que ´onde se encontram definidas os procedimentos 
+c\'odigo inseridos no corpo do arquivo .y que onde se encontram definidas os procedimentos 
 de an\'alise aplic\'aveis a cada sequ\^encia reconhecida.
 
 \section{Ajustes no Analisador Sint\'atico}
@@ -99,13 +99,17 @@ trata cada caso espec\'ifico.
 
 Conforme especifica\c{c}\~ao express\~oes n\~ao incluem, exceto em atribui\c{c}\~oes, literais 
 ou caracteres. Mas incluem vari\'aveis, acessos a posi\c{c}\~oes de matrizes, chamadas de 
-fun\c{c}\~oes e n\'umeros inteiros e reais, todos precedidos ou não de sinais indicativo de 
-n\'umero negativo. Ainda reconhece express\~oes l\'ogicas com operadoes de comparação e 
+fun\c{c}\~oes e n\'umeros inteiros e reais, todos precedidos ou n\~ao de sinais indicativo de 
+n\'umero negativo. Ainda reconhece express\~oes l\'ogicas com operadoes de compara\c{c}\~ao e 
 operadores l\'ogicos.
 
+No que tange a compara\c{c}\~oes l\'ogicas vale ressaltar que para efeito de an\'alises
+destas nosso analisador sem\^antico entende que um n\'umero pode ser considerado um 
+l\'ogico adotando a convers\~ao: 0 - $falso$ | n\~ao 0 - $verdadeiro$.
+
 \'E v\'alido ressaltar que todos os operadores definidos ($+$,$-$,$*$,$/$,$<$,$>$,$e$, $ou$ e 
-outros) s\'o podem ser executados sobre operandos de mesmo tipo e para os tipos que não sejam
-caracter ou literal, ou matrizes de qualquer tipo sem sele\c{c}\~ao posi\c{c}\~ao.
+outros) s\'o podem ser executados sobre operandos de mesmo tipo e para os tipos que n\~ao sejam
+caracter ou literal, ou matrizes de qualquer tipo sem sele\c{c}\~ao de posi\c{c}\~ao.
 
 \subsection{Estruturas de sele\c{c}\~ao e repeti\c{c}\~ao}
 
@@ -113,7 +117,7 @@ Estruturas de sele\c{c}\~ao aceitam express\c{c}\~oes que retornem valores l\'og
 apenas uma vari\'avel, as palavras reservadas $verdadeiro$ e $falso$ ou express\~oes complexas
 cujo resultado seja um l\'ogico.
 
-Comandos de la\c{c}o avaliam express\~oes \'ogicas similarmente \`a estutura de sele\c{c}\~ao
+Comandos de la\c{c}o avaliam express\~oes l\'ogicas similarmente \`a estrutura de sele\c{c}\~ao
 na parte condicional.
 
 \'E de bom tom frizarmos que para o comando $selecione$ os tipos inseridos dentro de um $caso$ 
@@ -199,7 +203,8 @@ matriz, evitando assim atribui\c{c}\~oes a espa\c{c}os de mem\'oria err\^oneos.
 
 \subsubsection{Uso em express\~oes}
 
-Pode-se utilizar, como uma vari\'avel comum, numa express\~ao uma posi\c{c}\~ao espec\'ifica 
+Devido a decis\~oes anteriores ainda n\~ao se pode
+utilizar, como uma vari\'avel comum numa express\~ao, uma posi\c{c}\~ao espec\'ifica 
 da matriz como segue:
 
 \begin{verbatim}
@@ -207,6 +212,36 @@ da matriz como segue:
     //variavel a  inteira
 	a := 10 + mat[0][0];
 \end{verbatim}
+
+Mas esta funcionalidade ser\'a integrada na entrega do compilador completo, ou seja, no pr\'oximo trabalho.
+
+\section{Aloca\c{c}\~ao de vari\'aveis}
+
+Por quest\~oes perform\'aticas devemos realizar a aloca\c{c}\~ao dos espa\c{c}os necess\'arios  
+para as vari\'aveis em tempo de compila\c{c}\~ao e n\~ao em tempo de execu\c{c}\~ao. Portanto, na
+hora de preencher a estrutura de vari\'aveis realizamos tamb\'em a aloca\c{c}\~ao, em um ponteiro
+$void$ do espa\c{c} necess\'rio para armazen\'a-la em tempo de execu\c{c}\~ao. As aloca\c{c}\~oes 
+seguem a seguinte l\'ogica para cada tipo:
+
+\subsection{Caracteres}
+
+Caracteres s\~ao alocados como $char$.
+
+\subsection{L\'ogicos}
+
+L\'ogicos s\~ao alocados como $int$ consonando com a conven\c{c}\~ao de C (0 para falso e n\~ao 0 para verdadeiro).
+
+\subsection{Inteiro e reais}
+
+Inteiros \'e alocado como $int$ e reais como $double$. A convers\~ao de nota\c{c}\~ao ser\' feita na entrega seguinte.
+
+\subsection{Literais}
+
+Assumimos literais com tamanho m\'aximo de 200 caracters, garantido em tempo de compila\c{c}\~ao e portanto alocamos um vetor $char$ de 200 posi\c{c}\~oes.
+
+\subsection{Matrizes}
+
+Respeitamos os tipos como definidos acima e alocamos, para matrizes de dimens\~ao 1, um vetor do tamanho de colunas. J\'a para matrizes de dimens\~ao 2 alocamos um vetor de dimens\~ao colunas * linhas.
 
 \section{Casos de teste}
 
@@ -224,8 +259,7 @@ Neste arquivo testa-se o bloco de declara\c{c}\~ao de vari\'aveis, bem como atri
 
 \subsubsection{in2.gpt}
 
-Neste arquivo testa-se as fun\c{c}\~oes primitivas leia() e imprima(ARGUMENTOS) e as estrutura 
-de sele\c{c}\~ao se-ent\~ao-sen\~ao aninhado e um seleciona.
+Testando as estrutura de sele\c{c}\~ao se-ent\~ao-sen\~ao aninhado e um seleciona.
 
 \subsubsection{in3.gpt}
 
@@ -233,13 +267,14 @@ Aqui aparecem as estruturas de repeti\c{c}\~ao enquanto, fa\c{c}a-enquanto e par
 
 \subsubsection{in4.gpt}
 
-Exemplo de um programa vazio.
+Neste arquivo testa-se as fun\c{c}\~oes primitivas leia(ARGUMENTO), imprima(ARGUMENTO), 
+leialn(ARGUMENTO), imprimaln(ARGUMENTO), minimo(ARGUMENTOS), 
+maximo(ARGUMENTOS) e 
+media(ARGUMENTOS).
 
 \subsubsection{in5.gpt}
 
-Exemplo com declara\c{c}\~ao e uso de fun\c{c}\~oes e aninhamento de comandos de 
-sele\c{c}\~ao e repeti\c{c}\~ao.
-
+Arquivo com testes, dentre outros, de estruturas de matrizes.
 
 \subsection{Testes com erro: sintaxe}
 
@@ -253,11 +288,11 @@ Introduzido erro na linha 10. Falta um : entre a variavel e o tipo.
 
 \subsubsection{inerr2.gpt}
 
-Introduzido erro na linha 28. Falta fechar aspas.
+Introduzido erro na linha 29. Falta fechar aspas.
 
 \subsubsection{inerr3.gpt}
 
-Introduzido erro na linha 15. Foi trocado o simbolo de diferente <> por !=.
+Introduzido erro na linha 15. Foi trocado o simbolo de diferente <> por ==.
 
 \subsubsection{inerr4.gpt}
 
@@ -265,7 +300,7 @@ Introduzido erro na linha 1. Foi removido o nome do algoritmo.
 
 \subsubsection{inerr5.gpt}
 
-Introduzido erro na linha 102. Foi acrescentado o : mas nao foi especificado o tipo de retorno.
+Introduzido erro na linha 20. Foi mantido o : mas mas retirado o tipo de retorno.
 
 \subsection{Testes com erro: sem\^antica}
 
@@ -274,21 +309,36 @@ introduzido propositalmente e abaixo descritos.
 
 \subsubsection{inerr6.gpt}
 
+Introduzido erro na linha 66. Foi comentada a inicializa\c{c}\~ao da vari\'avel $a$ causando erro na linha 70.\\
+Introduzido erro na linha 74. Foi adicionado a vari\'avel $j$ sem ser devidamente declarada.\\
+Introduzido erro na linha 78. Retirado um par\^ametro da fun\c{c}\~ao m\'edia causando erro de aridade.\\
+Introduzido erro na linha 90. Atribuindo tipo errado. \\
+Introduzido erro na linha 99. Introduzida, na express\~ao fun\c{c}\~ao com tipo de retorno incompatível.
 
 \subsubsection{inerr7.gpt}
 
+Introduzido erro na linha 51. Usando um tipo n\~ao v\'alido na espress\~ao. \\
+Introduzido erro na linha 63. Usando um tipo n\~ao v\'alido  no $caso$.\\
+Aviso referente a n\~ao utiliza\c{c}\~ao da vari\'avel $c$.
 
 \subsubsection{inerr8.gpt}
 
+Introduzido erro na linha 29. Valor do $passo$ alterado para real com os demais sendo inteiros. \\
+Aviso para as vari\'aveis $z$, $nome$ e $faltando$ que s\~ao declaradas mas n\~ao usadas. 
 
 \subsubsection{inerr9.gpt}
 
+Introduzido erro na linha 11. Usados tipos inv\'alidos (caracteres) na fun\c{c}\~ao $maximo$.\\
+Introduzido erro na linha 14. Usados tipos diferentes na fun\c{c}\~ao $minimo$.\\
+Introduzido erro na linha 15. Usados tipos diferentes na fun\c{c}\~ao $media$. \\
+Aviso para a matriz $mat2$ n\~ao utilizada.
 
 \subsubsection{inerr10.gpt}
 
-Falta fazer os exemplos errados desses e verificar compatibilidade dos corretos e 
-errados anteriores..
-\\
+Introduzido erro na linha 71. Retirada uma linha da inicializa\c{c}\~ao da matriz.\\
+Introduzido erro na linha 72. Retirado um termo da inicializa\c{c}\~ao da matriz. \\
+Introduzido erro na linha 73. Colocado um tipo inv\'alido na inicializa\c{c}\~ao da matriz. \\
+Aviso com vari\'avel $res$ n\~ao utilizada durante a fun\c{c}\~ao soma. \\
 
 \'E importante lembrar que em certos casos como a falta de ponto-e-v\'irgula ou delimitadores
 de repeti\c{c}\~ao tais 
