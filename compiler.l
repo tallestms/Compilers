@@ -69,10 +69,12 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "fim-variáveis"					{return token_fimvariaveis;}
 "função"					{return token_funcao;}
 "imprima"					{return token_imprima;}
+"imprimaln"					{return token_imprimaln;}
 "início"					{return token_inicio;}
 "inteiro"					{strcpy(currentType, yytext); return token_inteiro;} 
 "inteiros"					{strcpy(currentType, "inteiro"); return token_inteiros;}
 "leia"						{return token_leia;}
+"leialn"					{return token_leialn;}
 "literais"					{strcpy(currentType, "literal"); return token_literais;}
 "literal"					{strcpy(currentType, yytext); return token_literal;}
 "lógico"					{strcpy(currentType, yytext); return token_logico;}

@@ -2,11 +2,14 @@ algoritmo idade2;
 
 variáveis
 	idade : inteiro;
+	nome : literal;
 	x,fat : inteiro;
 	res : inteiro;
 	a,b : real;
+	z : lógico;
 	mat : matriz[5][2] de inteiros;
 	c : literal;
+	ao : caracter;
 fim-variáveis
 
 início
@@ -19,14 +22,14 @@ início
 	imprima("Digite seu nome:");
 	imprima("a");
 	idade := 10;
-	se (idade >= 18 e idade<10 e a>10.10 e verdadeiro) então
+	se (idade e idade<10 e a>10.10 e verdadeiro) então
 	  fat := 10;
 	  idade := 10;
 	senão
 	  idade := 11;
 	fim-se
 			res := res + x + 10-10;
-
+			z := x>fat e res > fat;
 
 	enquanto (x <> 10) faça
 		res := res + x;

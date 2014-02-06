@@ -74,10 +74,12 @@ hashTable* hashFunction = NULL;
 %token token_fimvariaveis
 %token token_funcao
 %token token_imprima
+%token token_imprimaln
 %token token_inicio
 %token token_inteiro
 %token token_inteiros
 %token token_leia
+%token token_leialn
 %token token_literais
 %token token_literal
 %token token_logico
@@ -466,9 +468,37 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
  */
 COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+token_imprimaln token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
 //token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
-token_identificador token_atribuicao token_leia token_abrep token_identificador token_fechap token_pontov |
-token_leia token_abrep token_identificador token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+//token_identificador token_atribuicao token_leia token_abrep token_identificador token_fechap token_pontov |
+token_leia token_abrep token_identificador
+{
+  	List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
+	if(identifier_temp==NULL)
+	{
+	  printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
+	} 
+	else
+	{
+	  ((variable*)(identifier_temp->info))->used = 1;
+	}
+  
+}
+token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+token_leialn token_abrep token_identificador
+{
+  	List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
+	if(identifier_temp==NULL)
+	{
+	  printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
+	} 
+	else
+	{
+	  ((variable*)(identifier_temp->info))->used = 1;
+	}
+  
+}
+token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} |
 token_identificador
 {
 
