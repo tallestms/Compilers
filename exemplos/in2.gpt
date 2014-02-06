@@ -2,7 +2,6 @@ algoritmo idade2;
 
 variáveis
 	idade : inteiro;
-	nome : literal;
 	x,fat : inteiro;
 	res : inteiro;
 	a,b : real;

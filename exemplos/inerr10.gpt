@@ -27,8 +27,7 @@ função atualizaGlobal(num:inteiro) : lógico
 	fim
 
 variáveis
-	x, y : caracter;
-	fat : caracter;
+	x : caracter;
 	z : matriz[5][5] de inteiros;
 	matA : matriz[7][3] de inteiros;
 	matB : matriz[5][1] de inteiros;
