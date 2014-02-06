@@ -27,7 +27,95 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
     var->dimension = dimension;
     var->nColum = colum;
     var->nLine = line;
-  }
+    var->value = NULL;
+    if(!matrix) //nao e matriz
+    {
+      if(type == 0) //inteiro
+      {
+	int *value = (int*) malloc (sizeof(int));
+	var->value = value;
+      }     
+      if(type == 3) //reais serao convertidos em float 
+      {
+	float *value = (float*) malloc(sizeof(float));
+	var->value = value;
+      }
+      if(type == 1) //tipo caracter
+      {
+	char *value = (char*) malloc(sizeof(char));
+	var->value = value;
+      }    
+      if(type == 2) //tipo literal 
+      {
+	char *value = (char*) malloc(50*sizeof(char)); //50 e o limite do literal
+	var->value = value;
+      }
+      if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
+      {
+	int *value = (int*) malloc(sizeof(int)); //50 e o limite do logico
+	var->value = value;
+      }
+    }
+    else if(matrix)
+    {
+      if(dimension==1)
+      {
+	if(type == 0) //inteiro
+	{
+	  int *value = (int*) malloc (colum*sizeof(int));
+	  var->value = value;
+	}     
+	if(type == 3) //reais serao convertidos em float 
+	{
+	  float *value = (float*) malloc(colum*sizeof(float));
+	  var->value = value;
+	}
+	if(type == 1) //tipo caracter
+	{
+	  char *value = (char*) malloc(colum*sizeof(char));
+	  var->value = value;
+	}    
+	if(type == 2) //tipo literal 
+	{
+	  char *value = (char*) malloc(colum*50*sizeof(char)); //50 e o limite do literal
+	  var->value = value;
+	}
+	if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
+	{
+	  int *value = (int*) malloc(colum*sizeof(int)); //50 e o limite do logico
+	  var->value = value;
+	}
+      }
+      else if(dimension==2)
+      {
+	if(type == 0) //inteiro
+	{
+	  int *value = (int*) malloc (line*colum*sizeof(int));
+	  var->value = value;
+	}     
+	if(type == 3) //reais serao convertidos em float 
+	{
+	  float *value = (float*) malloc(line*colum*sizeof(float));
+	  var->value = value;
+	}
+	if(type == 1) //tipo caracter
+	{
+	  char *value = (char*) malloc(line*colum*sizeof(char));
+	  var->value = value;
+	}    
+	if(type == 2) //tipo literal 
+	{
+	  char *value = (char*) malloc(line*colum*50*sizeof(char)); //50 e o limite do literal
+	  var->value = value;
+	}
+	if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
+	{
+	  int *value = (int*) malloc(line*colum*sizeof(int)); //50 e o limite do logico
+	  var->value = value;
+	}
+      }
+    }
+ }
 }
 
   /*

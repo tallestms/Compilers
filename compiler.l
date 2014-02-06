@@ -17,6 +17,7 @@ char currentType[10];
 int currentNumber = 0;
 char currentIdentifier[100];
 int isMatrix = 0;
+char limitString[53]; //limitador de tamanho de string no programa
 %}
 
 /* definição de dígito */
@@ -110,7 +111,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "="						{in_comparacao = 1; return token_igual;}
 "<>"						{in_comparacao = 1; return token_diferente;}
 {caracter}					{if(in_function == 1){strcat(functionArguments, "caracter"); strcat(functionArguments, " ");} strcpy(currentType, "caracter");return token_variavel_caracter;}
-{string}					{if(in_function == 1){strcat(functionArguments, "literal"); strcat(functionArguments, " ");} strcpy(currentType, "literal");return token_string;}
+{string}					{strcpy(limitString, yytext); if(in_function == 1){strcat(functionArguments, "literal"); strcat(functionArguments, " ");} strcpy(currentType, "literal");return token_string;}
 {identificador}					{strcpy(currentIdentifier, yytext); if(in_function!=1){strcat(identifiers, yytext); strcat(identifiers, " ");} if(in_function == 1){strcat(functionArguments, yytext); strcat(functionArguments, " ");} return token_identificador;}
 [ \t]						;
 [\n]						{nLine++;}

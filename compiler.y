@@ -38,6 +38,7 @@ int dimension, dim1, dim2;
 List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
+char limitString[53]; //limitador de tamanho de string no programa
 %}
 
 %token token_abrep
@@ -1166,12 +1167,19 @@ e se ela foi declarada.
 }
 | token_string 
 {
-  if(in_function!=1)
+  if(strlen(limitString) > 53)
   {
-    int currentTypeInt = convertType(currentType);
-    varRelations[currentRelationPos] = currentTypeInt;
-    ++currentRelationPos;
-    ++currentRelationComparison;
+    printf("Tamanho de literal passou do limite de 50 caracteres na linha %d\n", nLine);
+  }
+  else
+  {
+    if(in_function!=1)
+    {
+      int currentTypeInt = convertType(currentType);
+      varRelations[currentRelationPos] = currentTypeInt;
+      ++currentRelationPos;
+      ++currentRelationComparison;
+    }
   }
 }
 | token_abrep EXPR token_fechap 
