@@ -59,7 +59,7 @@ variáveis
 	char : caracter;
 	lit : literal;
 	z : lógico;
-	mat : matriz[2][2] de inteiros; 
+	mat : matriz[2000][2000] de inteiros; 
 fim-variáveis
 
 início
@@ -69,58 +69,34 @@ início
 	d := 20.20 + c;
 	a := maximo(a,b) > 10;
 	c := minimo(c,d) < (10.10 + media(c,10.10));
-	c := minimo(c,d) < (10.10 + media(10,c)); //erro por causa de 10
-	c := minimo(c,d) < (10.10 + media(c,b)); //erro por causa do media(c,b)
 	c := media(c,d);
-	//maximo(); // bug do compilador -> deixar (tira no relatorio!)
-	//minimo(); // bug do compilador -> deixar
-	//media(); // bug do compilador -> deixar
 	z := verdadeiro;
 	
 	c := sinistro(d, z);
 	c := 20.20;
 	b := minimo(a,b);
 	c := media(d,c);
-	//a := 10 + 10 + b;
-	//c := 20.20;
-	//b := 20 + b + b;
-	//c := soma2(a,b); 
 	a := soma2(c,d);
-	//a := soma2(a,b,c); 
-	//soma(10);
-	//soma3(a);
+	soma(10);
+	soma3(a);
 	a := 10;
 	c := 10.10 + 20.10;
 	b := 10;
-	//a := soma(10,20,30);
-	//a := soma(10,20);
-	a := soma(b); 
-	a := soma(a);
-	//a := soma(a);
 	c := 10.10;
-	//d := -10.10 + 10;
-	//adsad := 20;
-	//d := funcao(f,g);
-	//f := (10.10e+10 - 10.10)*10.10 - 10;
 	g := -10.10e+10;
 	char := 'c';
 	lit := "isso daqui é um texto";
 	z := verdadeiro;
-	//z := 10;
 	c := 10.10;
 	f := 20.20;
 	g := 10.10;
 	d := 10.10;
-        imprima(z);
-        leia(z);
-	//a := soma(a);
-	//oi := verdadeiro;
+      imprima(z);
+      leia(z);
 	a := b>(a+b+a);
-	//a := b>(soma(a)+a);
 	b := 10;
 	z := a > b;
 	z := b>a e (c<d) e (a>(b+soma2(c,f)) ou (c<(d+c)));
 	mat := {[1,2],[2,1]};
-	mat[1][1] := 3 + soma2(c,f) + soma(a); 
-	mat[1][1] := 3 + soma2(c,f) + soma(a); //incompativel pois soma(a) retorna real
+	mat[1][1] := 3 + soma2(c,f); 
 fim
