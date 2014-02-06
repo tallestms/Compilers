@@ -2,8 +2,6 @@ all:
 	flex -i compiler.l
 	bison compiler.y
 	gcc -o trab3 compiler.tab.c lists.c hash.c variables.c functions.c aux.c -lfl
-
-latex:
 	pdflatex trab3
 	pdflatex trab3
 	
