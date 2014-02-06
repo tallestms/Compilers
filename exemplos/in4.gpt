@@ -5,9 +5,9 @@ variáveis
 fim-variáveis
 início
 	imprima("oi");
-	imprima_ln("oioi");
+	imprimaln("oioi");
 	leia(r);
-	leia_ln(r);
+	leialn(r);
 	i := maximo(10,20);
 	r := maximo(10.0,20.0);
 	i := minimo(10,20);

@@ -120,7 +120,7 @@ início
 			parar;
 	fim-seleciona
 	
-	x := leia(a);
+	leia(a);
 	imprima(a);
 	
 	
