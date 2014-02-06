@@ -23,7 +23,7 @@ início
 	//imprima("Segunda versão do programa fatorial. Digite um número:");
 	//fat := leia();
 	res := 1;
-	para (x de res até 1 passo -1) faça
+	para (x de res até 1 passo -0.5) faça
 		fat := fat * 10.0;
 	fim-para
 	//imprima("fatorial de ",fat," é igual a ",res);
