@@ -38,7 +38,7 @@ int dimension, dim1, dim2;
 List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
-char limitString[53]; //limitador de tamanho de string no programa
+char limitString[203]; //limitador de tamanho de string no programa
 %}
 
 %token token_abrep
@@ -1167,7 +1167,7 @@ e se ela foi declarada.
 }
 | token_string 
 {
-  if(strlen(limitString) > 53)
+  if(strlen(limitString) > 203)
   {
     printf("Tamanho de literal passou do limite de 50 caracteres na linha %d\n", nLine);
   }

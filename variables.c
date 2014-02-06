@@ -47,12 +47,12 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
       }    
       if(type == 2) //tipo literal 
       {
-	char *value = (char*) malloc(50*sizeof(char)); //50 e o limite do literal
+	char *value = (char*) malloc(203*sizeof(char)); //200 e o limite do literal
 	var->value = value;
       }
       if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
       {
-	int *value = (int*) malloc(sizeof(int)); //50 e o limite do logico
+	int *value = (int*) malloc(sizeof(int));
 	var->value = value;
       }
     }
@@ -77,12 +77,12 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
 	}    
 	if(type == 2) //tipo literal 
 	{
-	  char *value = (char*) malloc(colum*50*sizeof(char)); //50 e o limite do literal
+	  char *value = (char*) malloc(colum*203*sizeof(char)); //200 e o limite do literal
 	  var->value = value;
 	}
 	if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
 	{
-	  int *value = (int*) malloc(colum*sizeof(int)); //50 e o limite do logico
+	  int *value = (int*) malloc(colum*sizeof(int));
 	  var->value = value;
 	}
       }
@@ -105,12 +105,12 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
 	}    
 	if(type == 2) //tipo literal 
 	{
-	  char *value = (char*) malloc(line*colum*50*sizeof(char)); //50 e o limite do literal
+	  char *value = (char*) malloc(line*colum*203*sizeof(char)); //200 e o limite do literal
 	  var->value = value;
 	}
 	if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
 	{
-	  int *value = (int*) malloc(line*colum*sizeof(int)); //50 e o limite do logico
+	  int *value = (int*) malloc(line*colum*sizeof(int));
 	  var->value = value;
 	}
       }
