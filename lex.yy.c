@@ -677,7 +677,7 @@ char currentType[10];
 int currentNumber = 0;
 char currentIdentifier[100];
 int isMatrix = 0;
-char limitString[53]; //limitador de tamanho de string no programa
+char limitString[203]; //limitador de tamanho de string no programa
 /* definição de dígito */
 #line 683 "lex.yy.c"
 

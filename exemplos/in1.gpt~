@@ -59,7 +59,7 @@ variáveis
 	char : caracter;
 	lit : literal;
 	z : lógico;
-	mat : matriz[2000][2000] de inteiros; 
+	mat : matriz[2][2] de inteiros; 
 fim-variáveis
 
 início

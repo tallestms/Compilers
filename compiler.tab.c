@@ -107,7 +107,7 @@ int dimension, dim1, dim2;
 List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
-char limitString[53]; //limitador de tamanho de string no programa
+char limitString[203]; //limitador de tamanho de string no programa
 
 
 /* Line 268 of yacc.c  */
@@ -3112,7 +3112,7 @@ else
 /* Line 1806 of yacc.c  */
 #line 1169 "compiler.y"
     {
-  if(strlen(limitString) > 53)
+  if(strlen(limitString) > 203)
   {
     printf("Tamanho de literal passou do limite de 50 caracteres na linha %d\n", nLine);
   }

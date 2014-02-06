@@ -2,7 +2,7 @@ algoritmo primitivas;
 variáveis
  i:inteiro;
  r:real;
- mat2 : matriz[1000][1000] de literais;
+ mat2 : matriz[100][100] de literais;
 fim-variáveis
 início
 	imprima("oi");
