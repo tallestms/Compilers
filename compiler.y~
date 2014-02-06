@@ -466,9 +466,37 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
  */
 COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+token_imprimaln token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
 //token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
-token_identificador token_atribuicao token_leia token_abrep token_identificador token_fechap token_pontov |
-token_leia token_abrep token_identificador token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+//token_identificador token_atribuicao token_leia token_abrep token_identificador token_fechap token_pontov |
+token_leia token_abrep token_identificador
+{
+  	List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
+	if(identifier_temp==NULL)
+	{
+	  printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
+	} 
+	else
+	{
+	  ((variable*)(identifier_temp->info))->used = 1;
+	}
+  
+}
+token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+token_leialn token_abrep token_identificador
+{
+  	List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
+	if(identifier_temp==NULL)
+	{
+	  printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
+	} 
+	else
+	{
+	  ((variable*)(identifier_temp->info))->used = 1;
+	}
+  
+}
+token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} |
 token_identificador
 {
 
@@ -613,7 +641,6 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		   int currentTypeInt = ((variable *)(currVariable->info))->type;
 		  // printf("%d \n", currentTypeInt);
 		  varRelations[currentRelationPos] = currentTypeInt;
-		  printf("%d %daaaa\n", currentTypeInt, currentRelationPos);
 		  ++currentRelationPos;
 		  ++currentRelationComparison;
 		}

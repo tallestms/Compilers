@@ -40,10 +40,11 @@ variáveis
 fim-variáveis
 
 início
-	
+	leia(a);
+
 	idade := 22;
       a := soma(idade,idade);
-	
+
 	z := {[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]};
 	
 	z[2][3] := 20 + 7;
@@ -120,7 +121,7 @@ início
 			parar;
 	fim-seleciona
 	
-	x := leia(a);
+	//x := leia(a);
 	imprima(a);
 	
 	

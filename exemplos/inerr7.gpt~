@@ -9,6 +9,7 @@ variáveis
 	z : lógico;
 	mat : matriz[5][2] de inteiros;
 	c : literal;
+	ao : caracter;
 fim-variáveis
 
 início
