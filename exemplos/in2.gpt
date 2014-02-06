@@ -46,7 +46,7 @@ início
 		res := res*x;
 		x := x - 1;
 	enquanto (x > 1); 	
-	
+
 	para (x de fat até 10 passo 10) faça
 			faça 
 			    res := res*x+11;

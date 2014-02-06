@@ -90,7 +90,7 @@ void verifyUsed(hashTable *hashtable)
 	    {
 	      char* varAux;
 	      varAux = strtok(((variable*)(temp->info))->name, " ");
-	      printf("Variavel %s nao foi utilizada durante o programa", ((variable*)(temp->info))->name);
+	      printf("Aviso: Variavel %s nao foi utilizada durante o programa", ((variable*)(temp->info))->name);
 	      if(varAux = (strtok(NULL, " ")))
 		printf(" na funcao %s.\n", varAux);
 	      else

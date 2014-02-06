@@ -732,8 +732,9 @@ EXPR
     { 
       char* returnVariable = strtok(identifiers, " ");
       if (returnVariable != NULL)
-      {
+      { 
 	List *identifier_temp = lookupStringVariable(hashVariables, returnVariable);
+
 	if(identifier_temp==NULL)
 	{
 	  printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
@@ -748,6 +749,8 @@ EXPR
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	  }
+	  else
+	    ((variable*)(identifier_temp->info))->used=1;
 	  in_logico=0;
 	}
 	else if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
@@ -798,10 +801,12 @@ EXPR
 	  }
 	  else if(in_logico==1 && in_condicional == 0)
 	  {
-	  if((((variable*)(identifier_temp->info))->type) != 4)
-	  {
-	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	  }
+	    if((((variable*)(identifier_temp->info))->type) != 4)
+	    {
+	      printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+	    }
+	    else
+	      ((variable*)(identifier_temp->info))->used=1;
 	  in_logico=0;
 	  }
 	  else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
