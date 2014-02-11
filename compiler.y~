@@ -1154,6 +1154,22 @@ e se ela foi declarada.
     }
   }
 }
+/*
+Aqui sera feita analise de matriz com apenas um index
+*/
+| token_identificador token_abrecol token_numinteiro token_fechacol
+  {
+    
+  }
+
+/*
+Aqui sera feita analise de matriz com dois indexes
+*/
+| token_identificador token_abrecol token_numinteiro token_fechacol token_abrecol token_numinteiro token_fechacol
+  {
+    
+  }
+  
 | token_variavel_caracter 
 {
   if(in_function!=1)

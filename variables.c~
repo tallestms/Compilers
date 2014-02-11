@@ -52,7 +52,7 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
       }
       if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
       {
-	int *value = (int*) malloc(sizeof(int)); //50 e o limite do logico
+	int *value = (int*) malloc(sizeof(int));
 	var->value = value;
       }
     }

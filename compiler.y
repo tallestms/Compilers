@@ -31,7 +31,7 @@ int currentFunctionArity = 0;
 char returnFunctionType[10];
 int switchType;
 int countLine = 0;
-int countColum = 0;
+int countColumn = 0;
 int typeAttribute;
 extern int isMatrix;
 int dimension, dim1, dim2;
@@ -1154,6 +1154,22 @@ e se ela foi declarada.
     }
   }
 }
+/*
+Aqui sera feita analise de matriz com apenas um index
+*/
+| token_identificador token_abrecol token_numinteiro token_fechacol
+  {
+    
+  }
+
+/*
+Aqui sera feita analise de matriz com dois indexes
+*/
+| token_identificador token_abrecol token_numinteiro token_fechacol token_abrecol token_numinteiro token_fechacol
+  {
+    
+  }
+  
 | token_variavel_caracter 
 {
   if(in_function!=1)
@@ -1453,7 +1469,7 @@ MATRIZ: token_abrec {countLine=0;} MATRIZ_VARIAS_COLUNAS {
 {
 	isMatrix = 1;
 }
- | token_abrecol {countColum=0;} BLOCO_MATRIZ {
+ | token_abrecol {countColumn=0;} BLOCO_MATRIZ {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
@@ -1474,7 +1490,7 @@ MATRIZ: token_abrec {countLine=0;} MATRIZ_VARIAS_COLUNAS {
  {
 	isMatrix = 1; 
  };
-MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol {countColum=0;} BLOCO_MATRIZ 
+MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol {countColumn=0;} BLOCO_MATRIZ 
 {
 countLine++;
 List *identifier_temp = NULL;
@@ -1487,12 +1503,12 @@ List *identifier_temp = NULL;
 	}
 	if(identifier_temp != NULL){
 		int numColum = ((variable*)(identifier_temp->info))->nColum;
-		if(countColum != numColum) {
+		if(countColumn != numColum) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
 		}
 	}
 }token_fechacol | token_abrecol 
-{countColum=0;} BLOCO_MATRIZ {
+{countColumn=0;} BLOCO_MATRIZ {
 	countLine++;
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -1503,7 +1519,7 @@ List *identifier_temp = NULL;
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
 	}
 	if(identifier_temp != NULL){
-		if (((variable*)(identifier_temp->info))->nColum != countColum){
+		if (((variable*)(identifier_temp->info))->nColum != countColumn){
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);	
 		}
 	}
@@ -1525,7 +1541,7 @@ BLOCO_MATRIZ: FATOR
 			printf("Tipo errado associado a matriz na linha %d\n",nLine);
 		} 
 	}
-	countColum++;
+	countColumn++;
 }
 	
 | BLOCO_MATRIZ token_virgula FATOR 
@@ -1544,7 +1560,7 @@ BLOCO_MATRIZ: FATOR
 			printf("Tipo errado associado a matriz na linha %d\n",nLine);
 		}
 	}	
-	countColum++;
+	countColumn++;
 };
 
 //BLOCO_ARGUMENTOS: /*Empty*/ | EXPR | BLOCO_ARGUMENTOS token_virgula EXPR;

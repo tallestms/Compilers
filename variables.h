@@ -42,7 +42,7 @@ variable* createVariable();
  * Input: ponteiro para variavel e seus atributos(nome, escopo e etc)
  * Output: nada
  */
-void setVariable(variable* var, char* name, char* scope, int type, int matrix, int dimension, int colum, int line);
+void setVariable(variable* var, char* name, char* scope, int type, int matrix, int dimension, int column, int line);
 int convertType(char *type);
 int convertTypeRelation(char *type);
 void convertTypeReverse(int type, char *aux);
