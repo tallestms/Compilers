@@ -1,7 +1,7 @@
 all:	
 	flex -i compiler.l
 	bison compiler.y
-	gcc -o trab3 compiler.tab.c lists.c hash.c variables.c functions.c aux.c -lfl
+	gcc -o trab3 compiler.tab.c lists.c hash.c variables.c functions.c aux.c tree.c -lfl
 
 	
 clean:

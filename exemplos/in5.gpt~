@@ -5,15 +5,16 @@ função soma(x: inteiro, y: inteiro) : inteiro
   início
   x:=20;
   y:=1;
+  res:=verdadeiro;
   retorne x;
   fim
   
 função soma2(x: inteiro, y: inteiro) : lógico
   res : lógico;
   início
-  x:=10; //verificar erro de tipo de x
+  x:=10; 
   y:=11;
-  res := x>y; //y nao declarado?
+  res := x>y; 
   retorne res;
   fim
 
@@ -21,14 +22,13 @@ função atualizaGlobal(num:inteiro) : lógico
 	global:inteiro;
 	res :lógico;
 	início
-	global := num; //num eh parametro, tem q estar inicializada
-	res := global = num; //num eh parametro, tem q estar inicializada
+	global := num; 
+	res := global = num; 
 	retorne res;
 	fim
 
 variáveis
-	x, y : caracter;
-	fat : caracter;
+	x : caracter;
 	z : matriz[5][5] de inteiros;
 	matA : matriz[7][3] de inteiros;
 	matB : matriz[5][1] de inteiros;
@@ -40,7 +40,7 @@ variáveis
 fim-variáveis
 
 início
-	leia(a);
+	leialn(a);
 
 	idade := 22;
       a := soma(idade,idade);
@@ -70,8 +70,8 @@ início
 	fim-se
 	
 	matA := {[1,2,3,4,5,6,7],[1,2,3,4,5,6,7],[1,2,3,4,5,6,7]};
-	matB := {[1,2,3,4,5]};
-	matC := [1.5,2.4,3.3,4.2,5.1];
+	matB := {[1,2,3,4,5,1]};
+	matC := [1.5,2.4,3.3,4.2,5.1,5.2];
 	
 	matA[5][2] := a + idade;
 	

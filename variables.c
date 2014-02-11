@@ -25,7 +25,7 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
     var->used = 0;    
     var->matrix = matrix;
     var->dimension = dimension;
-    var->nColum = column;
+    var->nColumn = column;
     var->nLine = line;
     var->value = NULL;
     if(!matrix) //nao e matriz

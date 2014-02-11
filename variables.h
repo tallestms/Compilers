@@ -17,7 +17,7 @@ struct variable_t {
   int used;
   int matrix;
   int dimension;
-  int nColum;
+  int nColumn;
   int nLine;
 };
 typedef struct variable_t variable;

@@ -636,8 +636,8 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		if(((variable*)(currVariable->info))->dimension != 1){
 			printf("Erro na linha %d, %s possui dimensao 2.\n", nLine, ((variable*)(currVariable->info))->name);
 		}
-		if(((variable*)(currVariable->info))->nColum <= currentNumber ){
-			printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
+		if(((variable*)(currVariable->info))->nColumn <= currentNumber ){
+			printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
 		}
 		else
 		{
@@ -682,8 +682,8 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		if(((variable*)(currVariable->info))->dimension != 2){
 			printf("Erro na linha %d, %s possui dimensao 1.\n", nLine, ((variable*)(currVariable->info))->name);
 		}
-		if(((variable*)(currVariable->info))->nColum <= currentNumber ){
-			printf("Erro na linha %d, %s possui %d colunas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
+		if(((variable*)(currVariable->info))->nColumn <= currentNumber ){
+			printf("Erro na linha %d, %s possui %d colunas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
 		}
 	}else{
 		printf("Variavel nao declarada na linha %d.\n",nLine);
@@ -693,7 +693,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
 		if(((variable*)(currVariable->info))->nLine <= currentNumber ){
-			printf("Erro na linha %d, %s possui %d linhas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColum );
+			printf("Erro na linha %d, %s possui %d linhas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
 		}
 	}
 } token_fechacol token_atribuicao EXPR {
@@ -1156,20 +1156,130 @@ e se ela foi declarada.
 }
 /*
 Aqui sera feita analise de matriz com apenas um index
+-- Fazer verificacoes de matriz
 */
 | token_identificador token_abrecol token_numinteiro token_fechacol
+{
+  List *identifier_temp = NULL;
+  if(strcmp(currentScope, "main")==0)
   {
-    
+    identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
+    if(identifier_temp==NULL)
+    {
+      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+    }
   }
-
+  else
+  {
+    char auxVariable[100];
+    strcpy(auxVariable, currentIdentifier);
+    strcat(auxVariable, " ");
+    strcat(auxVariable, currentScope);
+    identifier_temp = lookupStringVariable(hashVariables, auxVariable);
+    if(identifier_temp==NULL)
+    {
+      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+    }
+  }
+  if(identifier_temp != NULL)
+  {
+    if(((variable*)(identifier_temp->info))->used == 0)
+      printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
+    else if(((variable*)(identifier_temp->info))->matrix!=1){
+      printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(identifier_temp->info))->name);
+    }
+    else if(((variable*)(identifier_temp->info))->nColumn <= currentNumber ){
+	printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nColumn );
+    }
+    else
+    {  
+      if(in_function!=1)
+      {
+	int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+	varRelations[currentRelationPos] = currentTypeInt;
+	++currentRelationPos;
+	++currentRelationComparison;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+      }
+    //printf("identificador\n");
+    }
+  }
+}
 /*
 Aqui sera feita analise de matriz com dois indexes
+-- Fazer verificacoes de matriz
 */
-| token_identificador token_abrecol token_numinteiro token_fechacol token_abrecol token_numinteiro token_fechacol
+| token_identificador token_abrecol token_numinteiro token_fechacol token_abrecol 
+{
+  List *identifier_temp = NULL;
+  if(strcmp(currentScope, "main")==0)
   {
-    
+    identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
+    if(identifier_temp==NULL)
+    {
+      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+    }
   }
-  
+  else
+  {
+    char auxVariable[100];
+    strcpy(auxVariable, currentIdentifier);
+    strcat(auxVariable, " ");
+    strcat(auxVariable, currentScope);
+    identifier_temp = lookupStringVariable(hashVariables, auxVariable);
+    if(identifier_temp==NULL)
+    {
+      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+    }
+  }
+  if(identifier_temp != NULL)
+  {
+    if(((variable*)(identifier_temp->info))->used == 0)
+      printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
+    else if(((variable*)(identifier_temp->info))->matrix!=1){
+      printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(identifier_temp->info))->name);
+    }
+    else if(((variable*)(identifier_temp->info))->nColumn <= currentNumber ){
+	printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nColumn );
+    }
+  }
+}
+ token_numinteiro token_fechacol
+ {
+   List *identifier_temp = NULL;
+  if(strcmp(currentScope, "main")==0)
+  {
+    identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
+    if(identifier_temp==NULL)
+    {
+      printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+    }
+  }
+  else
+  {
+    char auxVariable[100];
+    strcpy(auxVariable, currentIdentifier);
+    strcat(auxVariable, " ");
+    strcat(auxVariable, currentScope);
+    identifier_temp = lookupStringVariable(hashVariables, auxVariable);
+    if(identifier_temp != NULL)
+    {
+      if(((variable*)(identifier_temp->info))->nLine <= currentNumber )
+      {
+	printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nLine );
+      }
+      else if(in_function!=1)
+      {
+	int currentTypeInt = ((variable*)(identifier_temp->info))->type;
+	varRelations[currentRelationPos] = currentTypeInt;
+	++currentRelationPos;
+	++currentRelationComparison;
+      // printf("%d %s\n", currentTypeInt, currentIdentifier);
+      }
+    }
+   }
+  }
+ 
 | token_variavel_caracter 
 {
   if(in_function!=1)
@@ -1502,7 +1612,7 @@ List *identifier_temp = NULL;
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
 	}
 	if(identifier_temp != NULL){
-		int numColum = ((variable*)(identifier_temp->info))->nColum;
+		int numColum = ((variable*)(identifier_temp->info))->nColumn;
 		if(countColumn != numColum) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
 		}
@@ -1519,7 +1629,7 @@ List *identifier_temp = NULL;
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
 	}
 	if(identifier_temp != NULL){
-		if (((variable*)(identifier_temp->info))->nColum != countColumn){
+		if (((variable*)(identifier_temp->info))->nColumn != countColumn){
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);	
 		}
 	}
