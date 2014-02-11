@@ -1167,7 +1167,7 @@ e se ela foi declarada.
 }
 | token_string 
 {
-  if(strlen(limitString) > 203)
+  if(strlen(limitString) > 53)
   {
     printf("Tamanho de literal passou do limite de 50 caracteres na linha %d\n", nLine);
   }

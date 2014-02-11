@@ -96,7 +96,7 @@ início
 	a := b>(a+b+a);
 	b := 10;
 	z := a > b;
-	z := b>a e (c<d) e (a>(c+soma2(c,f)) ou (c<(d+c)));
+	z := b>a e (c<d) e (a>(b+soma2(c,f)) ou (c<(d+c)));
 	mat := {[1,2],[2,1]};
 	mat[1][1] := 3 + soma2(c,f); 
 fim

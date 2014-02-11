@@ -13,6 +13,10 @@ início
 	mat := {[1,2,3,4,5],[6,7,8,9,10]};
 	x := 10;
 	fat := 10;
+	leialn(x);
+	leia(x);
+	imprima(x);
+	imprimaln(x);
 	res := 10;
 	a:=10.10;
 	b:=10.20;
