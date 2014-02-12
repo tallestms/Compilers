@@ -1571,6 +1571,7 @@ MATRIZ: token_abrec {countLine=0;} MATRIZ_VARIAS_COLUNAS {
 		int numLine = ((variable*)(identifier_temp->info))->nLine;
 		if(countLine != numLine) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+			((variable*)(identifier_temp->info))->used = 0;
 		}else{
 			((variable*)(identifier_temp->info))->used = 1;
 		}
@@ -1592,6 +1593,7 @@ MATRIZ: token_abrec {countLine=0;} MATRIZ_VARIAS_COLUNAS {
 		int numColumn = ((variable*)(identifier_temp->info))->nColumn;
 		if(countColumn != numColumn) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+			((variable*)(identifier_temp->info))->used = 0;
 		}else{
 			((variable*)(identifier_temp->info))->used = 1;
 		}
@@ -1615,6 +1617,7 @@ List *identifier_temp = NULL;
 		int numColum = ((variable*)(identifier_temp->info))->nColumn;
 		if(countColumn != numColum) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+			((variable*)(identifier_temp->info))->used = 0;
 		}
 	}
 }token_fechacol | token_abrecol 
@@ -1630,7 +1633,8 @@ List *identifier_temp = NULL;
 	}
 	if(identifier_temp != NULL){
 		if (((variable*)(identifier_temp->info))->nColumn != countColumn){
-			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);	
+			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+			((variable*)(identifier_temp->info))->used =0;
 		}
 	}
 }
