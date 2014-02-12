@@ -1591,7 +1591,7 @@ MATRIZ: token_abrec {countLine=0;} MATRIZ_VARIAS_COLUNAS {
 	if(identifier_temp != NULL){
 		int numColumn = ((variable*)(identifier_temp->info))->nColumn;
 		if(countColumn != numColumn) {
-			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine, countLine);
 		}else{
 			((variable*)(identifier_temp->info))->used = 1;
 		}

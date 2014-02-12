@@ -3184,7 +3184,7 @@ else
       printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(identifier_temp->info))->name);
     }
     else if(((variable*)(identifier_temp->info))->nColumn <= currentNumber ){
-	printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nColumn );
+	printf("Erro na linha %d, %s possui %d colunas.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nColumn );
     }
   }
 }
@@ -3211,11 +3211,12 @@ else
     strcat(auxVariable, " ");
     strcat(auxVariable, currentScope);
     identifier_temp = lookupStringVariable(hashVariables, auxVariable);
+  }
     if(identifier_temp != NULL)
     {
       if(((variable*)(identifier_temp->info))->nLine <= currentNumber )
       {
-	printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nLine );
+	printf("Erro na linha %d, %s possui %d linhas.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nLine );
       }
       else if(in_function!=1)
       {
@@ -3226,7 +3227,6 @@ else
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
       }
     }
-   }
   }
     break;
 
@@ -3612,8 +3612,8 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
 	}
 	if(identifier_temp != NULL){
-		int numLine = ((variable*)(identifier_temp->info))->nLine;
-		if(countLine != numLine) {
+		int numColumn = ((variable*)(identifier_temp->info))->nColumn;
+		if(countColumn != numColumn) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
 		}else{
 			((variable*)(identifier_temp->info))->used = 1;
