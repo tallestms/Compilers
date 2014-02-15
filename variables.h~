@@ -8,12 +8,12 @@
 
 #include "lists.h"
 
-#define T_INTEIRO 0
-#define T_CARACTER 1
-#define T_LITERAL 2
-#define T_REAL 3
-#define T_LOGICO 4
-#define T_SEMRETORNO 5
+#define t_inteiro 0
+#define t_caracter 1
+#define t_literal 2
+#define t_real 3
+#define t_logico 4
+#define t_semRetorno 5
 
 
 struct variable_t {

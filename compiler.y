@@ -10,6 +10,7 @@
 #define MAX_HASH 1000
 #define MAX_VARIABLE 32 //maior nome de variavel
 #define MAX_FUNCTION 32 //maior nome de funcao
+#define MAX_LITERAL 203
 
 extern int in_function;
 extern int in_logico;
@@ -19,15 +20,15 @@ extern int nLine;
 extern char identifiers[10*MAX_VARIABLE];
 extern char functionArguments[10*MAX_VARIABLE];
 extern char currentType[10];
-extern char currentIdentifier[100];
-extern int varRelations[100];
+extern char currentIdentifier[MAX_VARIABLE];
+extern int varRelations[50]; //Vetor que armazena relacoes de uma dada expressao
 extern int currentNumber;
 char currentVariable[MAX_VARIABLE + MAX_FUNCTION + 2];
-int currentRelationPos = 0;
-int currentRelationComparison = 0;
 char currentScope[MAX_FUNCTION] = "main";
 char currentFunction[MAX_FUNCTION];
 int currentFunctionArity = 0;
+int currentRelationPos = 0;
+int currentRelationComparison = 0;
 char returnFunctionType[10];
 int switchType;
 int countLine = 0;
@@ -247,18 +248,9 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
   };
 
 TIPOS_VARIAVEIS: token_inteiro | token_real | token_caracter | token_literal | token_logico | INICIALIZAR_MATRIZ;
-
-/*
- *
- *Tarefa: Fazer funcionar analise semantica para matrizes
- *
- */
-
  
 VARIAVEIS_IDENTIFICADORES: token_identificador | VARIAVEIS_IDENTIFICADORES token_virgula token_identificador
   
-
-
 INICIALIZAR_MATRIZ: token_matriz token_abrecol token_numinteiro token_fechacol token_abrecol {dim1 = currentNumber;} token_numinteiro {dim2 = currentNumber;} token_fechacol token_de TIPOS_VARIAVEIS_MATRIZ {dimension=2;} | 
 	token_matriz token_abrecol token_numinteiro token_fechacol token_de {dim1 = currentNumber;} TIPOS_VARIAVEIS_MATRIZ {dimension=1;};
 TIPOS_VARIAVEIS_MATRIZ: token_inteiros | token_caracteres | token_literais | token_reais | token_logicos;
@@ -272,7 +264,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
     {
 	function* newFunction = createFunction();
 	addInfoFunction(hashFunction, currentIdentifier, newFunction);
-	setFunction(newFunction, currentIdentifier, 5, 0, NULL, 0); //A funcao foi setada com valores default, estes valores serao alterados depois.
+	setFunction(newFunction, currentIdentifier, T_SEMRETORNO, 0, NULL, 0); //A funcao foi setada com valores default, estes valores serao alterados depois.
     }
     else
     {
@@ -288,7 +280,7 @@ FUNCAO
   if(identifier_temp!=NULL)
   {
     ((function*)(identifier_temp->info))->arity=currentFunctionArity; //Adicionando aridade
-    //Irei adicionar a versao inversa da lista de tipos de parametros para facilitar mais tarde com a comparacao.
+    //Irei adicionar a versao inversa da lista de tipos de parametros para facilitar mais tarde com a comparacao de parametros.
     currentParameters = reverseList(currentParameters);
     ((function*)(identifier_temp->info))->parameters=currentParameters; //Adicionando parametros
   }
@@ -303,7 +295,7 @@ FUNCAO
     {
 	function* newFunction = createFunction();
 	addInfoFunction(hashFunction, currentIdentifier, newFunction);
-	setFunction(newFunction, currentIdentifier, 5, 0, NULL, 0);
+	setFunction(newFunction, currentIdentifier, T_SEMRETORNO, 0, NULL, 0);
     }
     else
     {
@@ -448,7 +440,7 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
       variable* newVar = createVariable();
       int intVarType = convertType(currentType);
       setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
-            newVar->used = 1;
+        newVar->used = 1;
 	isMatrix = 0;  //Próxima variável entrar como não matriz
       addInfoVariable(hashVariables, varName, newVar);
       currentParameters = insertList(currentParameters, (void*)intVarType);
@@ -470,8 +462,6 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
 COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
 token_imprimaln token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
-//token_identificador token_atribuicao token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov |
-//token_identificador token_atribuicao token_leia token_abrep token_identificador token_fechap token_pontov |
 token_leia token_abrep token_identificador
 {
   	List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
@@ -533,35 +523,35 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       {
 	if(strcmp(argumentAux, "inteiro")==0)
 	{
-	if(0 != ((int)(functionTypes->info))) //inteiro
+	if(T_INTEIRO != ((int)(functionTypes->info))) //inteiro
 	  {
 	    printf("Inteiro na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
 	  }
 	}
 	else if	(strcmp(argumentAux, "real")==0)
 	{
-	if(3 != ((int)(functionTypes->info))) //real
+	if(T_REAL != ((int)(functionTypes->info))) //real
 	  {
 	    printf("Real na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
 	  }
 	}
 	else if	(strcmp(argumentAux, "caracter")==0)
 	{
-	if(1 != ((int)(functionTypes->info))) //caracter
+	if(T_CARACTER != ((int)(functionTypes->info))) //caracter
 	  {
 	    printf("Caracter na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
 	  }
 	}
 	else if	(strcmp(argumentAux, "literal")==0)
 	{
-	if(2 != ((int)(functionTypes->info))) //literal
+	if(T_LITERAL != ((int)(functionTypes->info))) //literal
 	  {
 	    printf("Literal na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
 	  }
 	}
 	else if	(strcmp(argumentAux, "lógico")==0)
 	{
-	if(4 != ((int)(functionTypes->info))) //logico
+	if(T_LOGICO != ((int)(functionTypes->info))) //logico
 	  {
 	    printf("Logico na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
 	  }
@@ -606,12 +596,10 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	functionTypes=functionTypes->next;
       }
     }
-    
       int currentTypeInt = ((function *)(identifier_temp->info))->returnType;
-     // printf("%d \n", currentTypeInt);
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
-      ++currentRelationComparison;
+      //++currentRelationComparison;
   }
   strcpy(functionArguments, "\0");
   strcpy(identifiers, "\0");
@@ -713,7 +701,6 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 } token_pontov
 | token_identificador token_atribuicao 
 {
-
   currentRelationComparison = 0;
   char* IdentifierTemp = (char*)malloc(sizeof(identifiers));
   strcpy(IdentifierTemp, identifiers);
@@ -722,7 +709,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   if(identifier_temp != NULL)
     typeAttribute = ((variable *)(identifier_temp->info))->type;
   else
-    typeAttribute = 5;
+    typeAttribute = T_SEMRETORNO;
       
   free(IdentifierTemp);
   strcpy(currentVariable, currentIdentifier);
@@ -740,7 +727,7 @@ EXPR
 	{
 	  printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
 	} 
-	else if((varRelations[0] == 2 || varRelations[0] == 1) && currentRelationPos > 1) //caracter ou literal
+	else if((varRelations[0] == T_LITERAL || varRelations[0] == T_CARACTER) && currentRelationPos > 1) //caracter ou literal
 	{
 	  printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
 	}
@@ -772,8 +759,8 @@ EXPR
 	in_comparacao = 0;
 	strcpy(identifiers, "\0");
 	}
-	}
-   else
+    }
+    else
     {
       char* varName = strtok(identifiers, " "); //Pegando o primeiro caracter
       if (varName != NULL)
@@ -796,7 +783,7 @@ EXPR
 	  {
 	    printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
 	  }
-	  else if((varRelations[0] == 2 || varRelations[0] == 1) && currentRelationPos > 1) //caracter ou literal
+	  else if((varRelations[0] == T_CARACTER || varRelations[0] == T_LITERAL) && currentRelationPos > 1) //caracter ou literal
 	  {
 	    printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
 	  }
@@ -824,10 +811,10 @@ EXPR
    }
 token_pontov {
 currentRelationComparison = 0;
-}|
-token_se token_abrep EXPR token_fechap {currentRelationPos=0;} token_entao BLOCO_AUXILIAR BLOCO_SENAO_FIMSE  | 
-token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap {in_condicional=0;} token_pontov | 
-token_enquanto token_abrep EXPR token_fechap {in_condicional=0;currentRelationPos=0;strcpy(identifiers,"\0");} token_faca BLOCO_AUXILIAR token_fimequanto | 
+}
+| token_se token_abrep EXPR token_fechap {currentRelationPos = 0;} token_entao BLOCO_AUXILIAR BLOCO_SENAO_FIMSE  | 
+token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap {in_condicional = 0;} token_pontov | 
+token_enquanto token_abrep EXPR token_fechap {in_condicional=0;currentRelationPos =0 ; strcpy(identifiers,"\0");} token_faca BLOCO_AUXILIAR token_fimequanto | 
 token_para token_abrep {strcpy(identifiers,"\0"); currentRelationPos=0;} token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap  
 {
 if(!verifyRelationship(varRelations, currentRelationPos))
@@ -892,10 +879,10 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
 }
 token_fechap 
 {
-if(varRelations[0] != 2 && varRelations[0] != 4)
+if(varRelations[0] != T_LITERAL && varRelations[0] != T_LOGICO)
   switchType = varRelations[0];
 else
-  switchType = 5;
+  switchType = T_SEMRETORNO;
 }
 BLOCO_SWITCH;
 
@@ -1205,10 +1192,6 @@ Aqui sera feita analise de matriz com apenas um index
     }
   }
 }
-/*
-Aqui sera feita analise de matriz com dois indexes
--- Fazer verificacoes de matriz
-*/
 | token_identificador token_abrecol token_numinteiro token_fechacol token_abrecol 
 {
   List *identifier_temp = NULL;
@@ -1293,9 +1276,9 @@ Aqui sera feita analise de matriz com dois indexes
 }
 | token_string 
 {
-  if(strlen(limitString) > 53)
+  if(strlen(limitString) > MAX_LITERAL)
   {
-    printf("Tamanho de literal passou do limite de 50 caracteres na linha %d\n", nLine);
+    printf("Tamanho de literal passou do limite de 200 caracteres na linha %d\n", nLine);
   }
   else
   {
@@ -1335,26 +1318,25 @@ Aqui sera feita analise de matriz com dois indexes
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
     in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
-//printRelationship(varRelations, currentRelationPos);
 List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   if(identifier_temp!=NULL)
   {
     if(strcmp(currentIdentifier, "maximo")==0)
     {
 
-      if (typeAttribute==0)
+      if (typeAttribute==T_INTEIRO)
       {
 	strcpy(currentFunction, "maximo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "inteiro");
       }
-      else if (typeAttribute==3)
+      else if (typeAttribute==T_REAL)
       {
 	strcpy(currentFunction, "maximo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "real");
       }
-      else if (typeAttribute==1)
+      else if (typeAttribute==T_CARACTER)
       {
 	strcpy(currentFunction, "maximo");
 	strcat(currentFunction, " ");
@@ -1368,19 +1350,19 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
      }
      if(strcmp(currentIdentifier, "minimo")==0)
      {
-      if (typeAttribute==0)
+      if (typeAttribute==T_INTEIRO)
       {
 	strcpy(currentFunction, "minimo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "inteiro");
       }
-      else if (typeAttribute==3)
+      else if (typeAttribute==T_REAL)
       {
 	strcpy(currentFunction, "minimo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "real");
       }
-      else if (typeAttribute==1)
+      else if (typeAttribute==T_CARACTER)
       {
 	strcpy(currentFunction, "minimo");
 	strcat(currentFunction, " ");
@@ -1394,13 +1376,13 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
      }
      if(strcmp(currentIdentifier, "media")==0)
      {
-      if (typeAttribute==0)
+      if (typeAttribute==T_INTEIRO)
       {
 	strcpy(currentFunction, "media");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "inteiro");
       }
-      else if (typeAttribute==3)
+      else if (typeAttribute==T_REAL)
       {
 	strcpy(currentFunction, "media");
 	strcat(currentFunction, " ");
@@ -1413,7 +1395,6 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
       }
      }
   }
- 
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
@@ -1438,35 +1419,35 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       {
 	if(strcmp(argumentAux, "inteiro")==0)
 	{
-	if(0 != ((int)(functionTypes->info))) //inteiro
+	if(T_INTEIRO != ((int)(functionTypes->info))) //inteiro
 	  {
 	    printf("Inteiro na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
 	  }
 	}
 	else if	(strcmp(argumentAux, "real")==0)
 	{
-	if(3 != ((int)(functionTypes->info))) //real
+	if(T_REAL != ((int)(functionTypes->info))) //real
 	  {
 	    printf("Real na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
 	  }
 	}
 	else if	(strcmp(argumentAux, "caracter")==0)
 	{
-	if(1 != ((int)(functionTypes->info))) //caracter
+	if(T_CARACTER != ((int)(functionTypes->info))) //caracter
 	  {
 	    printf("Caracter na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
 	  }
 	}
 	else if	(strcmp(argumentAux, "literal")==0)
 	{
-	if(2 != ((int)(functionTypes->info))) //literal
+	if(T_LITERAL != ((int)(functionTypes->info))) //literal
 	  {
 	    printf("Literal na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
 	  }
 	}
 	else if	(strcmp(argumentAux, "lógico")==0)
 	{
-	if(4 != ((int)(functionTypes->info))) //logico
+	if(T_LOGICO != ((int)(functionTypes->info))) //logico
 	  {
 	    printf("Logico na linha %d nao tem tipo correto equivalente na funcao %s.\n", nLine, currentFunction);
 	  }
@@ -1539,21 +1520,21 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 
 FATOR_CASE: SINALFATOR | token_numinteiro
 {
-  if(switchType != 0 && switchType !=5)
+  if(switchType != T_INTEIRO)
   {
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
   }
 }
 | token_numreal 
 {
-  if(switchType != 3 && switchType != 5)
+  if(switchType != T_REAL)
   {
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
   }
   }
 | token_variavel_caracter
 {
-  if(switchType != 1 && switchType !=5)
+  if(switchType != T_CARACTER)
   {
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
   }
@@ -1688,9 +1669,8 @@ void createPrimitives()
   function* newFunction = createFunction();
   char functionAux[100];
   strcpy(functionAux, "maximo");
-  setFunction(newFunction, functionAux,5, 0, NULL, 0);
+  setFunction(newFunction, functionAux,T_SEMRETORNO, 0, NULL, 0);
   addInfoFunction(hashFunction, functionAux, newFunction);
-
 
   //maximo, aridade 2, inteiro
   newFunction = createFunction();
@@ -1703,7 +1683,7 @@ void createPrimitives()
   List*argumentsFunction = startList();
   argumentsFunction = insertList(argumentsFunction, (void*)0);
   argumentsFunction = insertList(argumentsFunction, (void*)0);
-  setFunction(newFunction, functionAux,0, 2, argumentsFunction, 1);
+  setFunction(newFunction, functionAux,T_INTEIRO, 2, argumentsFunction, 1);
 
   
   //maximo, aridade 2, real
@@ -1717,7 +1697,7 @@ void createPrimitives()
   argumentsFunction = startList();
   argumentsFunction = insertList(argumentsFunction, (void*)3);
   argumentsFunction = insertList(argumentsFunction, (void*)3);
-  setFunction(newFunction, functionAux,3, 2, argumentsFunction, 1);
+  setFunction(newFunction, functionAux,T_REAL, 2, argumentsFunction, 1);
   
   //maximo, aridade 2, caracter
   newFunction = createFunction();
@@ -1730,12 +1710,12 @@ void createPrimitives()
   argumentsFunction = startList();
   argumentsFunction = insertList(argumentsFunction, (void*)1);
   argumentsFunction = insertList(argumentsFunction, (void*)1);
-  setFunction(newFunction, functionAux,1, 2, argumentsFunction, 1);
+  setFunction(newFunction, functionAux,T_CARACTER, 2, argumentsFunction, 1);
   
   //minimo, aridade 2, garantir que nao haja conflito
   newFunction = createFunction();
   strcpy(functionAux, "minimo");
-  setFunction(newFunction, functionAux,0, 0, NULL, 0);
+  setFunction(newFunction, functionAux,T_SEMRETORNO, 0, NULL, 0);
   addInfoFunction(hashFunction, functionAux, newFunction);
 
 
@@ -1750,7 +1730,7 @@ void createPrimitives()
   argumentsFunction = startList();
   argumentsFunction = insertList(argumentsFunction, (void*)0);
   argumentsFunction = insertList(argumentsFunction, (void*)0);
-  setFunction(newFunction, functionAux,0, 2, argumentsFunction, 1);
+  setFunction(newFunction, functionAux,T_INTEIRO, 2, argumentsFunction, 1);
 
   
   //maximo, aridade 2, real
@@ -1764,7 +1744,7 @@ void createPrimitives()
   argumentsFunction = startList();
   argumentsFunction = insertList(argumentsFunction, (void*)3);
   argumentsFunction = insertList(argumentsFunction, (void*)3);
-  setFunction(newFunction, functionAux,3, 2, argumentsFunction, 1);
+  setFunction(newFunction, functionAux,T_REAL, 2, argumentsFunction, 1);
   
   //maximo, aridade 2, caracter
   newFunction = createFunction();
@@ -1777,12 +1757,12 @@ void createPrimitives()
   argumentsFunction = startList();
   argumentsFunction = insertList(argumentsFunction, (void*)1);
   argumentsFunction = insertList(argumentsFunction, (void*)1);
-  setFunction(newFunction, functionAux,1, 2, argumentsFunction, 1);
+  setFunction(newFunction, functionAux,T_CARACTER, 2, argumentsFunction, 1);
   
   //media, aridade 2, garantir que nao haja conflito
   newFunction = createFunction();
   strcpy(functionAux, "media");
-  setFunction(newFunction, functionAux,0, 0, NULL, 0);
+  setFunction(newFunction, functionAux,T_SEMRETORNO, 0, NULL, 0);
   addInfoFunction(hashFunction, functionAux, newFunction);
 
   //media, aridade 2, inteiro
@@ -1796,7 +1776,7 @@ void createPrimitives()
   argumentsFunction = startList();
   argumentsFunction = insertList(argumentsFunction, (void*)0);
   argumentsFunction = insertList(argumentsFunction, (void*)0);
-  setFunction(newFunction, functionAux,0, 2, argumentsFunction, 1);
+  setFunction(newFunction, functionAux,T_INTEIRO, 2, argumentsFunction, 1);
 
   //media, aridade 2, real
   newFunction = createFunction();
@@ -1809,19 +1789,19 @@ void createPrimitives()
   argumentsFunction = startList();
   argumentsFunction = insertList(argumentsFunction, (void*)3);
   argumentsFunction = insertList(argumentsFunction, (void*)3);
-  setFunction(newFunction, functionAux,3, 2, argumentsFunction, 1);
+  setFunction(newFunction, functionAux,T_REAL, 2, argumentsFunction, 1);
   
   //imprime, aridade 1, garantir que nao haja conflito
   newFunction = createFunction();
   strcpy(functionAux, "imprima");
   addInfoFunction(hashFunction, functionAux, newFunction);
-  setFunction(newFunction, functionAux,5, 1, NULL, 1);
+  setFunction(newFunction, functionAux,T_SEMRETORNO, 1, NULL, 1);
 
   //leia, aridade 1, garantir que nao haja conflito
   newFunction = createFunction();
   strcpy(functionAux, "leia");
   addInfoFunction(hashFunction, functionAux, newFunction);
-  setFunction(newFunction, functionAux,5, 1, NULL, 1);
+  setFunction(newFunction, functionAux,T_SEMRETORNO, 1, NULL, 1);
 
 }
 
