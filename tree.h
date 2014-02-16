@@ -6,14 +6,17 @@
 #include <string.h>
 
 struct treeNodeStruct {
-  void* element;
-  List* children;
+  int type;
+  void* children1;
+  void* children2;
+  void* children3;
+  void* children4;
   struct treeNodeStruct *next;
 };
 typedef struct treeNodeStruct treeNode;
 
 treeNode* newTreeNode();
 
-
+int hasNext(treeNode* t);
 
 #endif /* TREE_H_ */
