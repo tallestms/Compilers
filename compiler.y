@@ -512,7 +512,10 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     int arity = numSpaces(auxArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
     {  
-      printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+      if(strcmp(currentFunction, "media") != 0 && strcmp(currentFunction, "maximo") != 0 && strcmp(currentFunction, "minimo") != 0)  
+	printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+      else
+	printf("Funcao primitiva maximo, minimo ou media precisam de um retorno.\n");
     }
     else
     {

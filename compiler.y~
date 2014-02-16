@@ -10,6 +10,7 @@
 #define MAX_HASH 1000
 #define MAX_VARIABLE 32 //maior nome de variavel
 #define MAX_FUNCTION 32 //maior nome de funcao
+#define MAX_LITERAL 203
 
 extern int in_function;
 extern int in_logico;
@@ -511,7 +512,11 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     int arity = numSpaces(auxArguments);
     if(arity != ((function*)(identifier_temp->info))->arity)
     {  
-      printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+      if(strcmp(currentFunction, "media") != 0 && strcmp(currentFunction, "maximo") != 0 && strcmp(currentFunction, "minimo") != 0)  
+	printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+      else
+	printf("Funcao primitiva maximo, minimo ou media precisam de um retorno.\n");
+	
     }
     else
     {
