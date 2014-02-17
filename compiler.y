@@ -6,6 +6,7 @@
 #include "hash.h"
 #include "lists.h"
 #include "aux.h"
+#include "tree.h"
 
 #define MAX_HASH 1000
 #define MAX_VARIABLE 32 //maior nome de variavel
@@ -40,6 +41,10 @@ List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
 char limitString[203]; //limitador de tamanho de string no programa
+
+
+treeNode* globalNode;
+
 %}
 
 %token token_abrep
@@ -710,7 +715,16 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   IdentifierTemp = strtok(IdentifierTemp, " ");
   List *identifier_temp = lookupStringVariable(hashVariables, IdentifierTemp);
   if(identifier_temp != NULL)
+  {
     typeAttribute = ((variable *)(identifier_temp->info))->type;
+    treeNode *aux;
+    aux = newTreeNode();
+    aux->type = 1;
+    aux->children1 = (void*)(identifier_temp->info);
+    
+    //No do EXPR
+    globalNode = newTreeNode();
+  }
   else
     typeAttribute = T_SEMRETORNO;
       
@@ -1023,7 +1037,9 @@ FATOR: SINALFATOR
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
+    
     //printf("real com sinal\n");
+    
   }
 }
 | token_numreal 
