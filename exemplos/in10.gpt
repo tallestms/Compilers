@@ -1,0 +1,9 @@
+algoritmo declaracao_de_variaveis;
+
+variáveis
+	a:inteiro;
+fim-variáveis
+
+início
+	a := 10;
+fim

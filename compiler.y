@@ -13,6 +13,7 @@
 #define MAX_FUNCTION 32 //maior nome de funcao
 #define MAX_LITERAL 203
 
+extern char* yytext;
 extern int in_function;
 extern int in_logico;
 extern int in_comparacao;
@@ -41,9 +42,9 @@ List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
 char limitString[203]; //limitador de tamanho de string no programa
-
-
-treeNode* globalNode;
+treeNode* globalTree = NULL;
+treeNode* expressionNode = NULL;
+treeNode* attributionNode = NULL;
 
 %}
 
@@ -132,7 +133,7 @@ treeNode* globalNode;
 %start PROG
 
 %%
-PROG:  token_algoritmo token_identificador token_pontov {strcpy(identifiers, "\0");} BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
+PROG:  token_algoritmo token_identificador token_pontov { globalTree = newTreeNode(); strcpy(identifiers, "\0");} BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
   //verifyMatrix(hashVariables);
   verifyUsed(hashVariables);
@@ -140,7 +141,7 @@ PROG:  token_algoritmo token_identificador token_pontov {strcpy(identifiers, "\0
 }
 |
 token_algoritmo token_identificador
-token_pontov {strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
+token_pontov {globalTree = newTreeNode(); strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
  // verifyMatrix(hashVariables);
   verifyUsed(hashVariables);
@@ -717,13 +718,13 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   if(identifier_temp != NULL)
   {
     typeAttribute = ((variable *)(identifier_temp->info))->type;
-    treeNode *aux;
-    aux = newTreeNode();
-    aux->type = 1;
-    aux->children1 = (void*)(identifier_temp->info);
-    
-    //No do EXPR
-    globalNode = newTreeNode();
+    attributionNode = newTreeNode();
+    fillTreeNode(attributionNode,"","ATRIBUICAO");
+    treeNode *idAux = newTreeNode();
+    fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+    attributionNode->children[0] = idAux;
+    expressionNode = newTreeNode();
+    attributionNode->children[1] = expressionNode;
   }
   else
     typeAttribute = T_SEMRETORNO;
@@ -1033,6 +1034,9 @@ FATOR: SINALFATOR
 {
   if(in_function!=1)
   {
+    fillTreeNode(globalTree, yytext, "inteiro");
+    //printf("%s : %s\n", globalTree->type, globalTree->value); 
+     
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;

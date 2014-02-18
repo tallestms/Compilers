@@ -6,11 +6,9 @@
 #include <string.h>
 
 struct treeNodeStruct {
-  int type;
-  void* children1;
-  void* children2;
-  void* children3;
-  void* children4;
+  char type[50];
+  char value[50];
+  struct treeNodeStruct* children[4];
   struct treeNodeStruct *next;
 };
 typedef struct treeNodeStruct treeNode;
@@ -18,5 +16,7 @@ typedef struct treeNodeStruct treeNode;
 treeNode* newTreeNode();
 
 int hasNext(treeNode* t);
+
+void fillTreeNode(treeNode *arv, char value[50], char type[50]);
 
 #endif /* TREE_H_ */
