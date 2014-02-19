@@ -1,0 +1,11 @@
+algoritmo declaracao_de_variaveis;
+
+variáveis
+	a:inteiro;
+	b:inteiro;
+fim-variáveis
+
+início
+	b := 10 + 1 + a;
+	a := b - a;
+fim
