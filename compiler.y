@@ -46,6 +46,17 @@ treeNode* globalTree = NULL;
 treeNode* expressionNode = NULL;
 treeNode* attributionNode = NULL;
 
+void addAttributionNodeIntoGlobalTree(){
+	if(globalTree==NULL){
+		globalTree = attributionNode;
+	}else{
+		treeNode *aux=globalTree;
+		while(aux->next!=NULL) aux = aux->next;
+		aux->next = attributionNode;
+	}
+	attributionNode = NULL;	
+}
+
 %}
 
 %token token_abrep
@@ -141,7 +152,7 @@ PROG:  token_algoritmo token_identificador token_pontov { globalTree = newTreeNo
 }
 |
 token_algoritmo token_identificador
-token_pontov {globalTree = newTreeNode(); strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
+token_pontov { strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
  // verifyMatrix(hashVariables);
   verifyUsed(hashVariables);
@@ -719,12 +730,11 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   {
     typeAttribute = ((variable *)(identifier_temp->info))->type;
     attributionNode = newTreeNode();
-    fillTreeNode(attributionNode,"","ATRIBUICAO");
+    fillTreeNode(attributionNode,yytext,"ATRIBUICAO");
     treeNode *idAux = newTreeNode();
     fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
     attributionNode->children[0] = idAux;
-    expressionNode = newTreeNode();
-    attributionNode->children[1] = expressionNode;
+    expressionNode = NULL;
   }
   else
     typeAttribute = T_SEMRETORNO;
@@ -734,6 +744,11 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 }
 EXPR
 {
+  attributionNode->children[1] = expressionNode;
+  expressionNode=NULL;
+  addAttributionNodeIntoGlobalTree();
+  printf("%s\n",globalTree->value);
+  printf("%s %s\n", globalTree->children[0]->value, globalTree->children[1]->value);
   if(strcmp(currentScope, "main") == 0)
     { 
       char* returnVariable = strtok(identifiers, " ");
@@ -1034,7 +1049,13 @@ FATOR: SINALFATOR
 {
   if(in_function!=1)
   {
-    fillTreeNode(globalTree, yytext, "inteiro");
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "inteiro");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    }
     //printf("%s : %s\n", globalTree->type, globalTree->value); 
      
     int currentTypeInt = convertType(currentType);

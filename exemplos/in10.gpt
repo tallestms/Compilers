@@ -6,4 +6,5 @@ fim-variáveis
 
 início
 	a := 10;
+	a := 3;
 fim
