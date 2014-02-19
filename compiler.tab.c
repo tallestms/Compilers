@@ -742,9 +742,9 @@ static const yytype_uint16 yyrline[] =
     1107,  1107,  1110,  1111,  1112,  1113,  1114,  1115,  1117,  1118,
     1118,  1119,  1120,  1120,  1122,  1170,  1215,  1215,  1217,  1217,
     1219,  1219,  1221,  1221,  1222,  1223,  1246,  1268,  1344,  1399,
-    1447,  1446,  1517,  1528,  1545,  1546,  1556,  1567,  1566,  1772,
-    1772,  1779,  1786,  1793,  1793,  1793,  1815,  1815,  1815,  1837,
-    1838,  1837,  1856,  1856,  1855,  1875,  1893
+    1447,  1446,  1517,  1528,  1545,  1546,  1566,  1587,  1586,  1792,
+    1792,  1799,  1806,  1813,  1813,  1813,  1835,  1835,  1835,  1857,
+    1858,  1857,  1876,  1876,  1875,  1895,  1913
 };
 #endif
 
@@ -3548,13 +3548,23 @@ else
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
+    
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "LOGICO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    } 
+    
   }
 }
     break;
 
   case 146:
 /* Line 1787 of yacc.c  */
-#line 1557 "compiler.y"
+#line 1567 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -3562,13 +3572,23 @@ else
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
+    
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "LOGICO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    } 
+    
   }
 }
     break;
 
   case 147:
 /* Line 1787 of yacc.c  */
-#line 1567 "compiler.y"
+#line 1587 "compiler.y"
     {
 
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
@@ -3656,7 +3676,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
 
   case 148:
 /* Line 1787 of yacc.c  */
-#line 1651 "compiler.y"
+#line 1671 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -3781,7 +3801,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
 
   case 150:
 /* Line 1787 of yacc.c  */
-#line 1773 "compiler.y"
+#line 1793 "compiler.y"
     {
   if(switchType != T_INTEIRO)
   {
@@ -3792,7 +3812,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
 
   case 151:
 /* Line 1787 of yacc.c  */
-#line 1780 "compiler.y"
+#line 1800 "compiler.y"
     {
   if(switchType != T_REAL)
   {
@@ -3803,7 +3823,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
 
   case 152:
 /* Line 1787 of yacc.c  */
-#line 1787 "compiler.y"
+#line 1807 "compiler.y"
     {
   if(switchType != T_CARACTER)
   {
@@ -3814,13 +3834,13 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
 
   case 153:
 /* Line 1787 of yacc.c  */
-#line 1793 "compiler.y"
+#line 1813 "compiler.y"
     {countLine=0;}
     break;
 
   case 154:
 /* Line 1787 of yacc.c  */
-#line 1793 "compiler.y"
+#line 1813 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -3844,7 +3864,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
 
   case 155:
 /* Line 1787 of yacc.c  */
-#line 1812 "compiler.y"
+#line 1832 "compiler.y"
     {
 	isMatrix = 1;
 }
@@ -3852,13 +3872,13 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
 
   case 156:
 /* Line 1787 of yacc.c  */
-#line 1815 "compiler.y"
+#line 1835 "compiler.y"
     {countColumn=0;}
     break;
 
   case 157:
 /* Line 1787 of yacc.c  */
-#line 1815 "compiler.y"
+#line 1835 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -3882,7 +3902,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
 
   case 158:
 /* Line 1787 of yacc.c  */
-#line 1834 "compiler.y"
+#line 1854 "compiler.y"
     {
 	isMatrix = 1; 
  }
@@ -3890,13 +3910,13 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
 
   case 159:
 /* Line 1787 of yacc.c  */
-#line 1837 "compiler.y"
+#line 1857 "compiler.y"
     {countColumn=0;}
     break;
 
   case 160:
 /* Line 1787 of yacc.c  */
-#line 1838 "compiler.y"
+#line 1858 "compiler.y"
     {
 countLine++;
 List *identifier_temp = NULL;
@@ -3919,13 +3939,13 @@ List *identifier_temp = NULL;
 
   case 162:
 /* Line 1787 of yacc.c  */
-#line 1856 "compiler.y"
+#line 1876 "compiler.y"
     {countColumn=0;}
     break;
 
   case 163:
 /* Line 1787 of yacc.c  */
-#line 1856 "compiler.y"
+#line 1876 "compiler.y"
     {
 	countLine++;
 	List *identifier_temp = NULL;
@@ -3947,7 +3967,7 @@ List *identifier_temp = NULL;
 
   case 165:
 /* Line 1787 of yacc.c  */
-#line 1876 "compiler.y"
+#line 1896 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -3968,7 +3988,7 @@ List *identifier_temp = NULL;
 
   case 166:
 /* Line 1787 of yacc.c  */
-#line 1895 "compiler.y"
+#line 1915 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -3989,7 +4009,7 @@ List *identifier_temp = NULL;
 
 
 /* Line 1787 of yacc.c  */
-#line 3993 "compiler.tab.c"
+#line 4013 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -4221,7 +4241,7 @@ yyreturn:
 
 
 /* Line 2050 of yacc.c  */
-#line 1913 "compiler.y"
+#line 1933 "compiler.y"
 
 
 #include "lex.yy.c"

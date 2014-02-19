@@ -1551,6 +1551,16 @@ Aqui sera feita analise de matriz com apenas um index
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
+    
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "LOGICO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    } 
+    
   }
 }
 | token_falso 
@@ -1561,6 +1571,16 @@ Aqui sera feita analise de matriz com apenas um index
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
+    
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "LOGICO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    } 
+    
   }
 }
 | token_identificador
