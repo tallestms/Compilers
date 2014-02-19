@@ -144,7 +144,7 @@ void addAttributionNodeIntoGlobalTree(){
 %start PROG
 
 %%
-PROG:  token_algoritmo token_identificador token_pontov { globalTree = newTreeNode(); strcpy(identifiers, "\0");} BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
+PROG:  token_algoritmo token_identificador token_pontov { strcpy(identifiers, "\0");} BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
   //verifyMatrix(hashVariables);
   verifyUsed(hashVariables);
@@ -747,8 +747,6 @@ EXPR
   attributionNode->children[1] = expressionNode;
   expressionNode=NULL;
   addAttributionNodeIntoGlobalTree();
-  printf("%s\n",globalTree->value);
-  printf("%s %s\n", globalTree->children[0]->value, globalTree->children[1]->value);
   if(strcmp(currentScope, "main") == 0)
     { 
       char* returnVariable = strtok(identifiers, " ");
@@ -1012,7 +1010,12 @@ EXPR: SIEXPR
 COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
 
 SIEXPR: TERMO 
-| SIEXPR ADICAO_SUBTRACAO TERMO
+| SIEXPR ADICAO_SUBTRACAO {
+	treeNode *aux = newTreeNode();
+	fillTreeNode(aux,yytext,"OPERADOR");
+	aux->children[0]=expressionNode;
+	expressionNode = aux;
+} TERMO
 | SIEXPR SINALFATOR ; 
 ADICAO_SUBTRACAO: token_mais | token_menos ;
 
@@ -1056,7 +1059,6 @@ FATOR: SINALFATOR
     }else{
     	expressionNode->children[1] = aux;
     }
-    //printf("%s : %s\n", globalTree->type, globalTree->value); 
      
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
