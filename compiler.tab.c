@@ -630,11 +630,11 @@ static const yytype_uint16 yyrline[] =
      867,   878,   879,   930,   878,   938,   938,   938,   940,   941,
      940,   968,   969,   968,   996,   996,   996,   997,   999,  1025,
     1028,  1028,  1028,  1028,  1028,  1028,  1030,  1031,  1031,  1037,
-    1038,  1038,  1040,  1055,  1067,  1067,  1067,  1067,  1067,  1068,
-    1069,  1092,  1114,  1190,  1245,  1293,  1292,  1363,  1374,  1391,
-    1392,  1402,  1413,  1412,  1618,  1618,  1625,  1632,  1639,  1639,
-    1639,  1661,  1661,  1661,  1683,  1684,  1683,  1702,  1702,  1701,
-    1721,  1739
+    1038,  1038,  1040,  1072,  1101,  1101,  1101,  1101,  1101,  1102,
+    1103,  1126,  1148,  1224,  1279,  1327,  1326,  1397,  1408,  1425,
+    1426,  1436,  1447,  1446,  1652,  1652,  1659,  1666,  1673,  1673,
+    1673,  1695,  1695,  1695,  1717,  1718,  1717,  1736,  1736,  1735,
+    1755,  1773
 };
 #endif
 
@@ -2994,6 +2994,23 @@ else
     ++currentRelationPos;
     ++currentRelationComparison;
     //printf("real com sinal\n");
+    
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "INTEIRO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	if(!strcmp(expressionNode->type,"OPERADOR")){
+    		expressionNode->children[1] = aux;
+    	}else{
+    		treeNode* aux2 = newTreeNode();
+    		fillTreeNode(aux2, "-", "OPERADOR");
+    		aux2->children[0] = expressionNode;
+    		expressionNode = aux2;
+    	}
+    }
+    
   }
 }
     break;
@@ -3001,7 +3018,7 @@ else
   case 123:
 
 /* Line 1806 of yacc.c  */
-#line 1056 "compiler.y"
+#line 1073 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -3010,6 +3027,23 @@ else
     ++currentRelationPos;
     ++currentRelationComparison;
     //printf("real com sinal\n");
+  
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "INTEIRO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	if(!strcmp(expressionNode->type,"OPERADOR")){
+    		expressionNode->children[1] = aux;
+    	}else{
+    		treeNode* aux2 = newTreeNode();
+    		fillTreeNode(aux2, "-", "OPERADOR");
+    		aux2->children[0] = expressionNode;
+    		expressionNode = aux2;
+    	}
+    }
+  
   }
 
 }
@@ -3018,7 +3052,7 @@ else
   case 130:
 
 /* Line 1806 of yacc.c  */
-#line 1070 "compiler.y"
+#line 1104 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -3046,7 +3080,7 @@ else
   case 131:
 
 /* Line 1806 of yacc.c  */
-#line 1093 "compiler.y"
+#line 1127 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -3073,7 +3107,7 @@ else
   case 132:
 
 /* Line 1806 of yacc.c  */
-#line 1120 "compiler.y"
+#line 1154 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -3149,7 +3183,7 @@ else
   case 133:
 
 /* Line 1806 of yacc.c  */
-#line 1191 "compiler.y"
+#line 1225 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -3205,7 +3239,7 @@ else
   case 134:
 
 /* Line 1806 of yacc.c  */
-#line 1246 "compiler.y"
+#line 1280 "compiler.y"
     {
   List *identifier_temp = NULL;
   if(strcmp(currentScope, "main")==0)
@@ -3257,7 +3291,7 @@ else
   case 135:
 
 /* Line 1806 of yacc.c  */
-#line 1293 "compiler.y"
+#line 1327 "compiler.y"
     {
   List *identifier_temp = NULL;
   if(strcmp(currentScope, "main")==0)
@@ -3297,7 +3331,7 @@ else
   case 136:
 
 /* Line 1806 of yacc.c  */
-#line 1328 "compiler.y"
+#line 1362 "compiler.y"
     {
    List *identifier_temp = NULL;
   if(strcmp(currentScope, "main")==0)
@@ -3337,7 +3371,7 @@ else
   case 137:
 
 /* Line 1806 of yacc.c  */
-#line 1364 "compiler.y"
+#line 1398 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -3353,7 +3387,7 @@ else
   case 138:
 
 /* Line 1806 of yacc.c  */
-#line 1375 "compiler.y"
+#line 1409 "compiler.y"
     {
   if(strlen(limitString) > MAX_LITERAL)
   {
@@ -3375,7 +3409,7 @@ else
   case 140:
 
 /* Line 1806 of yacc.c  */
-#line 1393 "compiler.y"
+#line 1427 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -3390,7 +3424,7 @@ else
   case 141:
 
 /* Line 1806 of yacc.c  */
-#line 1403 "compiler.y"
+#line 1437 "compiler.y"
     {
   if(in_function!=1)
   {
@@ -3405,7 +3439,7 @@ else
   case 142:
 
 /* Line 1806 of yacc.c  */
-#line 1413 "compiler.y"
+#line 1447 "compiler.y"
     {
 
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
@@ -3494,7 +3528,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   case 143:
 
 /* Line 1806 of yacc.c  */
-#line 1497 "compiler.y"
+#line 1531 "compiler.y"
     { 
   List *identifier_temp = lookupStringFunction(hashFunction, currentFunction);
   if(identifier_temp == NULL)
@@ -3620,7 +3654,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   case 145:
 
 /* Line 1806 of yacc.c  */
-#line 1619 "compiler.y"
+#line 1653 "compiler.y"
     {
   if(switchType != T_INTEIRO)
   {
@@ -3632,7 +3666,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   case 146:
 
 /* Line 1806 of yacc.c  */
-#line 1626 "compiler.y"
+#line 1660 "compiler.y"
     {
   if(switchType != T_REAL)
   {
@@ -3644,7 +3678,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   case 147:
 
 /* Line 1806 of yacc.c  */
-#line 1633 "compiler.y"
+#line 1667 "compiler.y"
     {
   if(switchType != T_CARACTER)
   {
@@ -3656,14 +3690,14 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   case 148:
 
 /* Line 1806 of yacc.c  */
-#line 1639 "compiler.y"
+#line 1673 "compiler.y"
     {countLine=0;}
     break;
 
   case 149:
 
 /* Line 1806 of yacc.c  */
-#line 1639 "compiler.y"
+#line 1673 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -3688,7 +3722,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   case 150:
 
 /* Line 1806 of yacc.c  */
-#line 1658 "compiler.y"
+#line 1692 "compiler.y"
     {
 	isMatrix = 1;
 }
@@ -3697,14 +3731,14 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   case 151:
 
 /* Line 1806 of yacc.c  */
-#line 1661 "compiler.y"
+#line 1695 "compiler.y"
     {countColumn=0;}
     break;
 
   case 152:
 
 /* Line 1806 of yacc.c  */
-#line 1661 "compiler.y"
+#line 1695 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -3729,7 +3763,7 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   case 153:
 
 /* Line 1806 of yacc.c  */
-#line 1680 "compiler.y"
+#line 1714 "compiler.y"
     {
 	isMatrix = 1; 
  }
@@ -3738,14 +3772,14 @@ List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   case 154:
 
 /* Line 1806 of yacc.c  */
-#line 1683 "compiler.y"
+#line 1717 "compiler.y"
     {countColumn=0;}
     break;
 
   case 155:
 
 /* Line 1806 of yacc.c  */
-#line 1684 "compiler.y"
+#line 1718 "compiler.y"
     {
 countLine++;
 List *identifier_temp = NULL;
@@ -3769,14 +3803,14 @@ List *identifier_temp = NULL;
   case 157:
 
 /* Line 1806 of yacc.c  */
-#line 1702 "compiler.y"
+#line 1736 "compiler.y"
     {countColumn=0;}
     break;
 
   case 158:
 
 /* Line 1806 of yacc.c  */
-#line 1702 "compiler.y"
+#line 1736 "compiler.y"
     {
 	countLine++;
 	List *identifier_temp = NULL;
@@ -3799,7 +3833,7 @@ List *identifier_temp = NULL;
   case 160:
 
 /* Line 1806 of yacc.c  */
-#line 1722 "compiler.y"
+#line 1756 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -3821,7 +3855,7 @@ List *identifier_temp = NULL;
   case 161:
 
 /* Line 1806 of yacc.c  */
-#line 1741 "compiler.y"
+#line 1775 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -3843,7 +3877,7 @@ List *identifier_temp = NULL;
 
 
 /* Line 1806 of yacc.c  */
-#line 3847 "compiler.tab.c"
+#line 3881 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -4074,7 +4108,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 1759 "compiler.y"
+#line 1793 "compiler.y"
 
 
 #include "lex.yy.c"

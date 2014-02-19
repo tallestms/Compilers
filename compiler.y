@@ -1050,6 +1050,23 @@ SINALFATOR:  token_numreal_comsinal
     ++currentRelationPos;
     ++currentRelationComparison;
     //printf("real com sinal\n");
+    
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "INTEIRO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	if(!strcmp(expressionNode->type,"OPERADOR")){
+    		expressionNode->children[1] = aux;
+    	}else{
+    		treeNode* aux2 = newTreeNode();
+    		fillTreeNode(aux2, "-", "OPERADOR");
+    		aux2->children[0] = expressionNode;
+    		expressionNode = aux2;
+    	}
+    }
+    
   }
 }
 | token_numinteiro_comsinal
@@ -1061,6 +1078,23 @@ SINALFATOR:  token_numreal_comsinal
     ++currentRelationPos;
     ++currentRelationComparison;
     //printf("real com sinal\n");
+  
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "INTEIRO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	if(!strcmp(expressionNode->type,"OPERADOR")){
+    		expressionNode->children[1] = aux;
+    	}else{
+    		treeNode* aux2 = newTreeNode();
+    		fillTreeNode(aux2, "-", "OPERADOR");
+    		aux2->children[0] = expressionNode;
+    		expressionNode = aux2;
+    	}
+    }
+  
   }
 
 };
