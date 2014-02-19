@@ -49,6 +49,7 @@ treeNode* expressionNode = NULL;
 treeNode* attributionNode = NULL;
 treeNode* swapUmZero = NULL;
 treeNode* swapDoisUm = NULL;
+treeNode* swapTresDois = NULL;
 /**
 *	FUNÇÕES
 **/
@@ -63,15 +64,31 @@ void addAttributionNodeIntoGlobalTree(){
 	attributionNode = NULL;	
 }
 
-void operadorDeNivelDois(char tipo[10]){
+void operadorDeNivelTres(){
 	treeNode *aux = newTreeNode();
-	fillTreeNode(aux, tipo,"OPERADOR-N-2");
+	fillTreeNode(aux, yytext,"OPERADOR-N-3");
 	aux->children[0] = expressionNode;
 	expressionNode = aux;
 }
 
+void operadorDeNivelDois(char tipo[10]){
+	if(!strcmp(expressionNode->type,"OPERADOR-N-3")){
+		swapTresDois = expressionNode;
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo,"OPERADOR-N-2");
+		aux->children[0] = expressionNode->children[1];
+		expressionNode->children[1] = aux;
+		expressionNode = aux;
+	} else {
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo,"OPERADOR-N-2");
+		aux->children[0] = expressionNode;
+		expressionNode = aux;
+	}
+}
+
 void operadorDeNivelUm(){
-	if(!strcmp(expressionNode->type,"OPERADOR-N-2")){
+	if(!strcmp(expressionNode->type,"OPERADOR-N-2") || !strcmp(expressionNode->type,"OPERADOR-N-3")){
 		swapDoisUm = expressionNode;
 		treeNode *aux = newTreeNode();
 		fillTreeNode(aux, yytext, "OPERADOR-N-1");
@@ -87,7 +104,7 @@ void operadorDeNivelUm(){
 }
 
 void operadorDeNivelZero(char tipo[10]){
-	if (!strcmp(expressionNode->type,"OPERADOR-N-1")){
+	if (!strcmp(expressionNode->type,"OPERADOR-N-1") || !strcmp(expressionNode->type,"OPERADOR-N-2") || !strcmp(expressionNode->type,"OPERADOR-N-3")){
 		swapUmZero = expressionNode;
 		treeNode *aux = newTreeNode();
 		fillTreeNode(aux, tipo, "OPERADOR-N-0");
@@ -115,6 +132,14 @@ void swapoutDoisUm(){
 		swapDoisUm=NULL;
 	}
 }
+
+void swapoutTresDois(){
+	if (swapTresDois!=NULL){
+		expressionNode = swapTresDois;
+		swapTresDois=NULL;
+	}
+}
+
 
 %}
 
@@ -1051,9 +1076,9 @@ token_e |
 token_ou;
 
 ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
-EXPR: SIEXPR 
+EXPR: SIEXPR { swapoutDoisUm(); swapoutTresDois(); }
 
-| EXPR COMPARACOES SIEXPR
+| EXPR COMPARACOES SIEXPR { swapoutDoisUm();swapoutTresDois(); }
 {
     if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -1079,7 +1104,7 @@ EXPR: SIEXPR
     //in_comparacao = 1;
   }
 }
-| EXPR LOGICOS SIEXPR 
+| EXPR LOGICOS {operadorDeNivelTres();} SIEXPR { swapoutTresDois(); }
 ;
  
 COMPARACOES: token_maior { operadorDeNivelDois(">") } 
