@@ -53,8 +53,6 @@ treeNode* attributionNode = NULL;
 treeNode* conditionNode = NULL;
 treeNode* commandNode = NULL;
 
-treeNode* globalglobal = NULL;
-
 //Adiciona no no stack global que ficara responsavel para controlar escopo dentro do programa
 void addNodeIntoGlobalStack(treeNode *info){
 	if(stackGlobal==NULL){
@@ -65,6 +63,12 @@ void addNodeIntoGlobalStack(treeNode *info){
 	}
 }
 
+treeNode* swapUmZero = NULL;
+treeNode* swapDoisUm = NULL;
+treeNode* swapTresDois = NULL;
+/**
+*	FUNÇÕES
+**/
 void addAttributionNodeIntoGlobalTree(){
 	if(globalTree==NULL){
 		globalTree = attributionNode;
@@ -86,6 +90,83 @@ void addConditionNodeIntoGlobalTree(){
 	}
 	conditionNode = NULL;	
 }
+
+void operadorDeNivelTres(){
+	treeNode *aux = newTreeNode();
+	fillTreeNode(aux, yytext,"OPERADOR-N-3");
+	aux->children[0] = expressionNode;
+	expressionNode = aux;
+}
+
+void operadorDeNivelDois(char tipo[10]){
+	if(!strcmp(expressionNode->type,"OPERADOR-N-3")){
+		swapTresDois = expressionNode;
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo,"OPERADOR-N-2");
+		aux->children[0] = expressionNode->children[1];
+		expressionNode->children[1] = aux;
+		expressionNode = aux;
+	} else {
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo,"OPERADOR-N-2");
+		aux->children[0] = expressionNode;
+		expressionNode = aux;
+	}
+}
+
+void operadorDeNivelUm(){
+	if(!strcmp(expressionNode->type,"OPERADOR-N-2") || !strcmp(expressionNode->type,"OPERADOR-N-3")){
+		swapDoisUm = expressionNode;
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, yytext, "OPERADOR-N-1");
+		aux->children[0] = expressionNode->children[1];
+		expressionNode->children[1] = aux;
+		expressionNode = aux;
+	}else{
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux,yytext,"OPERADOR-N-1");
+		aux->children[0]=expressionNode;
+		expressionNode = aux;
+	}
+}
+
+void operadorDeNivelZero(char tipo[10]){
+	if (!strcmp(expressionNode->type,"OPERADOR-N-1") || !strcmp(expressionNode->type,"OPERADOR-N-2") || !strcmp(expressionNode->type,"OPERADOR-N-3")){
+		swapUmZero = expressionNode;
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo, "OPERADOR-N-0");
+		aux->children[0] = expressionNode->children[1];
+		expressionNode->children[1] = aux;
+		expressionNode = aux;
+	}else{
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo, "OPERADOR-N-0");
+		aux->children[0] = expressionNode;
+		expressionNode = aux;
+	}
+}
+
+void swapoutUmZero(){
+	if (swapUmZero!=NULL){
+		expressionNode = swapUmZero;
+		swapUmZero=NULL;
+	}
+}
+
+void swapoutDoisUm(){
+	if (swapDoisUm!=NULL){
+		expressionNode = swapDoisUm;
+		swapDoisUm=NULL;
+	}
+}
+
+void swapoutTresDois(){
+	if (swapTresDois!=NULL){
+		expressionNode = swapTresDois;
+		swapTresDois=NULL;
+	}
+}
+
 
 %}
 
@@ -788,7 +869,7 @@ EXPR
 	//adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
 	//verifica que nao esta dentro de condicional tambem (enquanto ou se)
 	addAttributionNodeIntoGlobalTree();
-		  	
+  			  	
       char* returnVariable = strtok(identifiers, " ");
       if (returnVariable != NULL)
       { 
@@ -1057,9 +1138,9 @@ token_e |
 token_ou;
 
 ARGUMENTOS_FUNCAO: EXPR | ARGUMENTOS_FUNCAO token_virgula EXPR | /*Empty*/;
-EXPR: SIEXPR 
+EXPR: SIEXPR { swapoutDoisUm(); swapoutTresDois(); }
 
-| EXPR COMPARACOES SIEXPR
+| EXPR COMPARACOES SIEXPR { swapoutDoisUm();swapoutTresDois(); }
 {
     if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -1081,19 +1162,19 @@ EXPR: SIEXPR
     currentRelationComparison=0;
   }
 }
-| EXPR LOGICOS SIEXPR 
-;
+| EXPR LOGICOS {operadorDeNivelTres();} SIEXPR { swapoutTresDois(); };
  
-COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
+COMPARACOES: token_maior { operadorDeNivelDois(">"); } 
+| token_maiori  { operadorDeNivelDois(">="); }
+| token_igual  { operadorDeNivelDois("="); }
+| token_menor  { operadorDeNivelDois("<"); }
+| token_menori { operadorDeNivelDois("<="); }
+| token_diferente { operadorDeNivelDois("<>"); }; 
 
-SIEXPR: TERMO 
-| SIEXPR ADICAO_SUBTRACAO {
-	treeNode *aux = newTreeNode();
-	fillTreeNode(aux,yytext,"OPERADOR");
-	aux->children[0]=expressionNode;
-	expressionNode = aux;
-} TERMO
-| SIEXPR SINALFATOR ;
+
+SIEXPR: TERMO { swapoutDoisUm(); }
+| SIEXPR ADICAO_SUBTRACAO { operadorDeNivelUm(); } TERMO { swapoutDoisUm(); }
+| SIEXPR SINALFATOR ; 
 ADICAO_SUBTRACAO: token_mais | token_menos ;
 
 SINALFATOR:  token_numreal_comsinal 
@@ -1112,17 +1193,33 @@ SINALFATOR:  token_numreal_comsinal
     
     //preenche arvore de expressão
     treeNode* aux = newTreeNode();
-    fillTreeNode(aux, yytext, "INTEIRO");
+    fillTreeNode(aux, yytext, "REAL");
     if (expressionNode == NULL) {
       expressionNode = aux;
     }else{
-    	if(!strcmp(expressionNode->type,"OPERADOR")){
+    	if(!strcmp(expressionNode->type,"OPERADOR-N-1") & expressionNode->children[1]==NULL){
     		expressionNode->children[1] = aux;
     	}else{
-    		treeNode* aux2 = newTreeNode();
-    		fillTreeNode(aux2, "-", "OPERADOR");
-    		aux2->children[0] = expressionNode;
-    		expressionNode = aux2;
+    		if (!strcmp(expressionNode->type,"OPERADOR-N-2")){
+    			swapDoisUm = expressionNode;
+    			treeNode* aux2 = newTreeNode();
+	    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
+	    		aux2->children[0] = expressionNode->children[1];
+	    		aux2->children[1] = aux;
+	    		expressionNode->children[1] = aux2;
+	    		//retirando o '-'
+		 		strcpy(aux->value, aux->value+1);
+	    		aux2 = expressionNode;
+    		} else {
+    			treeNode* aux2 = newTreeNode();
+	    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
+	    		aux2->children[0] = expressionNode;
+	 		aux2->children[1] = aux;
+	 		//retirando o '-'
+	 		strcpy(aux->value, aux->value+1);
+	    		expressionNode = aux2;
+    		}
+    		
     	}
     }
     
@@ -1144,20 +1241,42 @@ SINALFATOR:  token_numreal_comsinal
     if (expressionNode == NULL) {
       expressionNode = aux;
     }else{
-    	if(!strcmp(expressionNode->type,"OPERADOR")){
+    	if(!strcmp(expressionNode->type,"OPERADOR-N-1") & expressionNode->children[1]==NULL){
     		expressionNode->children[1] = aux;
     	}else{
-    		treeNode* aux2 = newTreeNode();
-    		fillTreeNode(aux2, "-", "OPERADOR");
-    		aux2->children[0] = expressionNode;
-    		expressionNode = aux2;
+    		if (!strcmp(expressionNode->type,"OPERADOR-N-2")){
+    			swapDoisUm = expressionNode;
+    			treeNode* aux2 = newTreeNode();
+	    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
+	    		aux2->children[0] = expressionNode->children[1];
+	    		aux2->children[1] = aux;
+	    		expressionNode->children[1] = aux2;
+	    		//retirando o '-'
+		 		strcpy(aux->value, aux->value+1);
+	    		aux2 = expressionNode;
+    		} else {
+    			treeNode* aux2 = newTreeNode();
+	    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
+	    		aux2->children[0] = expressionNode;
+		 		aux2->children[1] = aux;
+		 		//retirando o '-'
+		 		strcpy(aux->value, aux->value+1);
+	    		expressionNode = aux2;
+    		}
+    		
     	}
     }
   
   }
 
 };
-TERMO: MATRIZ | FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR ;
+TERMO: MATRIZ | FATOR 
+//Dividir
+| TERMO token_dividir {	operadorDeNivelZero("/"); } FATOR { swapoutUmZero(); }
+//Módulo
+| TERMO token_mod { operadorDeNivelZero("%"); } FATOR { swapoutUmZero(); }
+//Multiplicar
+| TERMO token_vezes { operadorDeNivelZero("*"); } FATOR { swapoutUmZero(); };
 FATOR: SINALFATOR
 | token_numinteiro
 {
@@ -1488,6 +1607,16 @@ Aqui sera feita analise de matriz com apenas um index
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
+    
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "LOGICO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    } 
+    
   }
 }
 | token_falso 
@@ -1498,6 +1627,16 @@ Aqui sera feita analise de matriz com apenas um index
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
+    
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "LOGICO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    } 
+    
   }
 }
 | token_identificador
@@ -2002,10 +2141,7 @@ main(){
  
      if(IN_DEBUG_MODE){
   	treeNode* aux = globalTree;
-  	//for (;aux!=NULL; aux=aux->next)
-  	//{
-  	//	printNode(aux, 12, 0);
-  	//}
+
   	printNode(aux, 12, 0);
 	printf("\n ---------- \n");
       }
