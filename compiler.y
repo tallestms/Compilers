@@ -13,6 +13,7 @@
 #define MAX_FUNCTION 32 //maior nome de funcao
 #define MAX_LITERAL 203
 
+extern char* yytext;
 extern int in_function;
 extern int in_logico;
 extern int in_comparacao;
@@ -1037,9 +1038,7 @@ FATOR: SINALFATOR
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
-    
     //printf("real com sinal\n");
-    
   }
 }
 | token_numreal 
