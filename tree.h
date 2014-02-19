@@ -19,4 +19,6 @@ int hasNext(treeNode* t);
 
 void fillTreeNode(treeNode *arv, char value[50], char type[50]);
 
+void printNode(treeNode* t, int type, int nivel);
+
 #endif /* TREE_H_ */

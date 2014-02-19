@@ -13,6 +13,8 @@
 #define MAX_FUNCTION 32 //maior nome de funcao
 #define MAX_LITERAL 203
 
+#define IN_DEBUG_MODE 1
+
 extern char* yytext;
 extern int in_function;
 extern int in_logico;
@@ -729,11 +731,15 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   if(identifier_temp != NULL)
   {
     typeAttribute = ((variable *)(identifier_temp->info))->type;
+    
+    //cria o nó da arvore de atribuição
     attributionNode = newTreeNode();
     fillTreeNode(attributionNode,yytext,"ATRIBUICAO");
+    //cria o nó do identificador e insere a esquerda da atribuição
     treeNode *idAux = newTreeNode();
     fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
     attributionNode->children[0] = idAux;
+    //seta para null o nó de expressão (que será construído na parte de expressão)
     expressionNode = NULL;
   }
   else
@@ -744,11 +750,23 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 }
 EXPR
 {
+  //adiciono o nó de expressão a direita do nó de atribuição
   attributionNode->children[1] = expressionNode;
+  //retorno o nós de atribuição para null
   expressionNode=NULL;
-  addAttributionNodeIntoGlobalTree();
+
   if(strcmp(currentScope, "main") == 0)
     { 
+        //adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
+  	addAttributionNodeIntoGlobalTree();
+  	
+  	if(IN_DEBUG_MODE){
+	  	treeNode* aux = globalTree;
+	  	for (;aux!=NULL; aux=aux->next)
+	  		printNode(aux, 12, 0);
+	printf("\n ---------- \n");
+	}
+		  	
       char* returnVariable = strtok(identifiers, " ");
       if (returnVariable != NULL)
       { 
@@ -1052,13 +1070,6 @@ FATOR: SINALFATOR
 {
   if(in_function!=1)
   {
-    treeNode* aux = newTreeNode();
-    fillTreeNode(aux, yytext, "inteiro");
-    if (expressionNode == NULL) {
-      expressionNode = aux;
-    }else{
-    	expressionNode->children[1] = aux;
-    }
      
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
@@ -1067,17 +1078,37 @@ FATOR: SINALFATOR
     
     //printf("real com sinal\n");
     
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "INTEIRO");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    } 
+    
   }
 }
 | token_numreal 
 {
   if(in_function!=1)
   {
+  
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
     //printf("real com sinal\n");
+  
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "REAL");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    }
+    
   }
 }
 | token_identificador 
@@ -1107,6 +1138,16 @@ e se ela foi declarada.
       // printf("%d %s\n", currentTypeInt, currentIdentifier);
     }
    }
+   
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, ((variable*)(identifier_temp->info))->name, "VARIAVEL");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    }
+   
   }
   else
   //Caso em que escopo nao e funcao global, portanto precisa-se utilizar o tipo de variavel (nome_variavel nome_funcao)
@@ -1134,6 +1175,16 @@ e se ela foi declarada.
     }
     }
     //printf("identificador\n");
+  
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, auxVariable, "VARIAVEL");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    }
+    
   }
 }
 | token_menos token_identificador 
