@@ -48,7 +48,7 @@ treeNode* globalTree = NULL;
 treeNode* expressionNode = NULL;
 treeNode* attributionNode = NULL;
 treeNode* swapUmZero = NULL;
-
+treeNode* swapDoisUm = NULL;
 /**
 *	FUNÇÕES
 **/
@@ -61,6 +61,29 @@ void addAttributionNodeIntoGlobalTree(){
 		aux->next = attributionNode;
 	}
 	attributionNode = NULL;	
+}
+
+void operadorDeNivelDois(char tipo[10]){
+	treeNode *aux = newTreeNode();
+	fillTreeNode(aux, tipo,"OPERADOR-N-2");
+	aux->children[0] = expressionNode;
+	expressionNode = aux;
+}
+
+void operadorDeNivelUm(){
+	if(!strcmp(expressionNode->type,"OPERADOR-N-2")){
+		swapDoisUm = expressionNode;
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, yytext, "OPERADOR-N-1");
+		aux->children[0] = expressionNode->children[1];
+		expressionNode->children[1] = aux;
+		expressionNode = aux;
+	}else{
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux,yytext,"OPERADOR-N-1");
+		aux->children[0]=expressionNode;
+		expressionNode = aux;
+	}
 }
 
 void operadorDeNivelZero(char tipo[10]){
@@ -80,8 +103,17 @@ void operadorDeNivelZero(char tipo[10]){
 }
 
 void swapoutUmZero(){
-	expressionNode = swapUmZero;
-	swapUmZero=NULL;
+	if (swapUmZero!=NULL){
+		expressionNode = swapUmZero;
+		swapUmZero=NULL;
+	}
+}
+
+void swapoutDoisUm(){
+	if (swapDoisUm!=NULL){
+		expressionNode = swapDoisUm;
+		swapDoisUm=NULL;
+	}
 }
 
 %}
@@ -1050,15 +1082,15 @@ EXPR: SIEXPR
 | EXPR LOGICOS SIEXPR 
 ;
  
-COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_menori | token_diferente;
+COMPARACOES: token_maior { operadorDeNivelDois(">") } 
+| token_maiori  { operadorDeNivelDois(">=") }
+| token_igual  { operadorDeNivelDois("=") }
+| token_menor  { operadorDeNivelDois("<") }
+| token_menori { operadorDeNivelDois("<=") }
+| token_diferente { operadorDeNivelDois("<>") }; 
 
-SIEXPR: TERMO 
-| SIEXPR ADICAO_SUBTRACAO {
-	treeNode *aux = newTreeNode();
-	fillTreeNode(aux,yytext,"OPERADOR-N-1");
-	aux->children[0]=expressionNode;
-	expressionNode = aux;
-} TERMO
+SIEXPR: TERMO { swapoutDoisUm(); }
+| SIEXPR ADICAO_SUBTRACAO { operadorDeNivelUm(); } TERMO { swapoutDoisUm(); }
 | SIEXPR SINALFATOR ; 
 ADICAO_SUBTRACAO: token_mais | token_menos ;
 
@@ -1085,13 +1117,24 @@ SINALFATOR:  token_numreal_comsinal
     	if(!strcmp(expressionNode->type,"OPERADOR-N-1") & expressionNode->children[1]==NULL){
     		expressionNode->children[1] = aux;
     	}else{
-    		treeNode* aux2 = newTreeNode();
-    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
-    		aux2->children[0] = expressionNode;
- 		aux2->children[1] = aux;
- 		//retirando o '-'
- 		strcpy(aux->value, aux->value+1);
-    		expressionNode = aux2;
+    		if (!strcmp(expressionNode->type,"OPERADOR-N-2")){
+    			swapDoisUm = expressionNode;
+    			treeNode* aux2 = newTreeNode();
+	    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
+	    		aux2->children[0] = expressionNode->children[1];
+	    		aux2->children[1] = aux;
+	    		expressionNode->children[0] = aux2;
+	    		aux2 = expressionNode;
+    		} else {
+    			treeNode* aux2 = newTreeNode();
+	    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
+	    		aux2->children[0] = expressionNode;
+	 		aux2->children[1] = aux;
+	 		//retirando o '-'
+	 		strcpy(aux->value, aux->value+1);
+	    		expressionNode = aux2;
+    		}
+    		
     	}
     }
     
