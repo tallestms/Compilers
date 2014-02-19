@@ -1123,7 +1123,9 @@ SINALFATOR:  token_numreal_comsinal
 	    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
 	    		aux2->children[0] = expressionNode->children[1];
 	    		aux2->children[1] = aux;
-	    		expressionNode->children[0] = aux2;
+	    		expressionNode->children[1] = aux2;
+	    		//retirando o '-'
+		 		strcpy(aux->value, aux->value+1);
 	    		aux2 = expressionNode;
     		} else {
     			treeNode* aux2 = newTreeNode();
@@ -1159,13 +1161,26 @@ SINALFATOR:  token_numreal_comsinal
     	if(!strcmp(expressionNode->type,"OPERADOR-N-1") & expressionNode->children[1]==NULL){
     		expressionNode->children[1] = aux;
     	}else{
-    		treeNode* aux2 = newTreeNode();
-    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
-    		aux2->children[0] = expressionNode;
- 		aux2->children[1] = aux;
- 		//retirando o '-'
- 		strcpy(aux->value, aux->value+1);
-    		expressionNode = aux2;
+    		if (!strcmp(expressionNode->type,"OPERADOR-N-2")){
+    			swapDoisUm = expressionNode;
+    			treeNode* aux2 = newTreeNode();
+	    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
+	    		aux2->children[0] = expressionNode->children[1];
+	    		aux2->children[1] = aux;
+	    		expressionNode->children[1] = aux2;
+	    		//retirando o '-'
+		 		strcpy(aux->value, aux->value+1);
+	    		aux2 = expressionNode;
+    		} else {
+    			treeNode* aux2 = newTreeNode();
+	    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
+	    		aux2->children[0] = expressionNode;
+		 		aux2->children[1] = aux;
+		 		//retirando o '-'
+		 		strcpy(aux->value, aux->value+1);
+	    		expressionNode = aux2;
+    		}
+    		
     	}
     }
   
