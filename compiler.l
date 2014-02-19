@@ -65,7 +65,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "faça"						{return token_faca;}
 "falso"						{if(in_function == 1){strcat(functionArguments, "lógico"); strcat(functionArguments, " ");} strcpy(currentType, "lógico");return token_falso;}
 "fim"						{return token_fim;}
-"fim-enquanto"					{return token_fimequanto;}
+"fim-enquanto"					{return token_fimenquanto;}
 "fim-para"					{return token_fimpara;}
 "fim-se"					{return token_fimse;}
 "fim-variáveis"					{return token_fimvariaveis;}

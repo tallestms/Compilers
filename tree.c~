@@ -53,7 +53,7 @@ void printNode(treeNode* t, int type, int nivel){
 		for (i=0;t->children[i]!=NULL;i++){
 			printNode(t->children[i], type, nivel+2);
 		}
-		printNode(t->next, type, nivel);
+		printNode(t->next, type, nivel+);
 	}
 
 }

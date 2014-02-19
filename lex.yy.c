@@ -1095,7 +1095,7 @@ YY_RULE_SETUP
 case 29:
 YY_RULE_SETUP
 #line 68 "compiler.l"
-{return token_fimequanto;}
+{return token_fimenquanto;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP

@@ -7,17 +7,14 @@
 #include "lists.h"
 #include "aux.h"
 #include "tree.h"
+#include "stack.h"
 
 #define MAX_HASH 1000
 #define MAX_VARIABLE 32 //maior nome de variavel
 #define MAX_FUNCTION 32 //maior nome de funcao
 #define MAX_LITERAL 203
-
-<<<<<<< HEAD
-=======
 #define IN_DEBUG_MODE 1
 
->>>>>>> dbd179fca42131cde357615c904a943cb5cfb004
 extern char* yytext;
 extern int in_function;
 extern int in_logico;
@@ -47,19 +44,47 @@ List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
 char limitString[203]; //limitador de tamanho de string no programa
+
+Stack* stackGlobal = NULL;
+
 treeNode* globalTree = NULL;
 treeNode* expressionNode = NULL;
 treeNode* attributionNode = NULL;
+treeNode* conditionNode = NULL;
+treeNode* commandNode = NULL;
+
+treeNode* globalglobal = NULL;
+
+//Adiciona no no stack global que ficara responsavel para controlar escopo dentro do programa
+void addNodeIntoGlobalStack(treeNode *info){
+	if(stackGlobal==NULL){
+		stackGlobal = createStack();
+		pushStack(stackGlobal, (void*)info);
+	}else{
+		pushStack(stackGlobal, (void*)info);
+	}
+}
 
 void addAttributionNodeIntoGlobalTree(){
 	if(globalTree==NULL){
 		globalTree = attributionNode;
 	}else{
-		treeNode *aux=globalTree;
+		treeNode *aux = globalTree;
 		while(aux->next!=NULL) aux = aux->next;
 		aux->next = attributionNode;
 	}
 	attributionNode = NULL;	
+}
+
+void addConditionNodeIntoGlobalTree(){
+	if(globalTree==NULL){
+		globalTree = conditionNode;
+	}else{
+		treeNode *aux = globalTree;
+		while(aux->next!=NULL) aux = aux->next;
+		aux->next = conditionNode;
+	}
+	conditionNode = NULL;	
 }
 
 %}
@@ -92,7 +117,7 @@ void addAttributionNodeIntoGlobalTree(){
 %token token_faca
 %token token_falso
 %token token_fim
-%token token_fimequanto
+%token token_fimenquanto
 %token token_fimpara
 %token token_fimse
 %token token_fimvariaveis
@@ -753,22 +778,16 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 }
 EXPR
 {
-  //adiciono o nó de expressão a direita do nó de atribuição
-  attributionNode->children[1] = expressionNode;
-  //retorno o nós de atribuição para null
-  expressionNode=NULL;
-
+    //adiciono o nó de expressão a direita do nó de atribuição
+    attributionNode->children[1] = expressionNode;
+    //retorno o nós de atribuição para null
+    expressionNode=NULL;
+  
   if(strcmp(currentScope, "main") == 0)
     { 
-        //adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
-  	addAttributionNodeIntoGlobalTree();
-  	
-  	if(IN_DEBUG_MODE){
-	  	treeNode* aux = globalTree;
-	  	for (;aux!=NULL; aux=aux->next)
-	  		printNode(aux, 12, 0);
-	printf("\n ---------- \n");
-	}
+	//adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
+	//verifica que nao esta dentro de condicional tambem (enquanto ou se)
+	addAttributionNodeIntoGlobalTree();
 		  	
       char* returnVariable = strtok(identifiers, " ");
       if (returnVariable != NULL)
@@ -865,8 +884,49 @@ token_pontov {
 currentRelationComparison = 0;
 }
 | token_se token_abrep EXPR token_fechap {currentRelationPos = 0;} token_entao BLOCO_AUXILIAR BLOCO_SENAO_FIMSE  | 
-token_faca BLOCO_AUXILIAR token_enquanto token_abrep EXPR token_fechap {in_condicional = 0;} token_pontov | 
-token_enquanto token_abrep EXPR token_fechap {in_condicional=0;currentRelationPos =0 ; strcpy(identifiers,"\0");} token_faca BLOCO_AUXILIAR token_fimequanto | 
+token_faca BLOCO_AUXILIAR token_pontov token_enquanto token_abrep EXPR token_fechap {in_condicional = 0;} token_pontov | 
+token_enquanto token_abrep 
+{
+    //cria o nó da arvore de condicao
+    conditionNode = newTreeNode();
+    fillTreeNode(conditionNode,"condicao","CONDICIONAL");
+    
+    //seta para null o nó de expressão (que será construído na parte de expressão)
+    expressionNode = NULL;
+    }
+EXPR
+{
+    //adiciono o nó de expressão a direita do nó de condicao
+    conditionNode->children[0] = expressionNode;
+    commandNode = newTreeNode();
+    fillTreeNode(commandNode, "comando", "COMANDO");
+    conditionNode->children[1] = commandNode;
+    addConditionNodeIntoGlobalTree();
+  
+    addNodeIntoGlobalStack(globalTree);
+    globalTree = commandNode;
+    //retorno os nós de atribuição para null
+    expressionNode = NULL;
+}
+token_fechap {in_condicional = 0; currentRelationPos = 0 ; strcpy(identifiers,"\0");} token_faca
+
+BLOCO_AUXILIAR
+{
+/*
+     if(IN_DEBUG_MODE){
+  	treeNode* aux = globalTree;
+  	for (;aux!=NULL; aux=aux->next)
+  		printNode(aux, 12, 0);
+	printf("\n ---------- \n");
+      }
+*/
+  commandNode = NULL;
+  expressionNode = NULL;
+  conditionNode = NULL;
+  globalTree = ((treeNode*)(popStack(stackGlobal)));
+}
+
+token_fimenquanto | 
 token_para token_abrep {strcpy(identifiers,"\0"); currentRelationPos=0;} token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap  
 {
 if(!verifyRelationship(varRelations, currentRelationPos))
@@ -874,7 +934,7 @@ if(!verifyRelationship(varRelations, currentRelationPos))
     printf("Valores incompativeis na linha %d\n", nLine);
   }
 strcpy(identifiers,"\0"); 
-currentRelationPos=0;
+currentRelationPos = 0;
 }
 token_faca BLOCO_AUXILIAR token_fimpara | 
 
@@ -1014,15 +1074,11 @@ EXPR: SIEXPR
   }
     else if (in_condicional == 1)
   {
-    //printf("%d %d ", currentRelationPos, currentRelationComparison);
-    //printf("%s\n", identifiers);
-    //printRelationship(varRelations, currentRelationComparison);
     if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
 	}
     currentRelationComparison=0;
-    //in_comparacao = 1;
   }
 }
 | EXPR LOGICOS SIEXPR 
@@ -1037,7 +1093,7 @@ SIEXPR: TERMO
 	aux->children[0]=expressionNode;
 	expressionNode = aux;
 } TERMO
-| SIEXPR SINALFATOR ; 
+| SIEXPR SINALFATOR ;
 ADICAO_SUBTRACAO: token_mais | token_menos ;
 
 SINALFATOR:  token_numreal_comsinal 
@@ -1112,9 +1168,7 @@ FATOR: SINALFATOR
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
-    //printf("real com sinal\n");
-<<<<<<< HEAD
-=======
+    //printf("real com sinal\n");    
     
     //preenche arvore de expressão
     treeNode* aux = newTreeNode();
@@ -1124,8 +1178,6 @@ FATOR: SINALFATOR
     }else{
     	expressionNode->children[1] = aux;
     } 
-    
->>>>>>> dbd179fca42131cde357615c904a943cb5cfb004
   }
 }
 | token_numreal 
@@ -1946,6 +1998,19 @@ main(){
       hashFunction = createHash(MAX_HASH);
       createPrimitives();
       yyparse();
+      
+ 
+     if(IN_DEBUG_MODE){
+  	treeNode* aux = globalTree;
+  	//for (;aux!=NULL; aux=aux->next)
+  	//{
+  	//	printNode(aux, 12, 0);
+  	//}
+  	printNode(aux, 12, 0);
+	printf("\n ---------- \n");
+      }
+
+	
       freeTable(hashVariables);
       freeTableFunction(hashFunction);
 }

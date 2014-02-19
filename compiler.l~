@@ -16,7 +16,7 @@ char functionArguments[10*MAX_VARIABLE];
 int varRelations[50];
 char currentType[10];
 int currentNumber = 0;
-char currentIdentifier[100];
+char currentIdentifier[MAX_VARIABLE];
 int isMatrix = 0;
 char limitString[MAX_LITERAL]; //limitador de tamanho de string no programa
 %}
