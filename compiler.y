@@ -47,7 +47,11 @@ char limitString[203]; //limitador de tamanho de string no programa
 treeNode* globalTree = NULL;
 treeNode* expressionNode = NULL;
 treeNode* attributionNode = NULL;
+treeNode* swapUmZero = NULL;
 
+/**
+*	FUNÇÕES
+**/
 void addAttributionNodeIntoGlobalTree(){
 	if(globalTree==NULL){
 		globalTree = attributionNode;
@@ -57,6 +61,27 @@ void addAttributionNodeIntoGlobalTree(){
 		aux->next = attributionNode;
 	}
 	attributionNode = NULL;	
+}
+
+void operadorDeNivelZero(char tipo[10]){
+	if (!strcmp(expressionNode->type,"OPERADOR-N-1")){
+		swapUmZero = expressionNode;
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo, "OPERADOR-N-0");
+		aux->children[0] = expressionNode->children[1];
+		expressionNode->children[1] = aux;
+		expressionNode = aux;
+	}else{
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo, "OPERADOR-N-0");
+		aux->children[0] = expressionNode;
+		expressionNode = aux;
+	}
+}
+
+void swapoutUmZero(){
+	expressionNode = swapUmZero;
+	swapUmZero=NULL;
 }
 
 %}
@@ -764,7 +789,7 @@ EXPR
 	  	treeNode* aux = globalTree;
 	  	for (;aux!=NULL; aux=aux->next)
 	  		printNode(aux, 12, 0);
-	printf("\n ---------- \n");
+	printf("---------- \n");
 	}
 		  	
       char* returnVariable = strtok(identifiers, " ");
@@ -1030,7 +1055,7 @@ COMPARACOES: token_maior | token_maiori | token_igual | token_menor | token_meno
 SIEXPR: TERMO 
 | SIEXPR ADICAO_SUBTRACAO {
 	treeNode *aux = newTreeNode();
-	fillTreeNode(aux,yytext,"OPERADOR");
+	fillTreeNode(aux,yytext,"OPERADOR-N-1");
 	aux->children[0]=expressionNode;
 	expressionNode = aux;
 } TERMO
@@ -1053,16 +1078,19 @@ SINALFATOR:  token_numreal_comsinal
     
     //preenche arvore de expressão
     treeNode* aux = newTreeNode();
-    fillTreeNode(aux, yytext, "INTEIRO");
+    fillTreeNode(aux, yytext, "REAL");
     if (expressionNode == NULL) {
       expressionNode = aux;
     }else{
-    	if(!strcmp(expressionNode->type,"OPERADOR")){
+    	if(!strcmp(expressionNode->type,"OPERADOR-N-1") & expressionNode->children[1]==NULL){
     		expressionNode->children[1] = aux;
     	}else{
     		treeNode* aux2 = newTreeNode();
-    		fillTreeNode(aux2, "-", "OPERADOR");
+    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
     		aux2->children[0] = expressionNode;
+ 		aux2->children[1] = aux;
+ 		//retirando o '-'
+ 		strcpy(aux->value, aux->value+1);
     		expressionNode = aux2;
     	}
     }
@@ -1085,12 +1113,15 @@ SINALFATOR:  token_numreal_comsinal
     if (expressionNode == NULL) {
       expressionNode = aux;
     }else{
-    	if(!strcmp(expressionNode->type,"OPERADOR")){
+    	if(!strcmp(expressionNode->type,"OPERADOR-N-1") & expressionNode->children[1]==NULL){
     		expressionNode->children[1] = aux;
     	}else{
     		treeNode* aux2 = newTreeNode();
-    		fillTreeNode(aux2, "-", "OPERADOR");
+    		fillTreeNode(aux2, "-", "OPERADOR-N-1");
     		aux2->children[0] = expressionNode;
+ 		aux2->children[1] = aux;
+ 		//retirando o '-'
+ 		strcpy(aux->value, aux->value+1);
     		expressionNode = aux2;
     	}
     }
@@ -1098,7 +1129,13 @@ SINALFATOR:  token_numreal_comsinal
   }
 
 };
-TERMO: MATRIZ | FATOR | TERMO token_dividir FATOR | TERMO token_mod FATOR | TERMO token_vezes FATOR ;
+TERMO: MATRIZ | FATOR 
+//Dividir
+| TERMO token_dividir {	operadorDeNivelZero("/"); } FATOR { swapoutUmZero(); }
+//Módulo
+| TERMO token_mod { operadorDeNivelZero("%"); } FATOR { swapoutUmZero(); }
+//Multiplicar
+| TERMO token_vezes { operadorDeNivelZero("*"); } FATOR { swapoutUmZero(); };
 FATOR: SINALFATOR
 | token_numinteiro
 {
