@@ -11,7 +11,26 @@ início
 	a := 10;
 	d := 20;
 	b := verdadeiro e falso;
-	c := a>d e a<d e a>((a+d)*d) ou a<(a+d);
+	//c := a>d e a<d e a>((a+d)*d) ou a<(a+d); //isso ta certo???
+	
+	/*
+	enquanto (d <> 0) faça
+		a := a + d;
+	  enquanto ( d <> 0 ) faça
+		a := a +d;
+	  fim-enquanto
+	fim-enquanto
+	*/
+	
+	faça
+	  a := a + d;
+	  faça
+	    a := a + d;
+	      faça
+	    a := a + d;
+	  ;enquanto (a <> 0);
+	  ;enquanto (a <> 0);
+	;enquanto (a <> 0);
 	
 	//c := falso;
 	//b := a > d e d <= a;

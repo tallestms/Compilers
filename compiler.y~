@@ -983,7 +983,6 @@ BLOCO_AUXILIAR
 {
   commandNode = globalTree;
   globalTree = ((treeNode*)(popStack(stackGlobal)));
-  expressionNode = NULL;
 }
 token_pontov
 token_enquanto token_abrep EXPR

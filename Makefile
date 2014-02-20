@@ -5,4 +5,4 @@ all:
 
 	
 clean:
-	rm -rf trab3.aux trab3.blg trab3.bbl trab3.toc trab3.out lex.yy.c compiler.tab.c trab3.log
+	rm -rf *~ trab3.aux trab3.blg trab3.bbl trab3.toc trab3.out lex.yy.c compiler.tab.c trab3.log
