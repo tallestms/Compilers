@@ -54,7 +54,7 @@ início
 			faça 
 			    res := res*x+11;
 			    a := a + b+10.10;
-			;enquanto (x > 1); 
+			enquanto (x > 1); 
 	fim-para
 		
 	

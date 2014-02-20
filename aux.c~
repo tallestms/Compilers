@@ -40,7 +40,7 @@ int verifyRelationshipCondition(int *varRelations, int currentRelationComparison
   for(i=currentRelationPos-currentRelationComparison;i<currentRelationPos;i++)
   {
     //printf("%d ", varRelations[i]);
-    if(varRelations[i] != compare || varRelations[i] == 1 || varRelations[i] == 2)
+    if(varRelations[i] != compare || varRelations[i] == 1 || varRelations[i] == )
       return 0;
   }
   return 1;
