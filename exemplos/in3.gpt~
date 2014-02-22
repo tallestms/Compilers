@@ -35,5 +35,5 @@ início
 	faça 
 		res := res*x;
 		x := x - 1;
-	;enquanto (x > res); 
+	enquanto (x > res); 
 fim

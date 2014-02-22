@@ -46,20 +46,25 @@ hashTable* hashFunction = NULL;
 char limitString[203]; //limitador de tamanho de string no programa
 
 Stack* stackGlobal = NULL;
+Stack* stackIfThenElse = NULL;
 
 treeNode* globalTree = NULL;
 treeNode* expressionNode = NULL;
 treeNode* attributionNode = NULL;
 treeNode* conditionNode = NULL;
 treeNode* commandNode = NULL;
+treeNode* caseNode = NULL;
 
 //Adiciona no no stack global que ficara responsavel para controlar escopo dentro do programa
-void addNodeIntoGlobalStack(treeNode *info){
-	if(stackGlobal==NULL){
-		stackGlobal = createStack();
-		pushStack(stackGlobal, (void*)info);
+Stack* addNodeIntoStack(treeNode *info, Stack* aux){
+	if(aux==NULL){
+
+		aux = createStack();
+		pushStack(aux, (void*)info);
+		return aux;
 	}else{
-		pushStack(stackGlobal, (void*)info);
+		pushStack(aux, (void*)info);
+		return aux;
 	}
 }
 
@@ -504,11 +509,18 @@ BLOCO_FUNCAO: /*Empty*/ | REPETICAO_COMANDO;
 REPETICAO_COMANDO: COMANDO | REPETICAO_COMANDO COMANDO;
 
 BLOCO_IMPRIMA: FATOR 
+BLOCO_SWITCH:  BLOCO_SWITCH_AUX
 {
+  
+
+}
+BLOCO_SWITCH | 
+BLOCO_SWITCH_AUX FIM_BLOCO_SWITCH
+{
+	
 };
-BLOCO_SWITCH:  BLOCO_SWITCH_AUX BLOCO_SWITCH | 
-BLOCO_SWITCH_AUX FIM_BLOCO_SWITCH;
-FIM_BLOCO_SWITCH: token_padrao token_doisp BLOCO_AUXILIAR token_parar token_pontov token_fimseleciona | token_fimseleciona ;
+FIM_BLOCO_SWITCH: token_padrao token_doisp BLOCO_AUXILIAR token_parar
+token_pontov token_fimseleciona | token_fimseleciona ;
 BLOCO_SWITCH_AUX: token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_AUXILIAR token_parar token_pontov | token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_AUXILIAR;
 
 FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_inicio BLOCO_FUNCAO token_fim 
@@ -963,34 +975,65 @@ EXPR
 token_pontov {
 currentRelationComparison = 0;
 }
-| token_se token_abrep EXPR token_fechap {currentRelationPos = 0;} token_entao BLOCO_AUXILIAR BLOCO_SENAO_FIMSE  | 
-token_faca
+| token_se
 {
-    commandNode = newTreeNode();
-    fillTreeNode(commandNode, "comando", "COMANDO");
-    
-    //adicionando no global no stack, para ser recuperado depois
-    addNodeIntoGlobalStack(globalTree);
-    
-    //mudando no global para o comando
-    globalTree = commandNode;
+    //cria o nó da arvore de condicao
+    conditionNode = newTreeNode();
+    fillTreeNode(conditionNode,"condicao-se","CONDICIONAL");   
+    addConditionNodeIntoGlobalTree();
     
     //retorno os nós de atribuição para null
     expressionNode = NULL;
-    
+      
+}
+
+token_abrep EXPR
+{
+  commandNode = newTreeNode();
+  fillTreeNode(commandNode, "comando-se", "COMANDO");
+  //adicionando no global no stack, para ser recuperado depois
+  stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
+  //mudando no global para o comando
+  globalTree = commandNode;
+  
+  //colocando a expressao como filho 
+  conditionNode -> children[0] = expressionNode; 
+  conditionNode -> children[1] = commandNode;
+  commandNode ->children[0] = conditionNode;
+}
+
+token_fechap {currentRelationPos = 0;} token_entao BLOCO_AUXILIAR
+{
+  commandNode = globalTree;
+  conditionNode = commandNode -> children[0];
+  commandNode->children[0] = NULL;
+  globalTree = ((treeNode*)(popStack(stackGlobal)));
+  expressionNode = NULL;
+}
+BLOCO_SENAO_FIMSE  | 
+token_faca
+{
+    commandNode = newTreeNode();
+    fillTreeNode(commandNode, "comando-faca", "COMANDO");
+    //adicionando no global no stack, para ser recuperado depois
+    stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
+    //mudando no global para o comando
+    globalTree = commandNode;
+    //retorno os nós de atribuição para null
+    expressionNode = NULL;
 }
 BLOCO_AUXILIAR
 {
   commandNode = globalTree;
   globalTree = ((treeNode*)(popStack(stackGlobal)));
+  expressionNode = NULL;
 }
 token_pontov
 token_enquanto token_abrep EXPR
 {  
     //cria o nó da arvore de condicao
     conditionNode = newTreeNode();
-    fillTreeNode(conditionNode,"condicao","CONDICIONAL");
-    
+    fillTreeNode(conditionNode,"condicao-enquanto","CONDICIONAL");
      conditionNode->children[0] = expressionNode;
      conditionNode->children[1] = commandNode;
      addConditionNodeIntoGlobalTree();
@@ -1003,7 +1046,7 @@ token_enquanto token_abrep
 {
     //cria o nó da arvore de condicao
     conditionNode = newTreeNode();
-    fillTreeNode(conditionNode,"condicao","CONDICIONAL");
+    fillTreeNode(conditionNode,"condicao-enquanto","CONDICIONAL");
     //seta para null o nó de expressão (que será construído na parte de expressão)
     expressionNode = NULL;
 }
@@ -1014,16 +1057,14 @@ EXPR
     commandNode = newTreeNode();
     
     //adiciona o no de comando a direita
-    fillTreeNode(commandNode, "comando", "COMANDO");
+    fillTreeNode(commandNode, "comando-enquanto", "COMANDO");
     conditionNode->children[1] = commandNode;
     addConditionNodeIntoGlobalTree();
-    
+
     //adicionando no global no stack, para ser recuperado depois
-    addNodeIntoGlobalStack(globalTree);
-    
+    stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
     //mudando no global para o comando
     globalTree = commandNode;
-    
     //retorno os nós de atribuição para null
     expressionNode = NULL;
 }
@@ -1033,15 +1074,60 @@ BLOCO_AUXILIAR
 {
 
   //commandNode = NULL;
-  //expressionNode = NULL;
+  expressionNode = NULL;
   //conditionNode = NULL;
-  
+
   //no global passa a ser o anterior
   globalTree = ((treeNode*)(popStack(stackGlobal)));
 }
 token_fimenquanto | 
 
-token_para token_abrep {strcpy(identifiers,"\0"); currentRelationPos=0;} token_identificador token_de FATOR token_ate FATOR token_passo FATOR token_fechap  
+token_para 
+{
+  conditionNode = newTreeNode();
+  fillTreeNode(conditionNode,"condicao-para","CONDICAO");
+  addConditionNodeIntoGlobalTree();
+
+}
+token_abrep {strcpy(identifiers,"\0"); currentRelationPos=0;} token_identificador
+{
+  attributionNode = newTreeNode();
+  fillTreeNode(attributionNode,":=","ATRIBUICAO");
+  
+  treeNode *idAux = newTreeNode();
+  fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+  attributionNode->children[0] = idAux;
+  
+  conditionNode->children[0] = attributionNode;
+}
+token_de FATOR
+{
+  attributionNode->children[1] = expressionNode;
+  expressionNode = NULL;
+
+}
+token_ate FATOR
+{
+  conditionNode->children[1] = expressionNode;
+  expressionNode = NULL;
+}
+token_passo FATOR
+{
+  conditionNode->children[2] = expressionNode;
+  expressionNode = NULL;
+  
+  commandNode = newTreeNode();
+  fillTreeNode(commandNode, "comando-para", "COMANDO");
+   
+  conditionNode->children[3] = commandNode;
+   
+  //adicionando no global no stack, para ser recuperado depois
+  stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
+    
+  //mudando no global para o comando
+  globalTree = commandNode;
+}
+token_fechap  
 {
 if(!verifyRelationship(varRelations, currentRelationPos))
   {
@@ -1050,7 +1136,14 @@ if(!verifyRelationship(varRelations, currentRelationPos))
 strcpy(identifiers,"\0"); 
 currentRelationPos = 0;
 }
-token_faca BLOCO_AUXILIAR token_fimpara | 
+token_faca BLOCO_AUXILIAR
+{
+  expressionNode = NULL;
+ 
+  //no global passa a ser o anterior
+  globalTree = ((treeNode*)(popStack(stackGlobal)));
+}
+token_fimpara | 
 
 token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep token_identificador
 {
@@ -1102,6 +1195,31 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
     }
     //printf("identificador\n");
   }
+  
+    //cria o nó da arvore de condicao
+    conditionNode = newTreeNode();
+    fillTreeNode(conditionNode,"condicao-seleciona","CONDICIONAL");
+    
+    treeNode* idAux = newTreeNode();
+    fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+    
+    conditionNode->children[0] = idAux;
+    addConditionNodeIntoGlobalTree();
+
+    caseNode = newTreeNode();
+    commandNode = newTreeNode();
+    
+    caseNode->children[1] = commandNode;
+    
+    stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
+    globalTree = comma;
+    
+    
+    //retorno os nós de atribuição para null
+    expressionNode = NULL;
+    
+    
+    
 }
 token_fechap 
 {
@@ -1112,7 +1230,29 @@ else
 }
 BLOCO_SWITCH;
 
-BLOCO_SENAO_FIMSE: token_senao BLOCO_AUXILIAR {currentRelationPos=0;} token_fimse | token_fimse;
+BLOCO_SENAO_FIMSE: token_senao
+{
+  //atualizando no de condicao para se-senao
+  fillTreeNode(conditionNode,"condicao-se-senao","CONDICIONAL");   
+
+  commandNode = newTreeNode();
+  fillTreeNode(commandNode, "comando-senao", "COMANDO");
+  
+  conditionNode->children[2] = commandNode;
+  //adicionando no global no stack, para ser recuperado depois
+  stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
+  //mudando no global para o comando
+  globalTree = commandNode;
+  
+}
+BLOCO_AUXILIAR {currentRelationPos=0;} token_fimse
+{
+  commandNode = globalTree;
+  globalTree = ((treeNode*)(popStack(stackGlobal)));
+  expressionNode = NULL;
+}
+| token_fimse;
+
 LOGICOS: 
 {in_logico = 1;}
 {

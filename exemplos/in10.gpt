@@ -10,7 +10,28 @@ fim-variáveis
 início
 	a := 10;
 	d := 20;
-	b := verdadeiro e falso;
+	
+	/*
+	se (a = 10 e verdadeiro) então
+	  d := 10;
+	  se (a = 10 e verdadeiro) então
+	    d := 10;
+	    a := a + 20;
+	  fim-se
+	  a := a + 20;
+	senão
+	  se (a = 10 e verdadeiro) então
+	    d := 1000;
+	  senão
+	    se (a = 10 e verdadeiro) então
+	      d := 1000;
+	    fim-se
+	    a := 20;
+	  fim-se
+	fim-se
+	*/
+	
+	//b := verdadeiro e falso;
 	//c := a>d e a<d e a>((a+d)*d) ou a<(a+d); //isso ta certo???
 	
 	/*
@@ -22,15 +43,45 @@ início
 	fim-enquanto
 	*/
 	
+	/*
 	faça
 	  a := a + d;
 	  faça
 	    a := a + d;
-	      faça
-		a := a + d;
-	      ;enquanto (a <> 0);
+	      enquanto ( a <> 0 ) faça
+		a := a + 10 + 20;
+	      fim-enquanto
 	  ;enquanto (a <> 0);
 	;enquanto (a <> 0);
+	*/
+	
+	/*
+	para (a de d até 1 passo -1) faça
+		a := a * 10;
+		enquanto ( a <> 0 ) faça
+		  a := a + 10 + 20;
+		fim-enquanto
+	fim-para
+	*/
+	
+	// Exemplo de uso de SWITCH
+	seleciona (a)
+		caso (1):
+			a := 1;
+			parar;
+		caso (2):
+			a := 2;
+			parar;
+		caso (3):
+			a := 3;
+		caso (4):
+			a := 4;
+			parar;
+		padrão:
+			a := 1;
+			parar;
+	fim-seleciona
+	
 	
 	//c := falso;
 	//b := a > d e d <= a;
