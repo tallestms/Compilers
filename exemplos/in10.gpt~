@@ -10,8 +10,8 @@ variáveis
 fim-variáveis
 
 início
-	a := 10;
-	a := 10 + - a;
+	a := (10+2);
+	//a := 10 + - a;
 	//m := {[1,2,3,4],[4,3,2,1],[0,0,0,0]};
 	//n := [1,2,3,4];
 	//a := m[0][0] + m[1][1];
@@ -72,6 +72,7 @@ início
 	fim-para
 	*/
 	
+	/*
 	// Exemplo de uso de SWITCH
 	seleciona (a)
 		caso (1):
@@ -89,7 +90,7 @@ início
 			a := 1;
 			parar;
 	fim-seleciona
-
+	*/
 	//c := falso;
 	//b := a > d e d <= a;
 	//a := 1 + 2 * 3 * 4 + 5;
