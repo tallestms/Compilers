@@ -45,6 +45,7 @@ hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
 char limitString[203]; //limitador de tamanho de string no programa
 
+Stack* stackParetesis = NULL;
 Stack* stackGlobal = NULL;
 
 treeNode* globalTree = NULL;
@@ -66,6 +67,9 @@ void addNodeIntoGlobalStack(treeNode *info){
 treeNode* swapUmZero = NULL;
 treeNode* swapDoisUm = NULL;
 treeNode* swapTresDois = NULL;
+treeNode* tempDelimitadorNivelZero = NULL;
+treeNode* tempDelimitadorNivelUm = NULL;
+
 /**
 *	FUNÇÕES
 **/
@@ -166,6 +170,39 @@ void swapoutTresDois(){
 	}
 }
 
+/**
+* MATRIZES
+*/
+void treeMatrixOneDimension(char identifier[50], int currentNumber){
+	char s[50];
+	sprintf(s,"%d",currentNumber);
+	//nó contendo nome do identificador
+	treeNode* aux = newTreeNode();
+	fillTreeNode(aux, identifier, "MATRIX");
+	//nó contendo o tamanho da primeira dimensão
+	treeNode* dim = newTreeNode();
+	fillTreeNode(dim, s, "INTEIRO");
+	//seto primeira dimensão no filho 0
+	aux->children[0] = dim;
+	//se expressionNode é null seto no primeiro filho, caso contrário no segundo
+	if(expressionNode == NULL){
+		expressionNode = aux;
+	} else {
+		expressionNode->children[1] = aux;
+	}
+}
+
+void delimitadorNiveLZero(){
+	treeNode* aux= newTreeNode();
+	fillTreeNode(aux,"[]","DELIMITADOR-N-0");
+	expressionNode = aux; //expressionNode sempre será NULL pela definição de matrizes
+}
+
+void delimitadorNivelUm(){
+	treeNode* aux= newTreeNode();
+	fillTreeNode(aux,"{}","DELIMITADOR-N-1");
+	expressionNode = aux; //expressionNode sempre será NULL pela definição de matrizes
+}
 
 %}
 
@@ -1454,6 +1491,19 @@ e se ela foi declarada.
     }
     //printf("identificador\n");
     }
+    
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, ((variable*)(identifier_temp->info))->name, "VARIAVEL");
+    treeNode* signalAux = newTreeNode();
+    fillTreeNode(signalAux, "-", "OPERADOR-UNARIO");
+	signalAux->children[0] = aux;
+    if (expressionNode == NULL) {
+      expressionNode = signalAux;
+    }else{
+    	expressionNode->children[1] = signalAux;
+    }
+    
   }
    else
   {
@@ -1480,7 +1530,23 @@ e se ela foi declarada.
     }
     //printf("identificador\n");
     }
+    
+    //preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, ((variable*)(identifier_temp->info))->name, "VARIAVEL");
+    treeNode* signalAux = newTreeNode();
+    fillTreeNode(signalAux, "-", "OPERADOR-UNARIO");
+	signalAux->children[0] = aux;
+    if (expressionNode == NULL) {
+      expressionNode = signalAux;
+    }else{
+    	expressionNode->children[1] = signalAux;
+    }
+  
   }
+  
+  	
+  
 }
 /*
 Aqui sera feita analise de matriz com apenas um index
@@ -1511,6 +1577,9 @@ Aqui sera feita analise de matriz com apenas um index
   }
   if(identifier_temp != NULL)
   {
+  	//monta a arvore
+  	treeMatrixOneDimension( ((variable*)(identifier_temp->info))->name , currentNumber);
+  	
     if(((variable*)(identifier_temp->info))->used == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else if(((variable*)(identifier_temp->info))->matrix!=1){
@@ -1533,6 +1602,7 @@ Aqui sera feita analise de matriz com apenas um index
     }
   }
 }
+//Matrizes de duas dimensões
 | token_identificador token_abrecol token_numinteiro token_fechacol token_abrecol 
 {
   List *identifier_temp = NULL;
@@ -1558,6 +1628,9 @@ Aqui sera feita analise de matriz com apenas um index
   }
   if(identifier_temp != NULL)
   {
+  	//monta a arvore com uma dimensão
+  	treeMatrixOneDimension( ((variable*)(identifier_temp->info))->name , currentNumber);
+  
     if(((variable*)(identifier_temp->info))->used == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else if(((variable*)(identifier_temp->info))->matrix!=1){
@@ -1589,6 +1662,17 @@ Aqui sera feita analise de matriz com apenas um index
   }
     if(identifier_temp != NULL)
     {
+    	//completa a arvore com a segunda dimensão
+    	char s[50];
+    	sprintf(s,"%d",currentNumber);
+    	treeNode *aux = newTreeNode();
+	 	fillTreeNode(aux, s, "INTEIRO");
+	 	//Se  children[1] for null estamos no nó do identificador, caso contrário estamos no nó do operador
+	 	if(expressionNode->children[1] == NULL){
+		 	expressionNode->children[1] = aux; 		
+    	}else{
+    		expressionNode->children[1]->children[1] = aux;
+    	}
       if(((variable*)(identifier_temp->info))->nLine <= currentNumber )
       {
 	printf("Erro na linha %d, %s possui %d linhas.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nLine );
@@ -1632,7 +1716,7 @@ Aqui sera feita analise de matriz com apenas um index
     }
   }
 }
-| token_abrep EXPR token_fechap 
+| token_abrep EXPR token_fechap  //TODO - parentesis 
 | token_verdadeiro 
 {
   if(in_function!=1)
@@ -1900,7 +1984,8 @@ FATOR_CASE: SINALFATOR | token_numinteiro
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
   }
 };
-MATRIZ: token_abrec {countLine=0;} MATRIZ_VARIAS_COLUNAS {
+//Matriz de duas dimensões
+MATRIZ: token_abrec { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm = expressionNode;  expressionNode=NULL; printf("aqui0\n");} MATRIZ_VARIAS_COLUNAS {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
@@ -1918,11 +2003,13 @@ MATRIZ: token_abrec {countLine=0;} MATRIZ_VARIAS_COLUNAS {
 			((variable*)(identifier_temp->info))->used = 1;
 		}
 	}
+	expressionNode = tempDelimitadorNivelUm;
 } token_fechac 
 {
 	isMatrix = 1;
 }
- | token_abrecol {countColumn=0;} BLOCO_MATRIZ {
+//vetor
+ | token_abrecol {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;} BLOCO_MATRIZ {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
@@ -1943,9 +2030,16 @@ MATRIZ: token_abrec {countLine=0;} MATRIZ_VARIAS_COLUNAS {
 }token_fechacol
  {
 	isMatrix = 1; 
+	expressionNode = tempDelimitadorNivelZero;
  };
-MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol {countColumn=0;} BLOCO_MATRIZ 
+MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;} BLOCO_MATRIZ 
 {
+	printf("aqui\n");
+	treeNode *auxList = tempDelimitadorNivelUm->children[0];
+	printf("aqui2\n");
+	while(auxList->next != NULL) auxList = auxList->next;
+	auxList->next = tempDelimitadorNivelZero;
+	printf("aqui3\n");
 countLine++;
 List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -1962,8 +2056,14 @@ List *identifier_temp = NULL;
 			((variable*)(identifier_temp->info))->used = 0;
 		}
 	}
-}token_fechacol | token_abrecol 
-{countColumn=0;} BLOCO_MATRIZ {
+}token_fechacol
+| token_abrecol 
+{countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;} BLOCO_MATRIZ {
+	
+	printf("aqui4\n");
+	 tempDelimitadorNivelUm->children[0] = tempDelimitadorNivelZero;
+	printf("aqui5\n");
+	
 	countLine++;
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -1980,10 +2080,11 @@ List *identifier_temp = NULL;
 		}
 	}
 }
-token_fechacol;
+token_fechacol ;
 
 BLOCO_MATRIZ: FATOR 
-{
+{	
+	printf("oi\n");
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
@@ -1998,11 +2099,16 @@ BLOCO_MATRIZ: FATOR
 		} 
 	}
 	countColumn++;
+	
+	//primeiro no da lista
+	tempDelimitadorNivelZero->children[0] = expressionNode;
+	expressionNode = NULL;
+	 printf("tchau\n");
 }
 	
 | BLOCO_MATRIZ token_virgula FATOR 
 
-{
+{	
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
@@ -2017,6 +2123,14 @@ BLOCO_MATRIZ: FATOR
 		}
 	}	
 	countColumn++;
+	
+	//adiciona na lista
+	treeNode* auxList = tempDelimitadorNivelZero->children[0];
+	while(auxList->next != NULL) auxList = auxList->next;
+	auxList->next = expressionNode;
+	expressionNode = NULL;
+//	printNode(tempDelimitadorNivelZero,13,0);
+	
 };
 
 //BLOCO_ARGUMENTOS: /*Empty*/ | EXPR | BLOCO_ARGUMENTOS token_virgula EXPR;

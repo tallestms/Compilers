@@ -5,14 +5,21 @@ variáveis
 	b:lógico;
 	c:lógico;
 	d:inteiro;
+	m:matriz[4][3] de inteiros;
+	n:matriz[4] de inteiros;
 fim-variáveis
 
 início
+	a := 10 + - a;
+	//m := {[1,2,3,4],[4,3,2,1],[0,0,0,0]};
+	//n := [1,2,3,4];
+	//a := m[0][0] + m[1][1];
+	/*
 	a := 10;
 	d := 20;
 	b := verdadeiro e falso;
 	//c := a>d e a<d e a>((a+d)*d) ou a<(a+d); //isso ta certo???
-	
+	*/
 	/*
 	enquanto (d <> 0) faça
 		a := a + d;
@@ -21,7 +28,7 @@ início
 	  fim-enquanto
 	fim-enquanto
 	*/
-	
+	/*
 	faça
 	  a := a + d;
 	  faça
@@ -31,7 +38,7 @@ início
 	      ;enquanto (a <> 0);
 	  ;enquanto (a <> 0);
 	;enquanto (a <> 0);
-	
+	*/
 	//c := falso;
 	//b := a > d e d <= a;
 	//a := 1 + 2 * 3 * 4 + 5;
