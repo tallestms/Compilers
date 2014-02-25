@@ -41,8 +41,8 @@ int typeAttribute;
 extern int isMatrix;
 int dimension, dim1, dim2;
 List* currentParameters = NULL;
-hashTable* hashVariables = NULL;
-hashTable* hashFunction = NULL;
+extern hashTable* hashVariables = NULL;
+extern hashTable* hashFunction = NULL;
 char limitString[203]; //limitador de tamanho de string no programa
 
 Stack* stackParentesis = NULL;

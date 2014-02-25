@@ -68,4 +68,18 @@ int numSpaces(char *s)
 return counter;
 }
 
+int convertValuesTreeNode(char v[50],char t[50]){
+
+	if(!strcmp(t, "INTEIRO")) return 1;
+	if(!strcmp(t, "REAL")) return 2;
+	if(!strcmp(v,":=")) return 3;
+	if(!strcmp(v, "/")) return 4;
+	if(!strcmp(v, "*")) return 5;
+	if(!strcmp(v, "%")) return 6;
+	if(!strcmp(v, "+")) return 7;
+	if(!strcmp(v, "-")) return 8;
+	return -1;
+	
+}
+
 
