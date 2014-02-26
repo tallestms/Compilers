@@ -12,25 +12,30 @@ fim
 */
 
 variáveis
-	a:inteiro;
-	d:inteiro;
+	a : inteiro;
+	//b : caracter;
+	//d:inteiro;
 	//b:inteiro;
-	//c:lógico;
+	c:lógico;
 	//a : real;
 	//b : real;
-	c:lógico;
+	//c:real;
 	//d:inteiro;
 	//m:matriz[4][3] de inteiros;
-	//n:matriz[4] de inteiros;
+	n:matriz[4] de inteiros;
 fim-variáveis
 
 início
-	a := 10;
-	d := 20;
+	a := 100;
+	//a := -a * 2.0;
+	c := verdadeiro e verdadeiro;
+	//b := 'a';
+	//d := 20;
 	
 	//c := a > 5.0;
 	//m:={[1,2,3,4],[10,20,30,40],[100,200,300,400]};
 	//n := [1,2,3,4];
+	
 	//a := n[0];
 	//a := 100.0e-2 - 2.0;
 	//b := -a * (3.0 + (3.5-1.0));

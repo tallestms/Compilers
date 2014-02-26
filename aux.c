@@ -71,6 +71,7 @@ return counter;
 
 int convertValuesTreeNode(char v[50],char t[50]){
 
+	if(!strcmp(t, "LOGICO")) return 0;
 	if(!strcmp(t, "INTEIRO")) return 1;
 	if(!strcmp(t, "REAL")) return 2;
 	if(!strcmp(v,":=")) return 3;
@@ -90,6 +91,8 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v, "=")) return 17;
 	if(!strcmp(v, ">=")) return 18;
 	if(!strcmp(v, "<=")) return 19;
+	if(!strcmp(v, "e")) return 20;
+	if(!strcmp(v, "ou")) return 21;
 	return -1;
 	
 }

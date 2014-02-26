@@ -2649,16 +2649,15 @@ main()
       }
 
 	//execute
-	//executeTree(globalTree);
-	/*
+	executeTree(globalTree);
+	
  		List* l = lookupStringVariable(hashVariables, "c");
  		printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
- 		 l = lookupStringVariable(hashVariables, "a");
- 		printf("a: %f\n", *( (double*) ( (variable*) l->info )->value) );
+ 		l = lookupStringVariable(hashVariables, "a");
+ 		printf("a: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	l = lookupStringVariable(hashVariables, "b");
 	//	printf("b: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
 	//veriicando a matriz
-	*/
 	
 	  //freeTable(hashVariables);
       //freeTableFunction(hashFunction);

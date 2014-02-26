@@ -32,7 +32,7 @@ void* executeNode(treeNode* t){
 	int *intReturn = (int*)malloc(sizeof(int));
 	double *doubleReturn = (double*)malloc(sizeof(double));
 	char stringReturn[50];
-	char charReturn;
+	char *charReturn;
 	variable* var;
 	List* list;
 	char type[50];
@@ -44,6 +44,10 @@ void* executeNode(treeNode* t){
 	int c = convertValuesTreeNode(t->value,t->type);
 	printf("tipo convertido: %d\n",c);
 	switch (c) {
+	case 0: // verdadeiro - falso
+		if(!strcmp(t->value, "verdadeiro")) *intReturn = 1;
+		else *intReturn = 0;
+		return intReturn;
 	case 1: //inteiro
 		*intReturn = atoi(t->value);
 		return (void*)intReturn;
@@ -55,8 +59,10 @@ void* executeNode(treeNode* t){
 		 list = (lookupStringVariable(hashVariables, t->children[0]->value));
 		 var = (variable*) ( list->info );
 		 if(var->matrix) strcpy(globalVarName,  var->name);
+		 //inteiro ou logico
 		 if(var->type == 4 || var->type == 0){ var->value = (int*)(executeNode(t->children[1]) ) ; return; }
-		 //if(var->type == 1){ var->value = (char) (executeNode(t->children[1])); return; }
+		 //caracter
+	//	 if(var->type == 1){ var->value = (char*) (executeNode(t->children[1])); return; }
 		 if(var->type == 2){ strcpy(var->value, (char*)(executeNode(t->children[0]))); return; }
 		 if(var->type == 3){ var->value = (double*)executeNode(t->children[1]); return; }
 		 return;	
@@ -155,6 +161,7 @@ void* executeNode(treeNode* t){
 		
 		list = (List*)(lookupStringVariable(hashVariables, globalVarName)); 
 		var = (variable*) list->info;
+		printf("%s[%d]\n", var->name, var->nColumn);
 		if(var->dimension == 1){
 			aux = t->children[0];
 			for (i=0;i<var->nColumn;i++){
@@ -163,9 +170,7 @@ void* executeNode(treeNode* t){
 				}
 				aux = aux->next;
 			}
-			printf("aqui\n");	
 			printf("n = [%d,%d,%d,%d]\n", ((int*)(var->value))[0], ((int*)(var->value))[1] , ((int*)(var->value))[2], ((int*)(var->value))[3]);
-			
 			
 		} else { /*
 			aux = t->children[0];
@@ -206,28 +211,71 @@ void* executeNode(treeNode* t){
 		return;
 	case 14: // >
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) > (*((int*)executeNode(t->children[1])));
-		return intReturn; 
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) > (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) > (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
 	case 15: // <
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) < (*((int*)executeNode(t->children[1])));
-		return intReturn;
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) < (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) < (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
 	case 16: // <>
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) != (*((int*)executeNode(t->children[1])));
-		return intReturn;
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) != (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) != (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
 	case 17: // =
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) == (*((int*)executeNode(t->children[1])));
-		return intReturn;
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) == (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) == (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
 	case 18: // >=
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) >= (*((int*)executeNode(t->children[1])));
-		return intReturn;
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) >= (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) >= (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
 	case 19: //	<=
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) <= (*((int*)executeNode(t->children[1])));
-		return intReturn;
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) <= (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) <= (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
+	case 20: // e
+		*intReturn = *((int*)executeNode(t->children[0])) && *((int*)executeNode(t->children[1]));
+		return intReturn; 
+	case 21: // ou
+		*intReturn = *((int*)executeNode(t->children[0])) || *((int*)executeNode(t->children[1]));
+		return intReturn; 
+	
 	default: return;
 	
 	}
