@@ -162,7 +162,7 @@ void convertTypeReverseUpper(int type, char *aux)
   if(type==0)
     strcpy(aux, "INTEIRO");
   else if(type==1)
-    strcpy(aux, "CARACTER");
+    strcpy(aux, "CARACTERr");
   else if(type==2)
     strcpy(aux, "LITERAL");
   else if(type==3)

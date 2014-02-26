@@ -7,7 +7,7 @@ função soma(x: inteiro, y: inteiro) : inteiro
   y:=1;
   res:=verdadeiro;
   retorne x;
-fim
+  fim
   
 função soma2(x: inteiro, y: inteiro) : lógico
   res : lógico;

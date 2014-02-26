@@ -24,7 +24,6 @@ void setFunction(function *newFunc, char* name, int returnType, int arity, List*
     newFunc->arity = arity;
     newFunc->parameters = parameters;
     newFunc->functionDeclared = functionDeclared;
-    newFunc->functionTree = NULL;
   }
 }
 

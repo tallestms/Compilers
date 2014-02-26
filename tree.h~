@@ -9,7 +9,7 @@ struct treeNodeStruct {
   char type[50];
   char value[50];
   struct treeNodeStruct* children[4];
-  struct treeNodeStruct* next;
+  struct treeNodeStruct *next;
 };
 typedef struct treeNodeStruct treeNode;
 

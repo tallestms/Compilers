@@ -1,24 +1,36 @@
 algoritmo declaracao_de_variaveis;
 
+função soma(x: inteiro, y: inteiro, z: inteiro, w: inteiro) : inteiro
+  a:inteiro;
+  b:inteiro;
+início
+  a := 10;
+  b := 10;
+  retorne a;
+fim
+
+
 variáveis
 	a:inteiro;
-	b:lógico;
-	c:lógico;
+	//b:inteiro;
+	//c:lógico;
 	d:inteiro;
-	m:matriz[4][3] de inteiros;
-	n:matriz[4] de inteiros;
+	//m:matriz[4][3] de inteiros;
+	//n:matriz[4] de inteiros;
 fim-variáveis
 
 início
 	a := 10;
-	a := 10 + - a;
+	//a := 10 + - a;
 	//m := {[1,2,3,4],[4,3,2,1],[0,0,0,0]};
 	//n := [1,2,3,4];
 	//a := m[0][0] + m[1][1];
-	/*
-	a := 10;
+
+	//a := 10;
 	d := 20;
 	
+	a := soma(a, a, a, a);
+
 	/*
 	se (a = 10 e verdadeiro) então
 	  d := 10;
@@ -38,6 +50,7 @@ início
 	  fim-se
 	fim-se
 	*/
+
 	
 	//b := verdadeiro e falso;
 	//c := a>d e a<d e a>((a+d)*d) ou a<(a+d); //isso ta certo???
@@ -86,11 +99,16 @@ início
 		caso (4):
 			a := 4;
 			parar;
+		caso (5):
+			a := 5;
+			parar;
 		padrão:
 			a := 1;
+			a := 2;
 			parar;
 	fim-seleciona
 	*/
+	
 	//c := falso;
 	//b := a > d e d <= a;
 	//a := 1 + 2 * 3 * 4 + 5;

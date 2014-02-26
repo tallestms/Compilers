@@ -14,7 +14,7 @@ struct function_t
   int arity;
   int functionDeclared;
   List* parameters;
-  treeNode *functionTree;
+  treeNode *functionScope;
 };
 typedef struct function_t function;
 

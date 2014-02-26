@@ -2088,7 +2088,7 @@ Aqui sera feita analise de matriz com apenas um index
   List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   if(identifier_temp!=NULL)
   {
-    //treeNode* functionNode = ((function*)(identifier_temp->info))->functionTree;
+    treeNode* functionNode = ((function*)(identifier_temp->info))->functionTree;
     if(strcmp(currentIdentifier, "maximo")==0)
     {
 
