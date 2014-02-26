@@ -1,23 +1,31 @@
 algoritmo declaracao_de_variaveis;
 
 variáveis
-	a:inteiro;
-	b:lógico;
+	a : real;
+	b : real;
 	c:lógico;
-	d:inteiro;
-	m:matriz[4][3] de inteiros;
-	n:matriz[4] de inteiros;
+	//d:inteiro;
+	//m:matriz[4][3] de inteiros;
+	//n:matriz[4] de inteiros;
 fim-variáveis
 
 início
-	a := (10+2+(3+5));
+	a := 100.0;
+	//c := a > 5.0;
+	//m:={[1,2,3,4],[10,20,30,40],[100,200,300,400]};
+	//n := [1,2,3,4];
+	//a := n[0];
+	//a := 100.0e-2 - 2.0;
+	//b := -a * (3.0 + (3.5-1.0));
+	//a := b;
+	//a := 3;
 	//a := 10 + - a;
 	//m := {[1,2,3,4],[4,3,2,1],[0,0,0,0]};
 	//n := [1,2,3,4];
 	//a := m[0][0] + m[1][1];
 	/*
-	a := 10;
-	d := 20;
+	//a := 10;
+	//d := 20;
 	
 	/*
 	se (a = 10 e verdadeiro) então

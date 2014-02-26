@@ -8,7 +8,7 @@
 #include "tree.h"
 #include "aux.h"
 
-void executeTree(treeNode* t);
+void* executeTree(treeNode* t);
 void* executeNode(treeNode* t);
 
 #endif /*EXECUTE_H_*/

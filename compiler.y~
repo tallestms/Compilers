@@ -8,11 +8,12 @@
 #include "aux.h"
 #include "tree.h"
 #include "stack.h"
+#include "execute.h"
 
 #define MAX_HASH 1000
 #define MAX_VARIABLE 32 //maior nome de variavel
 #define MAX_FUNCTION 32 //maior nome de funcao
-#define MAX_LITERAL 203
+#define MAX_LITERAL 50
 #define IN_DEBUG_MODE 1
 
 extern char* yytext;
@@ -2145,7 +2146,7 @@ FATOR_CASE: SINALFATOR | token_numinteiro
   }
 };
 //Matriz de duas dimensões
-MATRIZ: token_abrec { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm = expressionNode;  expressionNode=NULL; printf("aqui0\n");} MATRIZ_VARIAS_COLUNAS {
+MATRIZ: token_abrec { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm = expressionNode;  expressionNode=NULL; } MATRIZ_VARIAS_COLUNAS {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
@@ -2194,12 +2195,9 @@ MATRIZ: token_abrec { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm 
  };
 MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;} BLOCO_MATRIZ 
 {
-	printf("aqui\n");
 	treeNode *auxList = tempDelimitadorNivelUm->children[0];
-	printf("aqui2\n");
 	while(auxList->next != NULL) auxList = auxList->next;
 	auxList->next = tempDelimitadorNivelZero;
-	printf("aqui3\n");
 countLine++;
 List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -2220,9 +2218,7 @@ List *identifier_temp = NULL;
 | token_abrecol 
 {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;} BLOCO_MATRIZ {
 	
-	printf("aqui4\n");
 	 tempDelimitadorNivelUm->children[0] = tempDelimitadorNivelZero;
-	printf("aqui5\n");
 	
 	countLine++;
 	List *identifier_temp = NULL;
@@ -2244,7 +2240,6 @@ token_fechacol ;
 
 BLOCO_MATRIZ: FATOR 
 {	
-	printf("oi\n");
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
@@ -2263,7 +2258,6 @@ BLOCO_MATRIZ: FATOR
 	//primeiro no da lista
 	tempDelimitadorNivelZero->children[0] = expressionNode;
 	expressionNode = NULL;
-	 printf("tchau\n");
 }
 	
 | BLOCO_MATRIZ token_virgula FATOR 
@@ -2444,19 +2438,28 @@ main(){
       hashVariables = createHash(MAX_HASH);
       hashFunction = createHash(MAX_HASH);
       createPrimitives();
-      yyparse();
-      
+      yyparse(); 
  
      if(IN_DEBUG_MODE){
   	treeNode* aux = globalTree;
 
-  	printNode(aux, 12, 0);
-	printf("\n ---------- \n");
+  	printNode(aux, 13, 0);
+	printf(" ---------- \n");
       }
 
+	//execute
+	executeTree(globalTree);
+ 		List* l = lookupStringVariable(hashVariables, "c");
+ 		printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		 l = lookupStringVariable(hashVariables, "a");
+ 		printf("a: %d\n", *( (double*) ( (variable*) l->info )->value) );
+ 	//	l = lookupStringVariable(hashVariables, "b");
+	//	printf("b: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
+	//veriicando a matriz
 	
-      freeTable(hashVariables);
-      freeTableFunction(hashFunction);
+	
+	  //freeTable(hashVariables);
+      //freeTableFunction(hashFunction);
 }
 
 /* rotina chamada por yyparse quando encontra erro */
