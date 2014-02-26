@@ -42,7 +42,7 @@ void* executeNode(treeNode* t){
 	int j1;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
-	printf("tipo convertido: %d\n",c);
+	//printf("tipo convertido: %d\n",c);
 	switch (c) {
 	case 0: // verdadeiro - falso
 		if(!strcmp(t->value, "verdadeiro")) *intReturn = 1;
@@ -166,11 +166,15 @@ void* executeNode(treeNode* t){
 			aux = t->children[0];
 			for (i=0;i<var->nColumn;i++){
 				if (var->type == 0 || var->type == 4) {
-					((int*)var->value)[i] = *((int*)(executeNode(aux)));
+					//int* auxiliar = ; 
+					*((int*)var->value + i*sizeof(int)) = *((int*)(executeNode(aux)));
+					//memset(var->value+i*sizeof(int), *((int*)(executeNode(aux))) ,1);
+					printf(">>>>>>%p -- %d\n",var->value+i*sizeof(int),*((int*)(executeNode(aux))));
 				}
 				aux = aux->next;
 			}
-			printf("n = [%d,%d,%d,%d]\n", ((int*)(var->value))[0], ((int*)(var->value))[1] , ((int*)(var->value))[2], ((int*)(var->value))[3]);
+			printf("n = [%p,%p,%p,%p]\n", ((int*)(var->value +0*sizeof(int) )), ((int*)(var->value +1*sizeof(int) )) , ((int*)(var->value +2*sizeof(int))), ((int*)(var->value+3*sizeof(int))));
+			printf("n = [%d,%d,%d,%d]\n", *((int*)(var->value +0*sizeof(int) )), *((int*)(var->value +1*sizeof(int) )) , *((int*)(var->value +2*sizeof(int))), *((int*)(var->value+3*sizeof(int))));
 			
 		} else { /*
 			aux = t->children[0];
@@ -199,7 +203,8 @@ void* executeNode(treeNode* t){
 		 	i = *((int*)executeNode(t->children[0]));
 		 	printf("i: %d\n",i);
 		 	*((int*) var->value) = 10;
-		 	*intReturn = *((int*) var->value);
+		 	intReturn = ((int*) var->value);
+		 	printf("%p<<<<<<\n",intReturn);
 	//	 	*intReturn = ((int*)( var->value ))[i];
 		 	return intReturn;
 		 }else{ /*
@@ -274,7 +279,12 @@ void* executeNode(treeNode* t){
 		return intReturn; 
 	case 21: // ou
 		*intReturn = *((int*)executeNode(t->children[0])) || *((int*)executeNode(t->children[1]));
-		return intReturn; 
+		return intReturn;
+	case 22:
+		while( *((int*)executeNode(t->children[0])) ){
+			executeTree(t->children[1]);
+		}
+		return;
 	
 	default: return;
 	

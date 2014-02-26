@@ -32,7 +32,7 @@ void* executeNode(treeNode* t){
 	int *intReturn = (int*)malloc(sizeof(int));
 	double *doubleReturn = (double*)malloc(sizeof(double));
 	char stringReturn[50];
-	char charReturn;
+	char *charReturn;
 	variable* var;
 	List* list;
 	char type[50];
@@ -42,8 +42,12 @@ void* executeNode(treeNode* t){
 	int j1;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
-	printf("tipo convertido: %d\n",c);
+	//printf("tipo convertido: %d\n",c);
 	switch (c) {
+	case 0: // verdadeiro - falso
+		if(!strcmp(t->value, "verdadeiro")) *intReturn = 1;
+		else *intReturn = 0;
+		return intReturn;
 	case 1: //inteiro
 		*intReturn = atoi(t->value);
 		return (void*)intReturn;
@@ -55,8 +59,10 @@ void* executeNode(treeNode* t){
 		 list = (lookupStringVariable(hashVariables, t->children[0]->value));
 		 var = (variable*) ( list->info );
 		 if(var->matrix) strcpy(globalVarName,  var->name);
+		 //inteiro ou logico
 		 if(var->type == 4 || var->type == 0){ var->value = (int*)(executeNode(t->children[1]) ) ; return; }
-		 //if(var->type == 1){ var->value = (char) (executeNode(t->children[1])); return; }
+		 //caracter
+	//	 if(var->type == 1){ var->value = (char*) (executeNode(t->children[1])); return; }
 		 if(var->type == 2){ strcpy(var->value, (char*)(executeNode(t->children[0]))); return; }
 		 if(var->type == 3){ var->value = (double*)executeNode(t->children[1]); return; }
 		 return;	
@@ -142,7 +148,7 @@ void* executeNode(treeNode* t){
 		 }
 		 if(var->type == 2){
 		 	strcpy(stringReturn,(char*)var->value);
-		 	return &stringReturn;
+		 //	return &stringReturn;
 		 }
 		 if(var->type == 3){
 		 	*doubleReturn = *((double*)var->value);
@@ -155,17 +161,20 @@ void* executeNode(treeNode* t){
 		
 		list = (List*)(lookupStringVariable(hashVariables, globalVarName)); 
 		var = (variable*) list->info;
+		printf("%s[%d]\n", var->name, var->nColumn);
 		if(var->dimension == 1){
 			aux = t->children[0];
 			for (i=0;i<var->nColumn;i++){
 				if (var->type == 0 || var->type == 4) {
-					((int*)var->value)[i] = *((int*)(executeNode(aux)));
+					//int* auxiliar = ; 
+					*((int*)var->value + i*sizeof(int)) = *((int*)(executeNode(aux)));
+					//memset(var->value+i*sizeof(int), *((int*)(executeNode(aux))) ,1);
+					printf(">>>>>>%p -- %d\n",var->value+i*sizeof(int),*((int*)(executeNode(aux))));
 				}
 				aux = aux->next;
 			}
-			printf("aqui\n");	
-			printf("n = [%d,%d,%d,%d]\n", ((int*)(var->value))[0], ((int*)(var->value))[1] , ((int*)(var->value))[2], ((int*)(var->value))[3]);
-			
+			printf("n = [%p,%p,%p,%p]\n", ((int*)(var->value +0*sizeof(int) )), ((int*)(var->value +1*sizeof(int) )) , ((int*)(var->value +2*sizeof(int))), ((int*)(var->value+3*sizeof(int))));
+			printf("n = [%d,%d,%d,%d]\n", *((int*)(var->value +0*sizeof(int) )), *((int*)(var->value +1*sizeof(int) )) , *((int*)(var->value +2*sizeof(int))), *((int*)(var->value+3*sizeof(int))));
 			
 		} else { /*
 			aux = t->children[0];
@@ -194,7 +203,8 @@ void* executeNode(treeNode* t){
 		 	i = *((int*)executeNode(t->children[0]));
 		 	printf("i: %d\n",i);
 		 	*((int*) var->value) = 10;
-		 	*intReturn = *((int*) var->value);
+		 	intReturn = ((int*) var->value);
+		 	printf("%p<<<<<<\n",intReturn);
 	//	 	*intReturn = ((int*)( var->value ))[i];
 		 	return intReturn;
 		 }else{ /*
@@ -206,28 +216,77 @@ void* executeNode(treeNode* t){
 		return;
 	case 14: // >
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) > (*((int*)executeNode(t->children[1])));
-		return intReturn; 
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) > (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) > (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
 	case 15: // <
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) < (*((int*)executeNode(t->children[1])));
-		return intReturn;
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) < (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) < (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
 	case 16: // <>
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) != (*((int*)executeNode(t->children[1])));
-		return intReturn;
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) != (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) != (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
 	case 17: // =
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) == (*((int*)executeNode(t->children[1])));
-		return intReturn;
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) == (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) == (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
 	case 18: // >=
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) >= (*((int*)executeNode(t->children[1])));
-		return intReturn;
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) >= (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) >= (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
 	case 19: //	<=
 		findType(t,type);
-		*intReturn = (*((int*)executeNode(t->children[0]))) <= (*((int*)executeNode(t->children[1])));
+		if(!strcmp(type, "INTEIRO")){
+			*intReturn = (*((int*)executeNode(t->children[0]))) <= (*((int*)executeNode(t->children[1])));
+			return intReturn; 
+		}
+		if(!strcmp(type, "REAL")){
+			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) <= (*((double*)executeNode(t->children[1]))) );
+			return intReturn; 
+		}
+	case 20: // e
+		*intReturn = *((int*)executeNode(t->children[0])) && *((int*)executeNode(t->children[1]));
+		return intReturn; 
+	case 21: // ou
+		*intReturn = *((int*)executeNode(t->children[0])) || *((int*)executeNode(t->children[1]));
 		return intReturn;
+	case 22:
+		printf("encontrado um comando\n");
+		while( *((int*)executeNode(t->children[0])) ){
+			executeTree(t->children[1]);
+		}
+		return;
+	
 	default: return;
 	
 	}

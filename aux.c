@@ -93,6 +93,7 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v, "<=")) return 19;
 	if(!strcmp(v, "e")) return 20;
 	if(!strcmp(v, "ou")) return 21;
+	if(!strcmp(v,"condicao-enquanto")) return 22;
 	return -1;
 	
 }

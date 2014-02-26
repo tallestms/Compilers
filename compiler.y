@@ -2651,10 +2651,12 @@ main()
 	//execute
 	executeTree(globalTree);
 	
- 		List* l = lookupStringVariable(hashVariables, "c");
- 		printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
- 		l = lookupStringVariable(hashVariables, "a");
+ 	//	List* l = lookupStringVariable(hashVariables, "c");
+ 	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		List* l = lookupStringVariable(hashVariables, "a");
  		printf("a: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		l = lookupStringVariable(hashVariables, "b");
+ 		printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	l = lookupStringVariable(hashVariables, "b");
 	//	printf("b: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
 	//veriicando a matriz

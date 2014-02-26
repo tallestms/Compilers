@@ -13,10 +13,10 @@ fim
 
 variáveis
 	a : inteiro;
-	//b : caracter;
-	//d:inteiro;
+	b : inteiro;
+	d:inteiro;
 	//b:inteiro;
-	c:lógico;
+	//c:lógico;
 	//a : real;
 	//b : real;
 	//c:real;
@@ -26,15 +26,15 @@ variáveis
 fim-variáveis
 
 início
-	a := 100;
+	//a := 100;
 	//a := -a * 2.0;
-	c := verdadeiro e verdadeiro;
+	//c := verdadeiro e verdadeiro;
 	//b := 'a';
 	//d := 20;
 	
 	//c := a > 5.0;
 	//m:={[1,2,3,4],[10,20,30,40],[100,200,300,400]};
-	//n := [1,2,3,4];
+	//n := [100,200,300,400];
 	
 	//a := n[0];
 	//a := 100.0e-2 - 2.0;
@@ -76,7 +76,20 @@ início
 	
 	//b := verdadeiro e falso;
 	//c := a>d e a<d e a>((a+d)*d) ou a<(a+d); //isso ta certo???
+	/*
+	a:=10;
+	b:=0;
+	d:=0;
 	
+	enquanto (a>2) faça
+		d:=0;
+		enquanto ( d < 2 ) faça
+			b:=b+1;
+			d := d+1;			
+		fim-enquanto
+		a:= a-1;
+	fim-enquanto
+	*/
 	/*
 	enquanto (d <> 0) faça
 		a := a + d;
