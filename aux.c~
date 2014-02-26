@@ -101,7 +101,7 @@ double stringRealToDouble(char s[50]){
 	int i;
 	parte1 = (char*)strtok(s,"e");
 	d = (double) atof(parte1);
-	parte2 = (char*)strtok(NULL,"e");
+	parte2 = strtok(NULL,"e");
 	if(parte2!=NULL){
 		if( *(parte2) == '-'){
 			i = atoi(parte2+1);					

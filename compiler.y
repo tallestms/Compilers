@@ -8,11 +8,12 @@
 #include "aux.h"
 #include "tree.h"
 #include "stack.h"
+#include "execute.h"
 
 #define MAX_HASH 1000
 #define MAX_VARIABLE 32 //maior nome de variavel
 #define MAX_FUNCTION 32 //maior nome de funcao
-#define MAX_LITERAL 203
+#define MAX_LITERAL 50
 #define IN_DEBUG_MODE 1
 
 extern char* yytext;
@@ -43,11 +44,11 @@ int dimension, dim1, dim2;
 List* currentParameters = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
-char limitString[203]; //limitador de tamanho de string no programa
+char limitString[50]; //limitador de tamanho de string no programa
 int pararCase = 1;
 
 
-Stack* stackParetesis = NULL;
+Stack* stackParentesis = NULL;
 Stack* stackGlobal = NULL;
 Stack* stackIfThenElse = NULL;
 
@@ -805,11 +806,7 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
 }
 | /*Empty*/;  
 
-/*
- *
- *Tarefa: Fazer funcoes primitivas.
- *
- */
+
 COMANDO:
 token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
 token_imprimaln token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
@@ -2038,7 +2035,28 @@ Aqui sera feita analise de matriz com apenas um index
     }
   }
 }
-| token_abrep EXPR token_fechap  //TODO - parentesis 
+| token_abrep {
+	//crio o no parentesis
+	treeNode *aux = newTreeNode();
+	fillTreeNode(aux,"()", "PARENTESIS");
+	if(expressionNode==NULL){
+		expressionNode = aux;
+	}else{
+		expressionNode->children[1] = aux;
+	}
+	//coloco o nó atual de expressão na pilha e seto para null
+	stackParentesis = addNodeIntoStack(expressionNode, stackParentesis);
+	expressionNode = NULL;
+
+} EXPR token_fechap {
+	treeNode* aux = (treeNode*) popStack(stackParentesis);
+	if(aux->children[0] == NULL){
+		aux->children[0] = expressionNode;
+	} else {
+		aux->children[1]->children[0] = expressionNode; 
+	}
+	expressionNode = aux;	
+} 
 | token_verdadeiro 
 {
   if(in_function!=1)
@@ -2326,7 +2344,7 @@ FATOR_CASE: SINALFATOR | token_numinteiro
   }
 };
 //Matriz de duas dimensões
-MATRIZ: token_abrec { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm = expressionNode;  expressionNode=NULL; printf("aqui0\n");} MATRIZ_VARIAS_COLUNAS {
+MATRIZ: token_abrec { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm = expressionNode;  expressionNode=NULL; } MATRIZ_VARIAS_COLUNAS {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
 		identifier_temp = lookupStringVariable(hashVariables, currentVariable);
@@ -2375,12 +2393,9 @@ MATRIZ: token_abrec { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm 
  };
 MATRIZ_VARIAS_COLUNAS: MATRIZ_VARIAS_COLUNAS token_virgula token_abrecol {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;} BLOCO_MATRIZ 
 {
-	printf("aqui\n");
 	treeNode *auxList = tempDelimitadorNivelUm->children[0];
-	printf("aqui2\n");
 	while(auxList->next != NULL) auxList = auxList->next;
 	auxList->next = tempDelimitadorNivelZero;
-	printf("aqui3\n");
 countLine++;
 List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -2400,6 +2415,11 @@ List *identifier_temp = NULL;
 }token_fechacol
 | token_abrecol 
 {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;} BLOCO_MATRIZ {
+
+	
+	 tempDelimitadorNivelUm->children[0] = tempDelimitadorNivelZero;
+	
+
 	countLine++;
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -2438,7 +2458,6 @@ BLOCO_MATRIZ: FATOR
 	//primeiro no da lista
 	tempDelimitadorNivelZero->children[0] = expressionNode;
 	expressionNode = NULL;
-	 printf("tchau\n");
 }
 	
 | BLOCO_MATRIZ token_virgula FATOR 
@@ -2619,19 +2638,30 @@ main()
       hashVariables = createHash(MAX_HASH);
       hashFunction = createHash(MAX_HASH);
       createPrimitives();
-      yyparse();
-      
+      yyparse(); 
  
      if(IN_DEBUG_MODE){
   	treeNode* aux = globalTree;
 
   	printNode(aux, 13, 0);
 	printf("\n ---------- \n");
+	printf(" ---------- \n");
       }
 
+	//execute
+	//executeTree(globalTree);
+	/*
+ 		List* l = lookupStringVariable(hashVariables, "c");
+ 		printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		 l = lookupStringVariable(hashVariables, "a");
+ 		printf("a: %f\n", *( (double*) ( (variable*) l->info )->value) );
+ 	//	l = lookupStringVariable(hashVariables, "b");
+	//	printf("b: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
+	//veriicando a matriz
+	*/
 	
-      freeTable(hashVariables);
-      freeTableFunction(hashFunction);
+	  //freeTable(hashVariables);
+      //freeTableFunction(hashFunction);
 }
 
 /* rotina chamada por yyparse quando encontra erro */

@@ -664,7 +664,7 @@ char *yytext;
 
 #define MAX_VARIABLE 32 //maior nome de variavel
 #define MAX_FUNCTION 32 //maior nome de funcao
-#define MAX_LITERAL 203 //maio string
+#define MAX_LITERAL 50 //maio string
 
 int nLine=1;
 int in_function = 0;

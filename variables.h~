@@ -50,9 +50,16 @@ variable* createVariable();
  * Output: nada
  */
 void setVariable(variable* var, char* name, char* scope, int type, int matrix, int dimension, int column, int line);
+<<<<<<< HEAD
 int convertType(char *type);
 int convertTypeRelation(char *type);
 void convertTypeReverse(int type, char *aux);
 void convertTypeReverseUpper(int type, char *aux)
 
+=======
+void setVariableValue(variable *var, void* value);
+int convertType(char *type);
+int convertTypeRelation(char *type);
+void convertTypeReverse(int type, char *aux);
+>>>>>>> 94d6bac5b59666a1365122c5cf93e61428a67e58
 #endif /* VARIABLES_H_ */

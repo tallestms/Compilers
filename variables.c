@@ -10,6 +10,7 @@ variable* createVariable()
     return newVar;
 }
 
+
 void setVariable(variable* var, char* name, char* scope, int type, int matrix, int dimension, int column, int line)
 {
   if (var == NULL)
@@ -47,7 +48,7 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
       }    
       if(type == 2) //tipo literal 
       {
-	char *value = (char*) malloc(203*sizeof(char)); //200 e o limite do literal
+	char *value = (char*) malloc(50*sizeof(char)); //45 e o limite do literal
 	var->value = value;
       }
       if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
@@ -93,9 +94,9 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
 	  int *value = (int*) malloc (line*column*sizeof(int));
 	  var->value = value;
 	}     
-	if(type == 3) //reais serao convertidos em float 
+	if(type == 3) //reais serao convertidos em double 
 	{
-	  float *value = (float*) malloc(line*column*sizeof(float));
+	  double *value = (double*) malloc(line*column*sizeof(double));
 	  var->value = value;
 	}
 	if(type == 1) //tipo caracter
@@ -105,7 +106,7 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
 	}    
 	if(type == 2) //tipo literal 
 	{
-	  char *value = (char*) malloc(line*column*203*sizeof(char)); //200 e o limite do literal
+	  char *value = (char*) malloc(line*column*50*sizeof(char)); //45 e o limite do literal
 	  var->value = value;
 	}
 	if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
