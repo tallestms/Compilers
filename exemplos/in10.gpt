@@ -24,7 +24,8 @@ fim
 */
 
 variáveis
-	a:inteiro;
+	a : inteiro;
+	b : inteiro;
 	d:inteiro;
 	//b:inteiro;
 	//c:lógico;
@@ -32,9 +33,10 @@ variáveis
 	//b : real;
 	//c : lógico;
 	//z : lógico;
+	//c:real;
 	//d:inteiro;
 	//m:matriz[4][3] de inteiros;
-	//n:matriz[4] de inteiros;
+	n:matriz[4] de inteiros;
 fim-variáveis
 
 início
@@ -44,11 +46,18 @@ início
 	//a := soma2(d*a+d*d*a,a+d*a*d*d);
 	//z := falso;
 	//c := compara(3*a>d,c e (c ou c) ou z);
+	//a := 100;
+	//a := -a * 2.0;
+	//c := verdadeiro e verdadeiro;
+	//b := 'a';
+	//d := 20;
 	
 	//c := a > 5.0;
 	//m:={[1,2,3,4],[10,20,30,40],[100,200,300,400]};
-	//n := [1,2,3,4];
-	//a := n[0];
+	//m[0][0] = 20;
+	//n := [100,200,300,400];
+
+	//a := m[3][2];
 	//a := 100.0e-2 - 2.0;
 	//b := -a * (3.0 + (3.5-1.0));
 	//a := b;
@@ -65,6 +74,32 @@ início
 	
 	//a := soma(a, a, a, a);
 
+	a:=10;
+	b:=0;
+	//d:=0;
+	
+	seleciona (a)
+		caso (1):
+			b := 10;
+			parar;
+		caso (2):
+			b := 20;
+			parar;
+		caso (3):
+			b:=30;
+		caso (4):
+			b:=40;
+			parar;
+		padrão:
+			b:=50;
+			parar;
+	fim-seleciona
+	
+	/*
+	para (a de d até 1 passo -1) faça
+		a := a * 10;
+	fim-para
+	*/
 	/*
 	se (a = 10 e verdadeiro) então
 	  d := 10;
@@ -85,10 +120,30 @@ início
 	fim-se
 	*/
 
-	
+		
 	//b := verdadeiro e falso;
 	//c := a>d e a<d e a>((a+d)*d) ou a<(a+d); //isso ta certo???
 	
+	/*
+	faça
+		a:=a-1;
+		d:=0;
+		faça
+			b:=b+2;
+			d:=d+1;
+		;enquanto(d<2);
+	;enquanto(a>0);
+	*/
+	/*
+	enquanto (a>2) faça
+		d:=0;
+		enquanto ( d < 2 ) faça
+			b:=b+1;
+			d := d+1;			
+		fim-enquanto
+		a:= a-1;
+	fim-enquanto
+	*/
 	/*
 	enquanto (d <> 0) faça
 		a := a + d;

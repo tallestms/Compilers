@@ -570,6 +570,8 @@ BLOCO_SWITCH:  BLOCO_SWITCH_AUX
     
       //if(aux->children[2] == NULL)
    // aux->children[1]->next = caseNodeAux;
+  //    if(aux->children[2] == NULL)
+  //  aux->children[1]->next = caseNodeAux;
     
   commandNode = globalTree;
   globalTree = ((treeNode*)(popStack(stackGlobal)));
@@ -1329,7 +1331,7 @@ token_ate FATOR
   fillTreeNode(idAux, currentVariable, "IDENTIFICADOR");
   
   attributionNode = newTreeNode();
-  fillTreeNode(attributionNode,":=","ATRIBUICAO");
+  fillTreeNode(attributionNode,"=","ATRIBUICAO");
   
   attributionNode->children[0] = idAux;
   attributionNode->children[1] = expressionNode;
@@ -2764,16 +2766,17 @@ main()
       }
 
 	//execute
-	//executeTree(globalTree);
-	/*
- 		List* l = lookupStringVariable(hashVariables, "c");
- 		printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
- 		 l = lookupStringVariable(hashVariables, "a");
- 		printf("a: %f\n", *( (double*) ( (variable*) l->info )->value) );
+	executeTree(globalTree);
+	
+ 	//	List* l = lookupStringVariable(hashVariables, "c");
+ 	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		List* l = lookupStringVariable(hashVariables, "a");
+ 		printf("a: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		l = lookupStringVariable(hashVariables, "b");
+ 		printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	l = lookupStringVariable(hashVariables, "b");
 	//	printf("b: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
 	//veriicando a matriz
-	*/
 	
 	  //freeTable(hashVariables);
       //freeTableFunction(hashFunction);
