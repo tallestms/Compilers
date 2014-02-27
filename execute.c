@@ -58,7 +58,7 @@ void* executeNode(treeNode* t){
 	case 3: // :=
 		 list = (lookupStringVariable(hashVariables, t->children[0]->value));
 		 var = (variable*) ( list->info );
-		 if(var->matrix) strcpy(globalVarName,  var->name);
+		 if(var->matrix) { strcpy(globalVarName,  var->name); executeNode(t->children[1]); return; }
 		 //inteiro ou logico
 		 if(var->type == 4 || var->type == 0){ var->value = (int*)(executeNode(t->children[1]) ) ; return; }
 		 //caracter
@@ -167,7 +167,7 @@ void* executeNode(treeNode* t){
 			for (i=0;i<var->nColumn;i++){
 				if (var->type == 0 || var->type == 4) {
 					//int* auxiliar = ; 
-					*((int*)var->value + i*sizeof(int)) = *((int*)(executeNode(aux)));
+					((int*)var->value)[i] = *((int*)(executeNode(aux)));
 					//memset(var->value+i*sizeof(int), *((int*)(executeNode(aux))) ,1);
 					printf(">>>>>>%p -- %d\n",var->value+i*sizeof(int),*((int*)(executeNode(aux))));
 				}
@@ -202,9 +202,9 @@ void* executeNode(treeNode* t){
 		 if(var->dimension == 1){
 		 	i = *((int*)executeNode(t->children[0]));
 		 	printf("i: %d\n",i);
-		 	*((int*) var->value) = 10;
-		 	intReturn = ((int*) var->value);
-		 	printf("%p<<<<<<\n",intReturn);
+		 	//*((int*) var->value) = 10;
+		 	*intReturn = ((int*) var->value)[i];
+		 	printf("%d\n",*intReturn);
 	//	 	*intReturn = ((int*)( var->value ))[i];
 		 	return intReturn;
 		 }else{ /*
