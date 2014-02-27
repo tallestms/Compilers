@@ -617,11 +617,11 @@ REPETICAO_COMANDO: COMANDO | REPETICAO_COMANDO COMANDO;
 BLOCO_IMPRIMA: FATOR 
 BLOCO_SWITCH:  BLOCO_SWITCH_AUX
 {
-  treeNode* aux = caseNode; //Ponteiro que sera utilizado no final desta expressao
+  //treeNode* aux = caseNode; //Ponteiro que sera utilizado no final desta expressao
   treeNode* caseNodeAux = newTreeNode();
     
-      if(aux->children[2] == NULL)
-    aux->children[1]->next = caseNodeAux;
+  //    if(aux->children[2] == NULL)
+  //  aux->children[1]->next = caseNodeAux;
     
   commandNode = globalTree;
   globalTree = ((treeNode*)(popStack(stackGlobal)));
@@ -1247,7 +1247,7 @@ token_enquanto token_abrep EXPR
 {  
     //cria o nó da arvore de condicao
     conditionNode = newTreeNode();
-    fillTreeNode(conditionNode,"condicao-enquanto","CONDICIONAL");
+    fillTreeNode(conditionNode,"condicao-faca-enquanto","CONDICIONAL");
      conditionNode->children[0] = expressionNode;
      conditionNode->children[1] = commandNode;
      addConditionNodeIntoGlobalTree();
@@ -2655,8 +2655,8 @@ main()
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
  		List* l = lookupStringVariable(hashVariables, "a");
  		printf("a: %d\n", *( (int*) ( (variable*) l->info )->value) );
- 	//	l = lookupStringVariable(hashVariables, "b");
- 	//	printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		l = lookupStringVariable(hashVariables, "b");
+ 		printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	l = lookupStringVariable(hashVariables, "b");
 	//	printf("b: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
 	//veriicando a matriz
