@@ -126,4 +126,14 @@ double stringRealToDouble(char s[50]){
 	return d;
 }
 
-
+int findArgumentType(int argumentNumber, List* aux)
+{
+  int i;
+  List* aux2 = aux; 
+  for(i = 1; i < argumentNumber; i++)
+  {
+    aux2 = aux2->next;
+  }
+  return ((int)(aux2->info));
+  
+}
