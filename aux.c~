@@ -101,7 +101,7 @@ double stringRealToDouble(char s[50]){
 	int i;
 	parte1 = (char*)strtok(s,"e");
 	d = (double) atof(parte1);
-	parte2 = strtok(NULL,"e");
+	parte2 = (char*)strtok(NULL,"e");
 	if(parte2!=NULL){
 		if( *(parte2) == '-'){
 			i = atoi(parte2+1);					
@@ -116,4 +116,15 @@ double stringRealToDouble(char s[50]){
 	return d;
 }
 
-
+int findArgumentType(int argumentNumber, List* aux)
+{
+  int i;
+  List* aux2 = aux; 
+  for(i = 1; i < argumentNumber; i++)
+  {
+    printf("porrA\n");
+    aux2 = aux2->next;
+  }
+  return ((int)(aux2->info));
+  
+}
