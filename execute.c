@@ -161,20 +161,16 @@ void* executeNode(treeNode* t){
 		
 		list = (List*)(lookupStringVariable(hashVariables, globalVarName)); 
 		var = (variable*) list->info;
-		printf("%s[%d]\n", var->name, var->nColumn);
 		if(var->dimension == 1){
 			aux = t->children[0];
 			for (i=0;i<var->nColumn;i++){
 				if (var->type == 0 || var->type == 4) {
-					//int* auxiliar = ; 
 					((int*)var->value)[i] = *((int*)(executeNode(aux)));
-					//memset(var->value+i*sizeof(int), *((int*)(executeNode(aux))) ,1);
-					printf(">>>>>>%p -- %d\n",var->value+i*sizeof(int),*((int*)(executeNode(aux))));
 				}
 				aux = aux->next;
 			}
-			printf("n = [%p,%p,%p,%p]\n", ((int*)(var->value +0*sizeof(int) )), ((int*)(var->value +1*sizeof(int) )) , ((int*)(var->value +2*sizeof(int))), ((int*)(var->value+3*sizeof(int))));
-			printf("n = [%d,%d,%d,%d]\n", *((int*)(var->value +0*sizeof(int) )), *((int*)(var->value +1*sizeof(int) )) , *((int*)(var->value +2*sizeof(int))), *((int*)(var->value+3*sizeof(int))));
+			//printf("n = [%p,%p,%p,%p]\n", ((int*)(var->value +0*sizeof(int) )), ((int*)(var->value +1*sizeof(int) )) , ((int*)(var->value +2*sizeof(int))), ((int*)(var->value+3*sizeof(int))));
+			//printf("n = [%d,%d,%d,%d]\n", *((int*)(var->value +0*sizeof(int) )), *((int*)(var->value +1*sizeof(int) )) , *((int*)(var->value +2*sizeof(int))), *((int*)(var->value+3*sizeof(int))));
 			
 		} else { 
 			aux = t->children[0];
@@ -298,10 +294,13 @@ void* executeNode(treeNode* t){
 			executeTree(t->children[1]);
 		}
 		return;
-	case 26: //para TODO
+	case 26: //para
 		//executa condição inicial
-		*((int*)executeNode(t->children[0]));
-		for (;;);	
+		executeNode(t->children[0]);
+		while ( ! ( *((int*)executeNode(t->children[1])) ) ){
+			executeTree(t->children[3]);
+			executeNode(t->children[2]);
+		}	
 		return;
 	case 27: //seleciona
 		list = (List*)(lookupStringVariable(hashVariables, t->children[0]->value)); 
@@ -317,7 +316,6 @@ void* executeNode(treeNode* t){
 		 		executeTree(cases->children[1]);
 		 	}
 			while(cases != NULL && cases->children[2]==NULL){
-				printf("aqui\n");		 	
 		 		cases = cases->next;
 		 		
 				if(cases){

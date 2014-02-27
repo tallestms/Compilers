@@ -36,12 +36,11 @@ variáveis
 	//c:real;
 	//d:inteiro;
 	//m:matriz[4][3] de inteiros;
-	n:matriz[4] de inteiros;
+	//n:matriz[4] de inteiros;
 fim-variáveis
 
 início
-	a := 10;
-	d := 20;
+
 	//c := verdadeiro;
 	//a := soma2(d*a+d*d*a,a+d*a*d*d);
 	//z := falso;
@@ -166,9 +165,10 @@ início
 	;enquanto (a <> 0);
 	*/
 	
-	
+	a := 10;
+	d := 5;	
 	para (a de d até 1 passo -1) faça
-		a := a * 10;
+		b := b+1;
 	fim-para
 	
 	//enquanto ( a <> 0 ) faça

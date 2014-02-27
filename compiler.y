@@ -1079,7 +1079,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       fillTreeNode(attributionNode,yytext,"ATRIBUICAO");
       //cria o nó do identificador e insere a esquerda da atribuição
       treeNode *idAux = newTreeNode();
-      fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+      fillTreeNode(idAux, currentIdentifier, "VARIAVEL");
       attributionNode->children[0] = idAux;
       //seta para null o nó de expressão (que será construído na parte de expressão)
       expressionNode = NULL;
@@ -1313,7 +1313,7 @@ token_abrep {strcpy(identifiers,"\0"); currentRelationPos=0;} token_identificado
   fillTreeNode(attributionNode,":=","ATRIBUICAO");
   
   treeNode *idAux = newTreeNode();
-  fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+  fillTreeNode(idAux, currentIdentifier, "VARIAVEL");
   //printf("%s", currentIdentifier);
   strcpy(currentVariable, currentIdentifier);
   attributionNode->children[0] = idAux;
@@ -1328,7 +1328,7 @@ token_de FATOR
 token_ate FATOR
 {
   treeNode *idAux = newTreeNode();
-  fillTreeNode(idAux, currentVariable, "IDENTIFICADOR");
+  fillTreeNode(idAux, currentVariable, "VARIAVEL");
   
   attributionNode = newTreeNode();
   fillTreeNode(attributionNode,"=","COMPARACAO");
@@ -1346,13 +1346,13 @@ token_passo FATOR
   fillTreeNode(passoAux, "+", "SOMA");
   
   treeNode *idAux1 = newTreeNode();
-  fillTreeNode(idAux1, currentVariable, "IDENTIFICADOR");
+  fillTreeNode(idAux1, currentVariable, "VARIAVEL");
  
   attributionNode = newTreeNode();
   fillTreeNode(attributionNode,":=","ATRIBUICAO");
 
   treeNode *idAux2 = newTreeNode();
-  fillTreeNode(idAux2, currentVariable, "IDENTIFICADOR");
+  fillTreeNode(idAux2, currentVariable, "VARIAVEL");
   
   passoAux->children[0] = idAux1;
   passoAux->children[1] = expressionNode;
@@ -1362,7 +1362,7 @@ token_passo FATOR
   
  /* 
   treeNode *idAux = newTreeNode();
-  fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+  fillTreeNode(idAux, currentIdentifier, "VARIAVEL");
   
   attributionNode = newTreeNode();
   fillTreeNode(attributionNode,":=","ATRIBUICAO");
@@ -1461,7 +1461,7 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
     fillTreeNode(conditionNode,"condicao-seleciona","CONDICIONAL");
     
     treeNode* idAux = newTreeNode();
-    fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+    fillTreeNode(idAux, currentIdentifier, "VARIAVEL");
     
     conditionNode->children[0] = idAux;
     addConditionNodeIntoGlobalTree();
@@ -2760,7 +2760,7 @@ main()
      if(IN_DEBUG_MODE){
   	treeNode* aux = globalTree;
 
-  	printNode(aux, 12, 0);
+  	printNode(aux, 13, 0);
 	printf("\n ---------- \n");
 	printf(" ---------- \n");
       }
