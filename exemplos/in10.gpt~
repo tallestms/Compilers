@@ -17,8 +17,8 @@ variáveis
 	d:inteiro;
 	//b:inteiro;
 	//c:lógico;
-	//a : real;
-	//b : real;
+	y : real;
+	//w : real;
 	//c:real;
 	//d:inteiro;
 	//m:matriz[4][3] de inteiros;
@@ -54,10 +54,11 @@ início
 	
 	//a := soma(a, a, a, a);
 
-	a:=6;
+	a:=10;
 	b:=0;
 	//d:=0;
 	
+	/*
 	seleciona (a)
 		caso (1):
 			b := 10;
@@ -74,7 +75,7 @@ início
 			b:=50;
 			parar;
 	fim-seleciona
-	
+	/*
 	/*
 	para (a de d até 1 passo -1) faça
 		a := a * 10;
