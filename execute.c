@@ -1,4 +1,5 @@
 #include <string.h>
+#include <math.h>
 #include "execute.h"
 #include "variables.h"
 #include "hash.h"
@@ -325,7 +326,18 @@ void* executeNode(treeNode* t){
 		 	
 		 }
 		 return;
-		
+	case 28: // ^
+		//Percorre os filhos a esquerda para identificar o tipo que só pode ser inteiro ou float
+		findType(t, type);
+		if(!strcmp(type,"INTEIRO") ){
+			*doubleReturn = pow ( *((int*)executeNode(t->children[0])) , *((int*)executeNode(t->children[1])) ); 
+		 	return doubleReturn;
+		}
+		if(!strcmp(type,"REAL")){
+			*doubleReturn = pow ( *((double*)executeNode(t->children[0])) , *((double*)executeNode(t->children[1])) ); 
+		 	return doubleReturn;
+		}
+		 return;
 	default: return;
 	
 	}

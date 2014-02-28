@@ -74,6 +74,7 @@ Stack* addNodeIntoStack(treeNode *info, Stack* aux){
 	}
 }
 
+treeNode* swapZeroMenor = NULL;
 treeNode* swapUmZero = NULL;
 treeNode* swapDoisUm = NULL;
 treeNode* swapTresDois = NULL;
@@ -168,6 +169,29 @@ void operadorDeNivelZero(char tipo[10]){
 		fillTreeNode(aux, tipo, "OPERADOR-N-0");
 		aux->children[0] = expressionNode;
 		expressionNode = aux;
+	}
+}
+
+void operadorDeMenorNivel(char tipo[10]){
+	if (!strcmp(expressionNode->type,"OPERADOR-N-0") || !strcmp(expressionNode->type,"OPERADOR-N-1") || !strcmp(expressionNode->type,"OPERADOR-N-2") || !strcmp(expressionNode->type,"OPERADOR-N-3")){
+		swapZeroMenor = expressionNode;
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo, "OPERADOR-M-N");
+		aux->children[0] = expressionNode->children[1];
+		expressionNode->children[1] = aux;
+		expressionNode = aux;
+	}else{
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo, "OPERADOR-M-N");
+		aux->children[0] = expressionNode;
+		expressionNode = aux;
+	}
+}
+
+void swapoutZeroMenor(){
+	if (swapZeroMenor!=NULL){
+		expressionNode = swapZeroMenor;
+		swapZeroMenor=NULL;
 	}
 }
 
@@ -309,6 +333,7 @@ void delimitadorNivelUm(){
 %token token_variavel_caracter
 %token token_string
 %token token_identificador
+%token token_circ
 
 %start PROG
 
@@ -1766,7 +1791,10 @@ TERMO: MATRIZ | FATOR
 //Módulo
 | TERMO token_mod { operadorDeNivelZero("%"); } FATOR { swapoutUmZero(); }
 //Multiplicar
-| TERMO token_vezes { operadorDeNivelZero("*"); } FATOR { swapoutUmZero(); };
+| TERMO token_vezes { operadorDeNivelZero("*"); } FATOR { swapoutUmZero(); }
+//Pow
+| TERMO token_circ { operadorDeMenorNivel("^"); } FATOR { swapoutZeroMenor(); };
+
 FATOR: SINALFATOR
 | token_numinteiro
 {
@@ -2771,9 +2799,9 @@ main()
  	//	List* l = lookupStringVariable(hashVariables, "c");
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
  		List* l = lookupStringVariable(hashVariables, "a");
- 		printf("a: %d\n", *( (int*) ( (variable*) l->info )->value) );
- 		l = lookupStringVariable(hashVariables, "b");
- 		printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		printf("a: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
+ 	//	l = lookupStringVariable(hashVariables, "b");
+ 	//	printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	l = lookupStringVariable(hashVariables, "b");
 	//	printf("b: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
 	//veriicando a matriz

@@ -24,7 +24,7 @@ fim
 */
 
 variáveis
-	a : inteiro;
+	a : real;
 	b : inteiro;
 	d:inteiro;
 	//b:inteiro;
@@ -40,6 +40,8 @@ variáveis
 fim-variáveis
 
 início
+
+	a := 1 + 2 ^ (3 * 4);
 
 	//c := verdadeiro;
 	//a := soma2(d*a+d*d*a,a+d*a*d*d);
@@ -73,8 +75,8 @@ início
 	
 	//a := soma(a, a, a, a);
 
-	a:=10;
-	b:=0;
+	//a:=10;
+	//b:=0;
 	//d:=0;
 	
 	/*
@@ -165,11 +167,12 @@ início
 	;enquanto (a <> 0);
 	*/
 	
-	a := 10;
-	d := 5;	
-	para (a de d até 1 passo -1) faça
-		b := b+1;
-	fim-para
+	//a := 10;
+	//d := 5;	
+	//b:=0;
+	//para (a de d até 1 passo -1) faça
+	//	b := b+1;
+	//fim-para
 	
 	//enquanto ( a <> 0 ) faça
 	//    a := a + 10 + 20;

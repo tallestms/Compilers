@@ -99,6 +99,7 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v,"condicao-se")) return 25;
 	if(!strcmp(v,"condicao-para")) return 26; //TODO
 	if(!strcmp(v,"condicao-seleciona")) return 27;
+	if(!strcmp(v, "^")) return 28;
 	
 	return -1;
 	
