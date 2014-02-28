@@ -1,13 +1,14 @@
 algoritmo declaracao_de_variaveis;
 
-/*
-função soma2(x: inteiro, y: inteiro) : inteiro
+função soma2(x: inteiro, y: inteiro, z: inteiro, w: inteiro, o: inteiro, p: inteiro):inteiro
   a:inteiro;
 início
   a := x + y;
   retorne a;
+  a := z + w;
+  retorne a;
 fim
-*/
+
 /*
 função soma4(x: inteiro, y: inteiro, z: inteiro, w: inteiro) : inteiro
   a:inteiro;
@@ -26,7 +27,7 @@ fim
 
 variáveis
 
-	a : real;
+	a : inteiro;
 	//b : inteiro;
 	//d : inteiro;
 	//b : inteiro;
@@ -42,10 +43,10 @@ variáveis
 	//z : lógico;
 	//c:real;
 	//d:inteiro;
-	m:matriz[2][2] de literais;
-	n:matriz[2] de literais;
-	ch : caracter;
-	str : literal;
+	//m:matriz[2][2] de literais;
+	//n:matriz[2] de literais;
+	//ch : caracter;
+	//str : literal;
 fim-variáveis
 
 início
@@ -55,7 +56,7 @@ início
 	//m[1][0] := 5.04;
 	//n := ["casa","cama"];
 	//m := {["casa","cama"],["carro","caro"]};
-	str := "teste";
+	//str := "teste";
 	//str := m[1][1];
 	//ch := 'J';
 	//m[0][1] := 1030;
@@ -97,7 +98,8 @@ início
 	//a := 10;
 	//d := 20;
 	
-	//a := soma2(a, a);
+	a := 10;
+	a:=a+soma2(a*(a+a),a,a,a,a*a,a+a+a)*a;
 
 	//a:=10;
 	//b:=0;

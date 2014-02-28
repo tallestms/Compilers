@@ -21,4 +21,6 @@ void fillTreeNode(treeNode *arv, char value[50], char type[50]);
 
 void printNode(treeNode* t, int type, int nivel);
 
+void copyTreeNodes(treeNode* a, treeNode* b);
+
 #endif /* TREE_H_ */

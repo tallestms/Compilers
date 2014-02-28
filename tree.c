@@ -57,3 +57,14 @@ void printNode(treeNode* t, int type, int nivel){
 	}
 
 }
+
+void copyTreeNodes(treeNode* a, treeNode* b)
+{
+  strcpy(a->type, b->type);
+  strcpy(a->value, b->value);
+  a->children[0] = b->children[0];
+  a->children[1] = b->children[1];
+  a->children[2] = b->children[2];
+  a->children[3] = b->children[3];
+  //a->next = b->next;
+}

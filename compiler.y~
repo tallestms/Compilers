@@ -51,6 +51,7 @@ int argumentNumber = 0;
 Stack* stackParentesis = NULL;
 Stack* stackGlobal = NULL;
 Stack* stackIfThenElse = NULL;
+Stack* stackExpressionNode = NULL;
 
 treeNode* globalTree = NULL;
 treeNode* expressionNode = NULL;
@@ -489,7 +490,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
 	treeNode *returnNode = newTreeNode();
 	fillTreeNode(returnNode, "RETORNO VARIAVEL", "VOID");
 	functionNode->children[0] = returnNode;
-	addNodeIntoGlobalTree(functionNode);
+	//addNodeIntoGlobalTree(functionNode);
 	
 	commandNode = newTreeNode();
 	fillTreeNode(commandNode, "comando-funcao", "COMANDO");
@@ -549,7 +550,7 @@ FUNCAO
 	treeNode *returnNode = newTreeNode();
 	fillTreeNode(returnNode, "RETORNO VARIAVEL","VOID");
 	functionNode->children[0] = returnNode;
-	addNodeIntoGlobalTree(functionNode);
+	//addNodeIntoGlobalTree(functionNode);
 	
 	commandNode = newTreeNode();
 	fillTreeNode(commandNode, "comando-funcao", "COMANDO");
@@ -728,7 +729,7 @@ VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS
       treeNode *functionVariableNode = newTreeNode();
       char upperType[10];
       convertTypeReverseUpper(intVarType, upperType);
-      fillTreeNode(functionVariableNode, currentIdentifier,upperType);
+      fillTreeNode(functionVariableNode, varName,upperType);
       if(functionNode->children[1] == NULL)
 	functionNode->children[1] = functionVariableNode;
       else
@@ -770,7 +771,7 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
       treeNode *functionVariableNode = newTreeNode();
       char upperType[10];
       convertTypeReverseUpper(intVarType, upperType);
-      fillTreeNode(functionVariableNode, currentIdentifier,upperType);
+      fillTreeNode(functionVariableNode, varName,upperType);
       if(functionNode->children[1] == NULL)
       {
 	functionNode->children[1] = functionVariableNode;
@@ -875,14 +876,17 @@ token_leialn token_abrep token_identificador
 token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} |
 token_identificador
 {
-
-  List *functionList = lookupStringFunction(hashFunction, currentFunction);
-  function* functionAux = ((function*)(functionList)->info);
-  functionNode = functionAux -> functionTree; 
- //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
-    in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
-  
+  in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
+  List *functionList = lookupStringFunction(hashFunction, currentFunction);
+  if(functionList!=NULL)
+  {
+    function* functionAux = ((function*)(functionList)->info);
+    functionNode = newTreeNode();
+    fillTreeNode(functionNode, currentFunction, "CHAMADA-FUNCAO");
+    functionNode->children[1] = functionAux -> functionTree; 
+    //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
+  }
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
 { 
@@ -1012,6 +1016,9 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   currentRelationPos = 0;
   in_function = 0;
   */
+  //expressionNode = popStack(stackExpressionNode);
+  addNodeIntoGlobalTree(functionNode);
+  
 } token_pontov
 | token_identificador token_abrecol token_numinteiro token_fechacol token_atribuicao {
 	strcpy(currentVariable, currentIdentifier);
@@ -1207,7 +1214,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       fillTreeNode(attributionNode,yytext,"ATRIBUICAO");
       //cria o nó do identificador e insere a esquerda da atribuição
       treeNode *idAux = newTreeNode();
-      fillTreeNode(idAux, currentIdentifier, "VARIAVEL");
+      fillTreeNode(idAux, auxVariable, "VARIAVEL");
       attributionNode->children[0] = idAux;
       //seta para null o nó de expressão (que será construído na parte de expressão)
       expressionNode = NULL;
@@ -1435,7 +1442,7 @@ BLOCO_AUXILIAR
 
   //no global passa a ser o anterior
   globalTree = ((treeNode*)(popStack(stackGlobal)));
-}
+} //functionArgument->next=NULL;
 token_fimenquanto | 
 
 token_para 
@@ -1555,10 +1562,10 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
       terminate();
     }
-    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
       terminate();
-    else
+    }else
     {  
     //if(in_function!=1)
     {
@@ -1730,24 +1737,66 @@ ARGUMENTOS_FUNCAO: EXPR
   if(argumentNumber <= functionAux->arity)
   {
     int returnTypeArgument = findArgumentType(argumentNumber, aux);
-   
     //printf("%d %d\n", returnTypeArgument, varRelations[0]);
 
-  if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
-  {
-    printf("Valores incompativeis na linha %d.\n", nLine);
-    terminate();
-  }
-  else if(returnTypeArgument != varRelations[0] && in_comparacao == 0)
-  {	
-    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-    terminate();
-  }
+    if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
+    {
+      printf("Valores incompativeis na linha %d.\n", nLine);
+      terminate();
+    }
+    else if(returnTypeArgument != varRelations[0] && in_comparacao == 0)
+    {	
+      printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+      terminate();
+    }
+    
+    if(functionNode->children[0] == NULL)
+    {
+      treeNode *functionArgument = newTreeNode();
+      copyTreeNodes(functionArgument, functionAux->functionTree->children[1]);
+      functionArgument->next = NULL;
+      
+      treeNode *argumentNode = newTreeNode();
+      char strAux[10];
+      sprintf(strAux, "%d", argumentNumber);
+      fillTreeNode(argumentNode, strAux, "ARGUMENTO");
+      
+      functionNode->children[0] = argumentNode;
+      argumentNode->children[0] = expressionNode;
+      argumentNode->children[1] = functionArgument;
+    }
+    else
+    {
+      treeNode *functionArgument = newTreeNode();
+      copyTreeNodes(functionArgument, functionAux->functionTree->children[1]);
+      treeNode *argumentNode = newTreeNode();
+      char strAux[10];
+      sprintf(strAux, "%d", argumentNumber);
+      fillTreeNode(argumentNode, strAux, "ARGUMENTO");
+      
+      treeNode *aux = functionNode->children[0];
+      while(aux->next!=NULL)
+      {
+	aux = aux->next;
+      }
+      int count = 1;
+      while(count!=argumentNumber)
+      {
+	functionArgument=functionArgument->next;
+	++count;
+      }
+      //functionArgument->next=NULL;
+      aux->next = argumentNode;
+      argumentNode->children[0] = expressionNode;
+      argumentNode->children[1] = functionArgument;
+    }
+
   }
   //strcpy(functionArguments, "\0");
   strcpy(identifiers, "\0");
   currentRelationPos = 0;
   currentRelationComparison = 0;
+  expressionNode = NULL;
  }
 | ARGUMENTOS_FUNCAO token_virgula EXPR
 {
@@ -1758,25 +1807,73 @@ ARGUMENTOS_FUNCAO: EXPR
 
   if(argumentNumber <= functionAux->arity)
   {
-  
-   int returnTypeArgument = findArgumentType(argumentNumber, aux);
-
+    int returnTypeArgument = findArgumentType(argumentNumber, aux);
   //("%d %d\n", returnTypeArgument, varRelations[0]);
-  if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
-  {
-    printf("Valores incompativeis na linha %d.\n", nLine);
-    terminate();
-  }
-  else if(returnTypeArgument != varRelations[0] && in_comparacao == 0)
-  {	
-    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-    terminate();
-  }
+
+    if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
+    {
+      printf("Valores incompativeis na linha %d.\n", nLine);
+      terminate();
+    }
+    else if(returnTypeArgument != varRelations[0] && in_comparacao == 0)
+    {	
+      printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+      terminate();
+    }
+    
+    if(functionNode->children[0] == NULL)
+    {
+      treeNode *functionArgument = newTreeNode();
+      copyTreeNodes(functionArgument, functionAux->functionTree->children[1]);
+      functionArgument->next = NULL;
+      
+      treeNode *argumentNode = newTreeNode();
+      char strAux[10];
+      sprintf(strAux, "%d", argumentNumber);
+      fillTreeNode(argumentNode, strAux, "ARGUMENTO");
+      
+      functionNode->children[0] = argumentNode;
+      argumentNode->children[0] = expressionNode;
+      argumentNode->children[1] = functionArgument;
+    }
+    else
+    {
+      treeNode *auxFunction;
+      auxFunction = functionAux->functionTree->children[1];
+      //copyTreeNodes(functionArgument, functionAux->functionTree->children[1]);
+      treeNode *argumentNode = newTreeNode();
+      char strAux[10];
+      sprintf(strAux, "%d", argumentNumber);
+      fillTreeNode(argumentNode, strAux, "ARGUMENTO");
+      
+      treeNode *aux = functionNode->children[0];
+      while(aux->next!=NULL)
+      {
+	aux = aux->next;
+      }
+          int count = 1;
+      while(count!=argumentNumber)
+      {
+	auxFunction=auxFunction->next;
+	++count;
+      }
+     
+      treeNode* functionArgument = newTreeNode();
+      copyTreeNodes(functionArgument, auxFunction);
+      
+      aux->next = argumentNode;
+    
+      argumentNode->children[0] = expressionNode;
+      argumentNode->children[1] = functionArgument;
+      functionArgument->next=NULL;
+    }
+
   }
   //strcpy(functionArguments, "\0");
   strcpy(identifiers, "\0");
   currentRelationPos = 0;
   currentRelationComparison = 0;
+  expressionNode = NULL;
 }
 | /*Empty*/;
 EXPR: SIEXPR { swapoutDoisUm(); swapoutTresDois(); }
@@ -2495,6 +2592,18 @@ Aqui sera feita analise de matriz com apenas um index
 	in_function = 0;
       }
      }
+  
+    List *functionList = lookupStringFunction(hashFunction, currentFunction);
+    if(functionList!=NULL)
+    {
+      function* functionAux = ((function*)(functionList)->info);
+      functionNode = newTreeNode();
+      fillTreeNode(functionNode, currentFunction, "CHAMADA-FUNCAO");
+      functionNode->children[1] = functionAux -> functionTree; 
+      
+      stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
+      expressionNode=NULL;
+    }
   }
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
@@ -2632,6 +2741,16 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	}
       }
       */
+    
+    expressionNode = popStack(stackExpressionNode);   
+   
+   if(expressionNode==NULL) {
+    expressionNode=functionNode;
+    }
+   else {
+      expressionNode->children[1] = functionNode;
+    }
+    
   strcpy(functionArguments, "\0");
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;
@@ -2986,18 +3105,18 @@ main()
      if(IN_DEBUG_MODE){
   	treeNode* aux = globalTree;
 
-  	printNode(aux, 13, 0);
+  	printNode(aux, 12, 0);
 	printf("\n ---------- \n");
 	printf(" ---------- \n");
       }
 
 	//execute
-	executeTree(globalTree);
+	//executeTree(globalTree);
 	
  	//	List* l = lookupStringVariable(hashVariables, "c");
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
- 		List* l = lookupStringVariable(hashVariables, "str");
- 		printf("str: %s\n", ( (char*) ( (variable*) l->info )->value) );
+ 	//	List* l = lookupStringVariable(hashVariables, "str");
+ 	//	printf("str: %s\n", ( (char*) ( (variable*) l->info )->value) );
  	//	List* l = lookupStringVariable(hashVariables, "a");
  	//	printf("a: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
  	//	l = lookupStringVariable(hashVariables, "ch");
