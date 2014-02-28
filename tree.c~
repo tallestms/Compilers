@@ -66,5 +66,5 @@ void copyTreeNodes(treeNode* a, treeNode* b)
   a->children[1] = b->children[1];
   a->children[2] = b->children[2];
   a->children[3] = b->children[3];
-  //a->next = b->next;
+  a->next = b->next;
 }

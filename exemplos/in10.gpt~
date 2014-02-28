@@ -1,10 +1,12 @@
 algoritmo declaracao_de_variaveis;
 
 
-função soma2(x: inteiro, y: inteiro) : inteiro
+função soma2(x: inteiro, y: inteiro, z: inteiro, w: inteiro, o: inteiro, p: inteiro):inteiro
   a:inteiro;
 início
   a := x + y;
+  retorne a;
+  a := z + w;
   retorne a;
 fim
 
@@ -33,8 +35,8 @@ variáveis
 	//a : real;
 	//b : inteiro;
 	//d : inteiro;
-	//b:inteiro;
-	//c:lógico;
+	//b : inteiro;
+	//c : lógico;
 	//a : real;
 	//b : real;
 	//c : lógico;
@@ -83,7 +85,7 @@ início
 	//a := 10;
 	//d := 20;
 	
-	a := soma2(a, a);
+	a:=a+soma2(a*(a+a),a,a,a,a*a,a+a+a)*a;
 
 	//a:=10;
 	//b:=0;
