@@ -81,7 +81,7 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v, "+")) return 7;
 	if(!strcmp(t, "OPERADOR-UNARIO")) return 8; 
 	if(!strcmp(v, "-")) return 9;
-	if(!strcmp(t, "VARIAVEL")) return 10;
+	if(!strcmp(t, "VARIAVEL") || !strcmp(t, "IDENTIFICADOR") ) return 10;
 	if(!strcmp(v, "()")) return 11;
 	if(!strcmp(v, "[]")||!strcmp(v, "{}")) return 12;
 	if(!strcmp(t, "MATRIX") )return 13;
@@ -97,8 +97,9 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v,"condicao-faca-enquanto")) return 23;
 	if(!strcmp(v,"condicao-se-senao")) return 24;
 	if(!strcmp(v,"condicao-se")) return 25;
-	//if(!strcmp(v,"condicao-para")) return 26; //TODO
+	if(!strcmp(v,"condicao-para")) return 26; //TODO
 	if(!strcmp(v,"condicao-seleciona")) return 27;
+	if(!strcmp(v, "^")) return 28;
 	
 	return -1;
 	

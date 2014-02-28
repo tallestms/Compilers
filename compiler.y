@@ -74,6 +74,7 @@ Stack* addNodeIntoStack(treeNode *info, Stack* aux){
 	}
 }
 
+treeNode* swapZeroMenor = NULL;
 treeNode* swapUmZero = NULL;
 treeNode* swapDoisUm = NULL;
 treeNode* swapTresDois = NULL;
@@ -168,6 +169,29 @@ void operadorDeNivelZero(char tipo[10]){
 		fillTreeNode(aux, tipo, "OPERADOR-N-0");
 		aux->children[0] = expressionNode;
 		expressionNode = aux;
+	}
+}
+
+void operadorDeMenorNivel(char tipo[10]){
+	if (!strcmp(expressionNode->type,"OPERADOR-N-0") || !strcmp(expressionNode->type,"OPERADOR-N-1") || !strcmp(expressionNode->type,"OPERADOR-N-2") || !strcmp(expressionNode->type,"OPERADOR-N-3")){
+		swapZeroMenor = expressionNode;
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo, "OPERADOR-M-N");
+		aux->children[0] = expressionNode->children[1];
+		expressionNode->children[1] = aux;
+		expressionNode = aux;
+	}else{
+		treeNode *aux = newTreeNode();
+		fillTreeNode(aux, tipo, "OPERADOR-M-N");
+		aux->children[0] = expressionNode;
+		expressionNode = aux;
+	}
+}
+
+void swapoutZeroMenor(){
+	if (swapZeroMenor!=NULL){
+		expressionNode = swapZeroMenor;
+		swapZeroMenor=NULL;
 	}
 }
 
@@ -309,6 +333,7 @@ void delimitadorNivelUm(){
 %token token_variavel_caracter
 %token token_string
 %token token_identificador
+%token token_circ
 
 %start PROG
 
@@ -1082,7 +1107,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
       fillTreeNode(attributionNode,yytext,"ATRIBUICAO");
       //cria o nó do identificador e insere a esquerda da atribuição
       treeNode *idAux = newTreeNode();
-      fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+      fillTreeNode(idAux, currentIdentifier, "VARIAVEL");
       attributionNode->children[0] = idAux;
       //seta para null o nó de expressão (que será construído na parte de expressão)
       expressionNode = NULL;
@@ -1316,7 +1341,7 @@ token_abrep {strcpy(identifiers,"\0"); currentRelationPos=0;} token_identificado
   fillTreeNode(attributionNode,":=","ATRIBUICAO");
   
   treeNode *idAux = newTreeNode();
-  fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+  fillTreeNode(idAux, currentIdentifier, "VARIAVEL");
   //printf("%s", currentIdentifier);
   strcpy(currentVariable, currentIdentifier);
   attributionNode->children[0] = idAux;
@@ -1331,7 +1356,7 @@ token_de FATOR
 token_ate FATOR
 {
   treeNode *idAux = newTreeNode();
-  fillTreeNode(idAux, currentVariable, "IDENTIFICADOR");
+  fillTreeNode(idAux, currentVariable, "VARIAVEL");
   
   attributionNode = newTreeNode();
   fillTreeNode(attributionNode,"=","COMPARACAO");
@@ -1349,13 +1374,13 @@ token_passo FATOR
   fillTreeNode(passoAux, "+", "SOMA");
   
   treeNode *idAux1 = newTreeNode();
-  fillTreeNode(idAux1, currentVariable, "IDENTIFICADOR");
+  fillTreeNode(idAux1, currentVariable, "VARIAVEL");
  
   attributionNode = newTreeNode();
   fillTreeNode(attributionNode,":=","ATRIBUICAO");
 
   treeNode *idAux2 = newTreeNode();
-  fillTreeNode(idAux2, currentVariable, "IDENTIFICADOR");
+  fillTreeNode(idAux2, currentVariable, "VARIAVEL");
   
   passoAux->children[0] = idAux1;
   passoAux->children[1] = expressionNode;
@@ -1365,7 +1390,7 @@ token_passo FATOR
   
  /* 
   treeNode *idAux = newTreeNode();
-  fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+  fillTreeNode(idAux, currentIdentifier, "VARIAVEL");
   
   attributionNode = newTreeNode();
   fillTreeNode(attributionNode,":=","ATRIBUICAO");
@@ -1464,7 +1489,7 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
     fillTreeNode(conditionNode,"condicao-seleciona","CONDICIONAL");
     
     treeNode* idAux = newTreeNode();
-    fillTreeNode(idAux, currentIdentifier, "IDENTIFICADOR");
+    fillTreeNode(idAux, currentIdentifier, "VARIAVEL");
     
     conditionNode->children[0] = idAux;
     addConditionNodeIntoGlobalTree();
@@ -1783,7 +1808,10 @@ token_mod { operadorDeNivelZero("%"); } FATOR
 } 
 { swapoutUmZero(); }
 //Multiplicar
-| TERMO token_vezes { operadorDeNivelZero("*"); } FATOR { swapoutUmZero(); };
+| TERMO token_vezes { operadorDeNivelZero("*"); } FATOR { swapoutUmZero(); }
+//Pow
+| TERMO token_circ { operadorDeMenorNivel("^"); } FATOR { swapoutZeroMenor(); };
+
 FATOR: SINALFATOR
 | token_numinteiro
 {
@@ -2777,7 +2805,7 @@ main()
      if(IN_DEBUG_MODE){
   	treeNode* aux = globalTree;
 
-  	printNode(aux, 12, 0);
+  	printNode(aux, 13, 0);
 	printf("\n ---------- \n");
 	printf(" ---------- \n");
       }
@@ -2791,6 +2819,10 @@ main()
  		//printf("a: %d\n", *( (int*) ( (variable*) l->info )->value) );
  		//l = lookupStringVariable(hashVariables, "b");
  		//printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 	//	List* l = lookupStringVariable(hashVariables, "a");
+ 	//	printf("a: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
+ 	//	l = lookupStringVariable(hashVariables, "b");
+ 	//	printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	l = lookupStringVariable(hashVariables, "b");
 	//	printf("b: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
 	//veriicando a matriz

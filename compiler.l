@@ -37,6 +37,7 @@ real_signed					("-")[0-9]+("."[0-9]+([eE](("+"|"-")?[0-9]+))?)
 real						[0-9]+("."[0-9]+([eE](("+"|"-")?[0-9]+))?)
 identificador					[a-zA-Z_][a-zA-Z0-9_]*
 %%
+"^"						{return token_circ;}
 "("						{return token_abrep;}
 ")"						{return token_fechap;}
 ","						{return token_virgula;}

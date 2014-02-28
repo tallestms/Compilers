@@ -31,6 +31,11 @@ variáveis
 	//b : inteiro;
 	//c : lógico;
 	//a : real;
+	//b : inteiro;
+	//d : inteiro;
+	//b:inteiro;
+	//c:lógico;
+	//a : real;
 	//b : real;
 	//c : lógico;
 	//z : lógico;
@@ -45,6 +50,9 @@ início
 	//d := 20 + n[0];
 	//n[0] := 1;
 	//m[0][0] := 1;
+
+	//a := 2^2;
+
 	//c := verdadeiro;
 	//a := soma2(d*a+d*d*a,a+d*a*d*d);
 	//z := falso;
@@ -77,8 +85,8 @@ início
 	
 	a := soma2(a, a);
 
-	a:=10;
-	b:=0;
+	//a:=10;
+	//b:=0;
 	//d:=0;
 	
 	/*
@@ -99,6 +107,7 @@ início
 			parar;
 	fim-seleciona
 	*/
+	/*
 	/*
 	para (a de d até 1 passo -1) faça
 		a := a * 10;
@@ -174,6 +183,13 @@ início
 		a := a * 10;
 	fim-para
 	*/
+	//a := 10;
+	//d := 5;	
+	//b:=0;
+	//para (a de d até 1 passo -1) faça
+	//	b := b+1;
+	//fim-para
+	
 	//enquanto ( a <> 0 ) faça
 	//    a := a + 10 + 20;
 	//fim-enquanto
