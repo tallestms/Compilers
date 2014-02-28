@@ -188,7 +188,7 @@ void verifyUsed(hashTable *hashtable)
         while(list!=NULL) {
             temp = list;
             list = list->next;
-	    if(((variable*)(temp->info))->used == 0)
+	    if(((variable*)(temp->info))->used == 0 && ((variable*)(temp->info))->matrix == 0)
 	    {
 	      char* varAux;
 	      varAux = strtok(((variable*)(temp->info))->name, " ");

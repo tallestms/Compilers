@@ -10,10 +10,7 @@ variable* createVariable()
     return newVar;
 }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 94d6bac5b59666a1365122c5cf93e61428a67e58
 void setVariable(variable* var, char* name, char* scope, int type, int matrix, int dimension, int column, int line)
 {
   if (var == NULL)
@@ -51,11 +48,7 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
       }    
       if(type == 2) //tipo literal 
       {
-<<<<<<< HEAD
-	char *value = (char*) malloc(203*sizeof(char)); //200 e o limite do literal
-=======
 	char *value = (char*) malloc(50*sizeof(char)); //45 e o limite do literal
->>>>>>> 94d6bac5b59666a1365122c5cf93e61428a67e58
 	var->value = value;
       }
       if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
@@ -101,15 +94,9 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
 	  int *value = (int*) malloc (line*column*sizeof(int));
 	  var->value = value;
 	}     
-<<<<<<< HEAD
-	if(type == 3) //reais serao convertidos em float 
-	{
-	  float *value = (float*) malloc(line*column*sizeof(float));
-=======
 	if(type == 3) //reais serao convertidos em double 
 	{
 	  double *value = (double*) malloc(line*column*sizeof(double));
->>>>>>> 94d6bac5b59666a1365122c5cf93e61428a67e58
 	  var->value = value;
 	}
 	if(type == 1) //tipo caracter
@@ -119,11 +106,7 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
 	}    
 	if(type == 2) //tipo literal 
 	{
-<<<<<<< HEAD
-	  char *value = (char*) malloc(line*column*203*sizeof(char)); //200 e o limite do literal
-=======
 	  char *value = (char*) malloc(line*column*50*sizeof(char)); //45 e o limite do literal
->>>>>>> 94d6bac5b59666a1365122c5cf93e61428a67e58
 	  var->value = value;
 	}
 	if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 
@@ -175,13 +158,12 @@ void convertTypeReverse(int type, char *aux)
     strcpy(aux, "lógico");
 }
 
-<<<<<<< HEAD
 void convertTypeReverseUpper(int type, char *aux)
 {
   if(type==0)
     strcpy(aux, "INTEIRO");
   else if(type==1)
-    strcpy(aux, "CARACTERr");
+    strcpy(aux, "CARACTER");
   else if(type==2)
     strcpy(aux, "LITERAL");
   else if(type==3)
@@ -189,8 +171,6 @@ void convertTypeReverseUpper(int type, char *aux)
   else if(type==4)
     strcpy(aux, "LOGICO");
 }
-=======
->>>>>>> 94d6bac5b59666a1365122c5cf93e61428a67e58
 void verifyUsed(hashTable *hashtable)
 {
     int i;

@@ -1,6 +1,6 @@
 algoritmo declaracao_de_variaveis;
 
-/*
+
 função soma2(x: inteiro, y: inteiro) : inteiro
   a:inteiro;
 início
@@ -8,6 +8,7 @@ início
   retorne a;
 fim
 
+/*
 função soma4(x: inteiro, y: inteiro, z: inteiro, w: inteiro) : inteiro
   a:inteiro;
 início
@@ -25,10 +26,10 @@ fim
 
 variáveis
 	a : inteiro;
-	b : inteiro;
-	d:inteiro;
-	//b:inteiro;
-	//c:lógico;
+	//b : inteiro;
+	//d : inteiro;
+	//b : inteiro;
+	//c : lógico;
 	//a : real;
 	//b : real;
 	//c : lógico;
@@ -36,12 +37,14 @@ variáveis
 	//c:real;
 	//d:inteiro;
 	//m:matriz[4][3] de inteiros;
-	n:matriz[4] de inteiros;
+	//n:matriz[4] de inteiros;
 fim-variáveis
 
 início
 	a := 10;
-	d := 20;
+	//d := 20 + n[0];
+	//n[0] := 1;
+	//m[0][0] := 1;
 	//c := verdadeiro;
 	//a := soma2(d*a+d*d*a,a+d*a*d*d);
 	//z := falso;
@@ -72,12 +75,13 @@ início
 	//a := 10;
 	//d := 20;
 	
-	//a := soma(a, a, a, a);
+	a := soma2(a, a);
 
-	a:=10;
-	b:=0;
+	//a:=10;
+	//b:=0;
 	//d:=0;
 	
+	/*
 	seleciona (a)
 		caso (1):
 			b := 10;
@@ -94,7 +98,7 @@ início
 			b:=50;
 			parar;
 	fim-seleciona
-	
+	*/
 	/*
 	para (a de d até 1 passo -1) faça
 		a := a * 10;
@@ -165,11 +169,11 @@ início
 	;enquanto (a <> 0);
 	*/
 	
-	
+	/*
 	para (a de d até 1 passo -1) faça
 		a := a * 10;
 	fim-para
-	
+	*/
 	//enquanto ( a <> 0 ) faça
 	//    a := a + 10 + 20;
 	//fim-enquanto
@@ -196,7 +200,7 @@ início
 			parar;
 	fim-seleciona
 	*/
-	
+	//a := 10 + 20 % 10;
 	//c := falso;
 	//b := a > d e d <= a;
 	//a := 1 + 2 * 3 * 4 + 5;
