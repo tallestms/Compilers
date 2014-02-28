@@ -1,6 +1,6 @@
 algoritmo declaracao_de_variaveis;
 
-/*
+
 função soma2(x: inteiro, y: inteiro) : inteiro
   a:inteiro;
 início
@@ -8,6 +8,7 @@ início
   retorne a;
 fim
 
+/*
 função soma4(x: inteiro, y: inteiro, z: inteiro, w: inteiro) : inteiro
   a:inteiro;
 início
@@ -24,11 +25,17 @@ fim
 */
 
 variáveis
+
+	a : inteiro;
+	//b : inteiro;
+	//d : inteiro;
+	//b : inteiro;
+	//c : lógico;
 	//a : real;
 	//b : inteiro;
-	//d:inteiro;
-	//b:inteiro;
-	//c:lógico;
+	//d : inteiro;
+	//b : inteiro;
+	//c : lógico;
 	//a : real;
 	//b : real;
 	//c : lógico;
@@ -47,6 +54,7 @@ início
 	//ch := '\n';
 	//str := "literalmente";
 	//b := soma4(1,2,3,4);
+
 	//a := 2^2;
 
 	//c := verdadeiro;
@@ -79,7 +87,7 @@ início
 	//a := 10;
 	//d := 20;
 	
-	//a := soma(a, a, a, a);
+	a := soma2(a, a);
 
 	//a:=10;
 	//b:=0;
@@ -102,6 +110,7 @@ início
 			b:=50;
 			parar;
 	fim-seleciona
+	*/
 	/*
 	/*
 	para (a de d até 1 passo -1) faça
@@ -173,6 +182,11 @@ início
 	;enquanto (a <> 0);
 	*/
 	
+	/*
+	para (a de d até 1 passo -1) faça
+		a := a * 10;
+	fim-para
+	*/
 	//a := 10;
 	//d := 5;	
 	//b:=0;
@@ -206,7 +220,7 @@ início
 			parar;
 	fim-seleciona
 	*/
-	
+	//a := 10 + 20 % 10;
 	//c := falso;
 	//b := a > d e d <= a;
 	//a := 1 + 2 * 3 * 4 + 5;

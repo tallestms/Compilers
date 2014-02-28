@@ -858,6 +858,9 @@ token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} |
 token_identificador
 {
 
+  List *functionList = lookupStringFunction(hashFunction, currentFunction);
+  function* functionAux = ((function*)(functionList)->info);
+  functionNode = functionAux -> functionTree; 
  //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
     in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
@@ -997,8 +1000,8 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		strcat(currentVariable, currentScope);
 	}
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
-	if (currVariable != NULL){
-		if(((variable*)(currVariable->info))->used!=1){
+	if (currVariable != NULL){\
+		if(((variable*)(currVariable->info))->used!=1 && ((variable*)(currVariable->info))->matrix==0){
 			printf("Erro, variavel nao inicializada na linha %d.\n", nLine);
 		}
 		if(((variable*)(currVariable->info))->matrix!=1){
@@ -1072,7 +1075,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	}
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
-		if(((variable*)(currVariable->info))->used!=1){
+		if(((variable*)(currVariable->info))->used!=1 && ((variable*)(currVariable->info))->matrix==0){
 			printf("Erro, variavel nao inicializada na linha %d.\n", nLine);
 		}
 		if(((variable*)(currVariable->info))->matrix!=1){
@@ -1491,7 +1494,7 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
     }
-    else if(((variable*)(identifier_temp->info))->used == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
@@ -1517,7 +1520,7 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
     }
-    else if(((variable*)(identifier_temp->info))->used == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 &&((variable*)(identifier_temp->info))->matrix == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
@@ -1840,7 +1843,21 @@ TERMO: MATRIZ | FATOR
 //Dividir
 | TERMO token_dividir {	operadorDeNivelZero("/"); } FATOR { swapoutUmZero(); }
 //Módulo
-| TERMO token_mod { operadorDeNivelZero("%"); } FATOR { swapoutUmZero(); }
+| TERMO 
+{
+  if(strcmp(currentType, "inteiro")!=0)
+  {
+    printf("Operador %% so aceita inteiros na linha %d.\n", nLine);
+  }
+} 
+token_mod { operadorDeNivelZero("%"); } FATOR 
+{
+    if(strcmp(currentType, "inteiro")!=0)
+    {
+      printf("Operador %% so aceita inteiro na linha %d.\n", nLine);
+    }
+} 
+{ swapoutUmZero(); }
 //Multiplicar
 | TERMO token_vezes { operadorDeNivelZero("*"); } FATOR { swapoutUmZero(); }
 //Pow
@@ -1904,7 +1921,7 @@ e se ela foi declarada.
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
     }
-    else if(((variable*)(identifier_temp->info))->used == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
@@ -1940,7 +1957,7 @@ e se ela foi declarada.
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
     }
-    else if(((variable*)(identifier_temp->info))->used == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
@@ -1975,7 +1992,7 @@ e se ela foi declarada.
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
     }
-    else if(((variable*)(identifier_temp->info))->used == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
@@ -2014,7 +2031,7 @@ e se ela foi declarada.
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
     }
-    else if(((variable*)(identifier_temp->info))->used == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else
     {  
@@ -2078,7 +2095,7 @@ Aqui sera feita analise de matriz com apenas um index
   	//monta a arvore
   	treeMatrixOneDimension( ((variable*)(identifier_temp->info))->name , currentNumber);
   	
-    if(((variable*)(identifier_temp->info))->used == 0)
+    if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else if(((variable*)(identifier_temp->info))->matrix!=1){
       printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(identifier_temp->info))->name);
@@ -2129,7 +2146,7 @@ Aqui sera feita analise de matriz com apenas um index
   	//monta a arvore com uma dimensão
   	treeMatrixOneDimension( ((variable*)(identifier_temp->info))->name , currentNumber);
   
-    if(((variable*)(identifier_temp->info))->used == 0)
+    if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
     else if(((variable*)(identifier_temp->info))->matrix!=1){
       printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(identifier_temp->info))->name);
@@ -2864,9 +2881,13 @@ main()
 	
  	//	List* l = lookupStringVariable(hashVariables, "c");
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		//List* l = lookupStringVariable(hashVariables, "a");
+ 		//printf("a: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		//l = lookupStringVariable(hashVariables, "b");
+ 		//printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	List* l = lookupStringVariable(hashVariables, "a");
  	//	printf("a: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
- 	//	List *l = lookupStringVariable(hashVariables, "b");
+ 	//	l = lookupStringVariable(hashVariables, "b");
  	//	printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	l = lookupStringVariable(hashVariables, "b");
 	//	printf("b: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
