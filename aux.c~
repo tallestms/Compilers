@@ -70,7 +70,6 @@ return counter;
 }
 
 int convertValuesTreeNode(char v[50],char t[50]){
-	printf("%s, %s\n",v,t);
 	if(!strcmp(t, "LITERAL")) return -2;	
 	if(!strcmp(t, "CARACTER")) return -1;	
 	if(!strcmp(t, "LOGICO")) return 0;
@@ -139,4 +138,11 @@ int findArgumentType(int argumentNumber, List* aux)
   }
   return ((int)(aux2->info));
   
+}
+
+void retiraAspasFinal(char* s){
+	int i;
+	for(i=0;s[i];i++);
+	s[i-1] = '\0';	
+
 }

@@ -139,3 +139,9 @@ int findArgumentType(int argumentNumber, List* aux)
   return ((int)(aux2->info));
   
 }
+
+void retiraAspasFinal(char* s){
+	int i;
+	for(i=0;s[i];i++);
+	s[i-1] = '\0';	
+}

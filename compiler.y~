@@ -2249,9 +2249,12 @@ Aqui sera feita analise de matriz com apenas um index
       ++currentRelationPos;
       ++currentRelationComparison;
     
+    	char s[50];
+    	strcpy(s,yytext+1);
+    	retiraAspasFinal(s);
     	//preenche arvore de expressão
     	treeNode* aux = newTreeNode();
-    	fillTreeNode(aux, yytext, "LITERAL");
+    	fillTreeNode(aux, s, "LITERAL");
     	if (expressionNode == NULL) {
     	  expressionNode = aux;
     	}else{
@@ -2895,12 +2898,12 @@ main()
 	
  	//	List* l = lookupStringVariable(hashVariables, "c");
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
- 	//	List* l = lookupStringVariable(hashVariables, "str");
- 	//	printf("str: %s\n", ( (char*) ( (variable*) l->info )->value) );
- 		List* l = lookupStringVariable(hashVariables, "a");
- 		printf("a: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
- 		l = lookupStringVariable(hashVariables, "ch");
- 		printf("ch: %c\n", *( (char*) ( (variable*) l->info )->value) );
+ 		List* l = lookupStringVariable(hashVariables, "str");
+ 		printf("str: %s\n", ( (char*) ( (variable*) l->info )->value) );
+ 	//	List* l = lookupStringVariable(hashVariables, "a");
+ 	//	printf("a: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
+ 	//	l = lookupStringVariable(hashVariables, "ch");
+ 	//	printf("ch: %c\n", *( (char*) ( (variable*) l->info )->value) );
  		//l = lookupStringVariable(hashVariables, "b");
  		//printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	List* l = lookupStringVariable(hashVariables, "a");

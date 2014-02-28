@@ -2237,7 +2237,7 @@ Aqui sera feita analise de matriz com apenas um index
 }
 | token_string 
 {
-  if(strlen(limitString) > MAX_LITERAL)
+  if(strlen(limitString) > MAX_LITERAL+2)
   {
     printf("Tamanho de literal passou do limite de 50 caracteres na linha %d\n", nLine);
   }
@@ -2249,9 +2249,12 @@ Aqui sera feita analise de matriz com apenas um index
       ++currentRelationPos;
       ++currentRelationComparison;
     
+    	char s[50];
+    	strcpy(s,yytext+1);
+    	retiraAspasFinal(s);
     	//preenche arvore de expressão
     	treeNode* aux = newTreeNode();
-    	fillTreeNode(aux, yytext, "LITERAL");
+    	fillTreeNode(aux, s, "LITERAL");
     	if (expressionNode == NULL) {
     	  expressionNode = aux;
     	}else{
