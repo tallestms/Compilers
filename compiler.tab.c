@@ -825,18 +825,18 @@ static const yytype_uint16 yyrline[] =
      587,   588,   588,   590,   592,   591,   620,   619,   656,   663,
      655,   669,   671,   670,   676,   678,   679,   681,   680,   692,
      690,   701,   743,   785,   788,   829,   830,   832,   831,   845,
-     844,   859,   870,   858,   996,  1049,   996,  1070,  1111,  1124,
-    1070,  1140,  1172,  1139,  1280,  1291,  1305,  1306,  1279,  1315,
-    1326,  1333,  1341,  1314,  1343,  1351,  1368,  1371,  1342,  1383,
-    1389,  1390,  1402,  1408,  1423,  1471,  1480,  1382,  1488,  1489,
-    1568,  1488,  1577,  1591,  1576,  1597,  1600,  1601,  1600,  1628,
-    1629,  1628,  1656,  1682,  1709,  1710,  1712,  1712,  1734,  1734,
-    1736,  1737,  1738,  1739,  1740,  1741,  1744,  1745,  1745,  1746,
-    1747,  1747,  1749,  1797,  1842,  1842,  1844,  1844,  1847,  1853,
-    1854,  1846,  1862,  1862,  1864,  1864,  1866,  1867,  1888,  1910,
-    1986,  2070,  2122,  2121,  2206,  2224,  2249,  2249,  2271,  2291,
-    2312,  2311,  2535,  2535,  2548,  2561,  2575,  2575,  2575,  2599,
-    2599,  2599,  2622,  2623,  2622,  2645,  2645,  2644,  2669,  2691
+     844,   859,   870,   858,   996,  1049,   996,  1074,  1115,  1128,
+    1074,  1154,  1186,  1153,  1294,  1305,  1319,  1320,  1293,  1329,
+    1340,  1347,  1355,  1328,  1357,  1365,  1382,  1385,  1356,  1397,
+    1403,  1404,  1416,  1422,  1437,  1485,  1494,  1396,  1502,  1503,
+    1582,  1502,  1591,  1605,  1590,  1611,  1614,  1615,  1614,  1642,
+    1643,  1642,  1670,  1696,  1723,  1724,  1726,  1726,  1748,  1748,
+    1750,  1751,  1752,  1753,  1754,  1755,  1758,  1759,  1759,  1760,
+    1761,  1761,  1763,  1811,  1856,  1856,  1858,  1858,  1861,  1867,
+    1868,  1860,  1876,  1876,  1878,  1878,  1880,  1881,  1902,  1924,
+    2000,  2084,  2136,  2135,  2220,  2238,  2263,  2263,  2285,  2305,
+    2326,  2325,  2549,  2549,  2562,  2575,  2589,  2589,  2589,  2613,
+    2613,  2613,  2636,  2637,  2636,  2659,  2659,  2658,  2683,  2705
 };
 #endif
 
@@ -2909,6 +2909,10 @@ yyreduce:
     attributionNode->children[1] = expressionNode;
     //retorno o nós de atribuição para null
     expressionNode=NULL;
+    
+    //adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
+    //verifica que nao esta dentro de condicional tambem (enquanto ou se)
+    addAttributionNodeIntoGlobalTree();
 
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
@@ -2929,7 +2933,7 @@ yyreduce:
   case 77:
 
 /* Line 1806 of yacc.c  */
-#line 1070 "compiler.y"
+#line 1074 "compiler.y"
     {
 	strcpy(currentVariable, currentIdentifier);
 	if (strcmp(currentScope, "main")!=0 ){
@@ -2953,7 +2957,7 @@ yyreduce:
 		
 		  //cria o nó da arvore de atribuição
 		  attributionNode = newTreeNode();
-		  fillTreeNode(attributionNode,yytext,"ATRIBUICAO");
+		  fillTreeNode(attributionNode,":=","ATRIBUICAO");
 		  //cria o nó do identificador e insere a esquerda da atribuição
 		  treeNode *idAux = newTreeNode();
 		  fillTreeNode(idAux, currentIdentifier, "MATRIZ");
@@ -2976,7 +2980,7 @@ yyreduce:
   case 78:
 
 /* Line 1806 of yacc.c  */
-#line 1111 "compiler.y"
+#line 1115 "compiler.y"
     {
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
@@ -2996,10 +3000,20 @@ yyreduce:
   case 79:
 
 /* Line 1806 of yacc.c  */
-#line 1124 "compiler.y"
+#line 1128 "compiler.y"
     {
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
+	
+		//adiciono o nó de expressão a direita do nó de atribuição
+    	attributionNode->children[1] = expressionNode;
+    	//retorno o nós de atribuição para null
+    	expressionNode=NULL;
+    
+    	//adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
+    	//verifica que nao esta dentro de condicional tambem (enquanto ou se)
+    	addAttributionNodeIntoGlobalTree();
+	
 		if(!verifyRelationship(varRelations, currentRelationPos))
 		{
 		  printf("Tipos incompativeis na linha %d.\n", nLine);
@@ -3017,7 +3031,7 @@ yyreduce:
   case 81:
 
 /* Line 1806 of yacc.c  */
-#line 1140 "compiler.y"
+#line 1154 "compiler.y"
     {  
   currentRelationComparison = 0;
   char auxVariable[100];
@@ -3054,7 +3068,7 @@ yyreduce:
   case 82:
 
 /* Line 1806 of yacc.c  */
-#line 1172 "compiler.y"
+#line 1186 "compiler.y"
     {
     //adiciono o nó de expressão a direita do nó de atribuição
     attributionNode->children[1] = expressionNode;
@@ -3164,7 +3178,7 @@ yyreduce:
   case 83:
 
 /* Line 1806 of yacc.c  */
-#line 1276 "compiler.y"
+#line 1290 "compiler.y"
     {
 currentRelationComparison = 0;
 }
@@ -3173,7 +3187,7 @@ currentRelationComparison = 0;
   case 84:
 
 /* Line 1806 of yacc.c  */
-#line 1280 "compiler.y"
+#line 1294 "compiler.y"
     {
     //cria o nó da arvore de condicao
     conditionNode = newTreeNode();
@@ -3188,7 +3202,7 @@ currentRelationComparison = 0;
   case 85:
 
 /* Line 1806 of yacc.c  */
-#line 1291 "compiler.y"
+#line 1305 "compiler.y"
     {
   commandNode = newTreeNode();
   fillTreeNode(commandNode, "comando-se", "COMANDO");
@@ -3207,14 +3221,14 @@ currentRelationComparison = 0;
   case 86:
 
 /* Line 1806 of yacc.c  */
-#line 1305 "compiler.y"
+#line 1319 "compiler.y"
     {currentRelationPos = 0;}
     break;
 
   case 87:
 
 /* Line 1806 of yacc.c  */
-#line 1306 "compiler.y"
+#line 1320 "compiler.y"
     {
   commandNode = globalTree;
   conditionNode = commandNode -> children[0];
@@ -3227,7 +3241,7 @@ currentRelationComparison = 0;
   case 89:
 
 /* Line 1806 of yacc.c  */
-#line 1315 "compiler.y"
+#line 1329 "compiler.y"
     {
     commandNode = newTreeNode();
     fillTreeNode(commandNode, "comando-faca", "COMANDO");
@@ -3243,7 +3257,7 @@ currentRelationComparison = 0;
   case 90:
 
 /* Line 1806 of yacc.c  */
-#line 1326 "compiler.y"
+#line 1340 "compiler.y"
     {
   commandNode = globalTree;
   globalTree = ((treeNode*)(popStack(stackGlobal)));
@@ -3254,7 +3268,7 @@ currentRelationComparison = 0;
   case 91:
 
 /* Line 1806 of yacc.c  */
-#line 1333 "compiler.y"
+#line 1347 "compiler.y"
     {  
     //cria o nó da arvore de condicao
     conditionNode = newTreeNode();
@@ -3268,14 +3282,14 @@ currentRelationComparison = 0;
   case 92:
 
 /* Line 1806 of yacc.c  */
-#line 1341 "compiler.y"
+#line 1355 "compiler.y"
     {in_condicional = 0;}
     break;
 
   case 94:
 
 /* Line 1806 of yacc.c  */
-#line 1343 "compiler.y"
+#line 1357 "compiler.y"
     {
     //cria o nó da arvore de condicao
     conditionNode = newTreeNode();
@@ -3288,7 +3302,7 @@ currentRelationComparison = 0;
   case 95:
 
 /* Line 1806 of yacc.c  */
-#line 1351 "compiler.y"
+#line 1365 "compiler.y"
     {
     //adiciono o nó de expressão a direita do nó de condicao
     conditionNode->children[0] = expressionNode;
@@ -3311,14 +3325,14 @@ currentRelationComparison = 0;
   case 96:
 
 /* Line 1806 of yacc.c  */
-#line 1368 "compiler.y"
+#line 1382 "compiler.y"
     {in_condicional = 0; currentRelationPos = 0 ; strcpy(identifiers,"\0");}
     break;
 
   case 97:
 
 /* Line 1806 of yacc.c  */
-#line 1371 "compiler.y"
+#line 1385 "compiler.y"
     {
 
   //commandNode = NULL;
@@ -3333,7 +3347,7 @@ currentRelationComparison = 0;
   case 99:
 
 /* Line 1806 of yacc.c  */
-#line 1383 "compiler.y"
+#line 1397 "compiler.y"
     {
   conditionNode = newTreeNode();
   fillTreeNode(conditionNode,"condicao-para","CONDICAO");
@@ -3345,14 +3359,14 @@ currentRelationComparison = 0;
   case 100:
 
 /* Line 1806 of yacc.c  */
-#line 1389 "compiler.y"
+#line 1403 "compiler.y"
     {strcpy(identifiers,"\0"); currentRelationPos=0;}
     break;
 
   case 101:
 
 /* Line 1806 of yacc.c  */
-#line 1390 "compiler.y"
+#line 1404 "compiler.y"
     {
   attributionNode = newTreeNode();
   fillTreeNode(attributionNode,":=","ATRIBUICAO");
@@ -3369,7 +3383,7 @@ currentRelationComparison = 0;
   case 102:
 
 /* Line 1806 of yacc.c  */
-#line 1402 "compiler.y"
+#line 1416 "compiler.y"
     {
   attributionNode->children[1] = expressionNode;
   expressionNode = NULL;
@@ -3380,7 +3394,7 @@ currentRelationComparison = 0;
   case 103:
 
 /* Line 1806 of yacc.c  */
-#line 1408 "compiler.y"
+#line 1422 "compiler.y"
     {
   treeNode *idAux = newTreeNode();
   fillTreeNode(idAux, currentVariable, "VARIAVEL");
@@ -3400,7 +3414,7 @@ currentRelationComparison = 0;
   case 104:
 
 /* Line 1806 of yacc.c  */
-#line 1423 "compiler.y"
+#line 1437 "compiler.y"
     {
   treeNode *passoAux = newTreeNode();
   fillTreeNode(passoAux, "+", "SOMA");
@@ -3453,7 +3467,7 @@ currentRelationComparison = 0;
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 1471 "compiler.y"
+#line 1485 "compiler.y"
     {
 if(!verifyRelationship(varRelations, currentRelationPos))
   {
@@ -3467,7 +3481,7 @@ currentRelationPos = 0;
   case 106:
 
 /* Line 1806 of yacc.c  */
-#line 1480 "compiler.y"
+#line 1494 "compiler.y"
     {
   expressionNode = NULL;
  
@@ -3479,14 +3493,14 @@ currentRelationPos = 0;
   case 108:
 
 /* Line 1806 of yacc.c  */
-#line 1488 "compiler.y"
+#line 1502 "compiler.y"
     {strcpy(identifiers, "\0"); currentRelationPos=0;}
     break;
 
   case 109:
 
 /* Line 1806 of yacc.c  */
-#line 1489 "compiler.y"
+#line 1503 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -3570,7 +3584,7 @@ currentRelationPos = 0;
   case 110:
 
 /* Line 1806 of yacc.c  */
-#line 1568 "compiler.y"
+#line 1582 "compiler.y"
     {
 if(varRelations[0] != T_LITERAL && varRelations[0] != T_LOGICO)
   switchType = varRelations[0];
@@ -3582,7 +3596,7 @@ else
   case 112:
 
 /* Line 1806 of yacc.c  */
-#line 1577 "compiler.y"
+#line 1591 "compiler.y"
     {
   //atualizando no de condicao para se-senao
   fillTreeNode(conditionNode,"condicao-se-senao","CONDICIONAL");   
@@ -3602,14 +3616,14 @@ else
   case 113:
 
 /* Line 1806 of yacc.c  */
-#line 1591 "compiler.y"
+#line 1605 "compiler.y"
     {currentRelationPos=0;}
     break;
 
   case 114:
 
 /* Line 1806 of yacc.c  */
-#line 1592 "compiler.y"
+#line 1606 "compiler.y"
     {
   commandNode = globalTree;
   globalTree = ((treeNode*)(popStack(stackGlobal)));
@@ -3620,14 +3634,14 @@ else
   case 116:
 
 /* Line 1806 of yacc.c  */
-#line 1600 "compiler.y"
+#line 1614 "compiler.y"
     {in_logico = 1;}
     break;
 
   case 117:
 
 /* Line 1806 of yacc.c  */
-#line 1601 "compiler.y"
+#line 1615 "compiler.y"
     {
   if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -3658,14 +3672,14 @@ else
   case 119:
 
 /* Line 1806 of yacc.c  */
-#line 1628 "compiler.y"
+#line 1642 "compiler.y"
     {in_logico = 1;}
     break;
 
   case 120:
 
 /* Line 1806 of yacc.c  */
-#line 1629 "compiler.y"
+#line 1643 "compiler.y"
     {
   if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -3696,7 +3710,7 @@ else
   case 122:
 
 /* Line 1806 of yacc.c  */
-#line 1657 "compiler.y"
+#line 1671 "compiler.y"
     {
   List* functionList = lookupStringVariable(hashFunction, currentFunction);
   function* functionAux = ((function*)(functionList->info));
@@ -3727,7 +3741,7 @@ else
   case 123:
 
 /* Line 1806 of yacc.c  */
-#line 1683 "compiler.y"
+#line 1697 "compiler.y"
     {
   List* functionList = lookupStringVariable(hashFunction, currentFunction);
   function* functionAux = ((function*)(functionList->info));
@@ -3759,21 +3773,21 @@ else
   case 125:
 
 /* Line 1806 of yacc.c  */
-#line 1710 "compiler.y"
+#line 1724 "compiler.y"
     { swapoutDoisUm(); swapoutTresDois(); }
     break;
 
   case 126:
 
 /* Line 1806 of yacc.c  */
-#line 1712 "compiler.y"
+#line 1726 "compiler.y"
     { swapoutDoisUm();swapoutTresDois(); }
     break;
 
   case 127:
 
 /* Line 1806 of yacc.c  */
-#line 1713 "compiler.y"
+#line 1727 "compiler.y"
     {
     if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -3800,84 +3814,84 @@ else
   case 128:
 
 /* Line 1806 of yacc.c  */
-#line 1734 "compiler.y"
+#line 1748 "compiler.y"
     {operadorDeNivelTres();}
     break;
 
   case 129:
 
 /* Line 1806 of yacc.c  */
-#line 1734 "compiler.y"
+#line 1748 "compiler.y"
     { swapoutTresDois(); }
     break;
 
   case 130:
 
 /* Line 1806 of yacc.c  */
-#line 1736 "compiler.y"
+#line 1750 "compiler.y"
     { operadorDeNivelDois(">"); }
     break;
 
   case 131:
 
 /* Line 1806 of yacc.c  */
-#line 1737 "compiler.y"
+#line 1751 "compiler.y"
     { operadorDeNivelDois(">="); }
     break;
 
   case 132:
 
 /* Line 1806 of yacc.c  */
-#line 1738 "compiler.y"
+#line 1752 "compiler.y"
     { operadorDeNivelDois("="); }
     break;
 
   case 133:
 
 /* Line 1806 of yacc.c  */
-#line 1739 "compiler.y"
+#line 1753 "compiler.y"
     { operadorDeNivelDois("<"); }
     break;
 
   case 134:
 
 /* Line 1806 of yacc.c  */
-#line 1740 "compiler.y"
+#line 1754 "compiler.y"
     { operadorDeNivelDois("<="); }
     break;
 
   case 135:
 
 /* Line 1806 of yacc.c  */
-#line 1741 "compiler.y"
+#line 1755 "compiler.y"
     { operadorDeNivelDois("<>"); }
     break;
 
   case 136:
 
 /* Line 1806 of yacc.c  */
-#line 1744 "compiler.y"
+#line 1758 "compiler.y"
     { swapoutDoisUm(); }
     break;
 
   case 137:
 
 /* Line 1806 of yacc.c  */
-#line 1745 "compiler.y"
+#line 1759 "compiler.y"
     { operadorDeNivelUm(); }
     break;
 
   case 138:
 
 /* Line 1806 of yacc.c  */
-#line 1745 "compiler.y"
+#line 1759 "compiler.y"
     { swapoutDoisUm(); }
     break;
 
   case 142:
 
 /* Line 1806 of yacc.c  */
-#line 1750 "compiler.y"
+#line 1764 "compiler.y"
     {
   /*
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
@@ -3930,7 +3944,7 @@ else
   case 143:
 
 /* Line 1806 of yacc.c  */
-#line 1798 "compiler.y"
+#line 1812 "compiler.y"
     {
   //if(in_function!=1)
   {
@@ -3980,21 +3994,21 @@ else
   case 146:
 
 /* Line 1806 of yacc.c  */
-#line 1844 "compiler.y"
+#line 1858 "compiler.y"
     {	operadorDeNivelZero("/"); }
     break;
 
   case 147:
 
 /* Line 1806 of yacc.c  */
-#line 1844 "compiler.y"
+#line 1858 "compiler.y"
     { swapoutUmZero(); }
     break;
 
   case 148:
 
 /* Line 1806 of yacc.c  */
-#line 1847 "compiler.y"
+#line 1861 "compiler.y"
     {
   if(strcmp(currentType, "inteiro")!=0)
   {
@@ -4006,14 +4020,14 @@ else
   case 149:
 
 /* Line 1806 of yacc.c  */
-#line 1853 "compiler.y"
+#line 1867 "compiler.y"
     { operadorDeNivelZero("%"); }
     break;
 
   case 150:
 
 /* Line 1806 of yacc.c  */
-#line 1854 "compiler.y"
+#line 1868 "compiler.y"
     {
     if(strcmp(currentType, "inteiro")!=0)
     {
@@ -4025,42 +4039,42 @@ else
   case 151:
 
 /* Line 1806 of yacc.c  */
-#line 1860 "compiler.y"
+#line 1874 "compiler.y"
     { swapoutUmZero(); }
     break;
 
   case 152:
 
 /* Line 1806 of yacc.c  */
-#line 1862 "compiler.y"
+#line 1876 "compiler.y"
     { operadorDeNivelZero("*"); }
     break;
 
   case 153:
 
 /* Line 1806 of yacc.c  */
-#line 1862 "compiler.y"
+#line 1876 "compiler.y"
     { swapoutUmZero(); }
     break;
 
   case 154:
 
 /* Line 1806 of yacc.c  */
-#line 1864 "compiler.y"
+#line 1878 "compiler.y"
     { operadorDeMenorNivel("^"); }
     break;
 
   case 155:
 
 /* Line 1806 of yacc.c  */
-#line 1864 "compiler.y"
+#line 1878 "compiler.y"
     { swapoutZeroMenor(); }
     break;
 
   case 157:
 
 /* Line 1806 of yacc.c  */
-#line 1868 "compiler.y"
+#line 1882 "compiler.y"
     {
   //if(in_function!=1)
   {
@@ -4086,7 +4100,7 @@ else
   case 158:
 
 /* Line 1806 of yacc.c  */
-#line 1889 "compiler.y"
+#line 1903 "compiler.y"
     {
   //if(in_function!=1)
   {
@@ -4113,7 +4127,7 @@ else
   case 159:
 
 /* Line 1806 of yacc.c  */
-#line 1916 "compiler.y"
+#line 1930 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -4189,7 +4203,7 @@ else
   case 160:
 
 /* Line 1806 of yacc.c  */
-#line 1987 "compiler.y"
+#line 2001 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -4274,7 +4288,7 @@ else
   case 161:
 
 /* Line 1806 of yacc.c  */
-#line 2071 "compiler.y"
+#line 2085 "compiler.y"
     {
   List *identifier_temp = NULL;
   if(strcmp(currentScope, "main")==0)
@@ -4329,7 +4343,7 @@ else
   case 162:
 
 /* Line 1806 of yacc.c  */
-#line 2122 "compiler.y"
+#line 2136 "compiler.y"
     {
   List *identifier_temp = NULL;
   if(strcmp(currentScope, "main")==0)
@@ -4372,7 +4386,7 @@ else
   case 163:
 
 /* Line 1806 of yacc.c  */
-#line 2160 "compiler.y"
+#line 2174 "compiler.y"
     {
    List *identifier_temp = NULL;
   if(strcmp(currentScope, "main")==0)
@@ -4423,7 +4437,7 @@ else
   case 164:
 
 /* Line 1806 of yacc.c  */
-#line 2207 "compiler.y"
+#line 2221 "compiler.y"
     {
 
     int currentTypeInt = convertType(currentType);
@@ -4446,7 +4460,7 @@ else
   case 165:
 
 /* Line 1806 of yacc.c  */
-#line 2225 "compiler.y"
+#line 2239 "compiler.y"
     {
   if(strlen(limitString) > MAX_LITERAL)
   {
@@ -4476,7 +4490,7 @@ else
   case 166:
 
 /* Line 1806 of yacc.c  */
-#line 2249 "compiler.y"
+#line 2263 "compiler.y"
     {
 	//crio o no parentesis
 	treeNode *aux = newTreeNode();
@@ -4496,7 +4510,7 @@ else
   case 167:
 
 /* Line 1806 of yacc.c  */
-#line 2262 "compiler.y"
+#line 2276 "compiler.y"
     {
 	treeNode* aux = (treeNode*) popStack(stackParentesis);
 	if(aux->children[0] == NULL){
@@ -4511,7 +4525,7 @@ else
   case 168:
 
 /* Line 1806 of yacc.c  */
-#line 2272 "compiler.y"
+#line 2286 "compiler.y"
     {
   //if(in_function!=1)
   {
@@ -4536,7 +4550,7 @@ else
   case 169:
 
 /* Line 1806 of yacc.c  */
-#line 2292 "compiler.y"
+#line 2306 "compiler.y"
     {
   //if(in_function!=1)
   {
@@ -4561,7 +4575,7 @@ else
   case 170:
 
 /* Line 1806 of yacc.c  */
-#line 2312 "compiler.y"
+#line 2326 "compiler.y"
     {
 
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
@@ -4651,7 +4665,7 @@ else
   case 171:
 
 /* Line 1806 of yacc.c  */
-#line 2397 "compiler.y"
+#line 2411 "compiler.y"
     { 
   List *functionList = lookupStringFunction(hashFunction, currentFunction);
   if(functionList == NULL)
@@ -4794,7 +4808,7 @@ else
   case 173:
 
 /* Line 1806 of yacc.c  */
-#line 2536 "compiler.y"
+#line 2550 "compiler.y"
     {
   if(switchType != T_INTEIRO)
   {
@@ -4812,7 +4826,7 @@ else
   case 174:
 
 /* Line 1806 of yacc.c  */
-#line 2549 "compiler.y"
+#line 2563 "compiler.y"
     {
   if(switchType != T_REAL)
   {
@@ -4830,7 +4844,7 @@ else
   case 175:
 
 /* Line 1806 of yacc.c  */
-#line 2562 "compiler.y"
+#line 2576 "compiler.y"
     {
   if(switchType != T_CARACTER)
   {
@@ -4848,14 +4862,14 @@ else
   case 176:
 
 /* Line 1806 of yacc.c  */
-#line 2575 "compiler.y"
+#line 2589 "compiler.y"
     { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm = expressionNode;  expressionNode=NULL; }
     break;
 
   case 177:
 
 /* Line 1806 of yacc.c  */
-#line 2575 "compiler.y"
+#line 2589 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -4881,7 +4895,7 @@ else
   case 178:
 
 /* Line 1806 of yacc.c  */
-#line 2595 "compiler.y"
+#line 2609 "compiler.y"
     {
 	isMatrix = 1;
 }
@@ -4890,14 +4904,14 @@ else
   case 179:
 
 /* Line 1806 of yacc.c  */
-#line 2599 "compiler.y"
+#line 2613 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 180:
 
 /* Line 1806 of yacc.c  */
-#line 2599 "compiler.y"
+#line 2613 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -4922,7 +4936,7 @@ else
   case 181:
 
 /* Line 1806 of yacc.c  */
-#line 2618 "compiler.y"
+#line 2632 "compiler.y"
     {
 	isMatrix = 1; 
 	expressionNode = tempDelimitadorNivelZero;
@@ -4932,14 +4946,14 @@ else
   case 182:
 
 /* Line 1806 of yacc.c  */
-#line 2622 "compiler.y"
+#line 2636 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 183:
 
 /* Line 1806 of yacc.c  */
-#line 2623 "compiler.y"
+#line 2637 "compiler.y"
     {
 	treeNode *auxList = tempDelimitadorNivelUm->children[0];
 	while(auxList->next != NULL) auxList = auxList->next;
@@ -4966,14 +4980,14 @@ List *identifier_temp = NULL;
   case 185:
 
 /* Line 1806 of yacc.c  */
-#line 2645 "compiler.y"
+#line 2659 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 186:
 
 /* Line 1806 of yacc.c  */
-#line 2645 "compiler.y"
+#line 2659 "compiler.y"
     {
 
 	
@@ -5001,7 +5015,7 @@ List *identifier_temp = NULL;
   case 188:
 
 /* Line 1806 of yacc.c  */
-#line 2670 "compiler.y"
+#line 2684 "compiler.y"
     {	
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5027,7 +5041,7 @@ List *identifier_temp = NULL;
   case 189:
 
 /* Line 1806 of yacc.c  */
-#line 2693 "compiler.y"
+#line 2707 "compiler.y"
     {	
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5057,7 +5071,7 @@ List *identifier_temp = NULL;
 
 
 /* Line 1806 of yacc.c  */
-#line 5061 "compiler.tab.c"
+#line 5075 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -5288,7 +5302,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 2719 "compiler.y"
+#line 2733 "compiler.y"
 
 
 #include "lex.yy.c"
@@ -5450,12 +5464,16 @@ main()
       }
 
 	//execute
-	//executeTree(globalTree);
+	executeTree(globalTree);
 	
  	//	List* l = lookupStringVariable(hashVariables, "c");
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
- 		//List* l = lookupStringVariable(hashVariables, "a");
- 		//printf("a: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 		List* l = lookupStringVariable(hashVariables, "str");
+ 		printf("str: %s\n", ( (char*) ( (variable*) l->info )->value) );
+ 	//	List* l = lookupStringVariable(hashVariables, "a");
+ 	//	printf("a: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
+ 	//	l = lookupStringVariable(hashVariables, "ch");
+ 	//	printf("ch: %c\n", *( (char*) ( (variable*) l->info )->value) );
  		//l = lookupStringVariable(hashVariables, "b");
  		//printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	List* l = lookupStringVariable(hashVariables, "a");

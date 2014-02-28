@@ -1,13 +1,13 @@
 algoritmo declaracao_de_variaveis;
 
-
+/*
 função soma2(x: inteiro, y: inteiro) : inteiro
   a:inteiro;
 início
   a := x + y;
   retorne a;
 fim
-
+*/
 /*
 função soma4(x: inteiro, y: inteiro, z: inteiro, w: inteiro) : inteiro
   a:inteiro;
@@ -25,14 +25,8 @@ fim
 */
 
 variáveis
-<<<<<<< HEAD
-	//a : real;
-	//b : inteiro;
-	//d:inteiro;
-	//b:inteiro;
-	//c:lógico;
-=======
-	a : inteiro;
+
+	a : real;
 	//b : inteiro;
 	//d : inteiro;
 	//b : inteiro;
@@ -42,33 +36,35 @@ variáveis
 	//d : inteiro;
 	//b : inteiro;
 	//c : lógico;
->>>>>>> 048b24bd313d32e12d7807f5820a212274caa82a
 	//a : real;
 	//b : real;
 	//c : lógico;
 	//z : lógico;
 	//c:real;
 	//d:inteiro;
-	//m:matriz[4][3] de inteiros;
-	n:matriz[4] de inteiros;
+	m:matriz[2][2] de literais;
+	n:matriz[2] de literais;
 	ch : caracter;
 	str : literal;
 fim-variáveis
 
 início
-<<<<<<< HEAD
+	//m[0][0] := "casa";
+	//m[1][1] := 20.2;
+	//m[0][1] := 5.05;
+	//m[1][0] := 5.04;
+	//n := ["casa","cama"];
+	m := {["casa","cama"],["carro","caro"]};
+	str := m[1][1];
+	//str := m[1][1];
+	//ch := 'J';
+	//m[0][1] := 1030;
+	//n[0] := 105;
+	//a:=m[1][0];
+	//ch := 'a';
 	
-	n[0] := 1;
-	//ch := '\n';
-	//str := "literalmente";
 	//b := soma4(1,2,3,4);
-=======
-	a := 10;
-	//d := 20 + n[0];
-	//n[0] := 1;
-	//m[0][0] := 1;
 
->>>>>>> 048b24bd313d32e12d7807f5820a212274caa82a
 	//a := 2^2;
 
 	//c := verdadeiro;
@@ -101,7 +97,7 @@ início
 	//a := 10;
 	//d := 20;
 	
-	a := soma2(a, a);
+	//a := soma2(a, a);
 
 	//a:=10;
 	//b:=0;

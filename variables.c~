@@ -78,7 +78,7 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
 	}    
 	if(type == 2) //tipo literal 
 	{
-	  char *value = (char*) malloc(column*53*sizeof(char)); //50 e o limite do literal
+	  char *value = (char*) malloc(column*203*sizeof(char)); //200 e o limite do literal
 	  var->value = value;
 	}
 	if(type == 4) //tipo logico -> sera convertido em inteiro (1 ou 0) de acordo com C 

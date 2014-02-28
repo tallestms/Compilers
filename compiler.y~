@@ -1052,6 +1052,10 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     attributionNode->children[1] = expressionNode;
     //retorno o nós de atribuição para null
     expressionNode=NULL;
+    
+    //adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
+    //verifica que nao esta dentro de condicional tambem (enquanto ou se)
+    addAttributionNodeIntoGlobalTree();
 
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
@@ -1090,7 +1094,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		
 		  //cria o nó da arvore de atribuição
 		  attributionNode = newTreeNode();
-		  fillTreeNode(attributionNode,yytext,"ATRIBUICAO");
+		  fillTreeNode(attributionNode,":=","ATRIBUICAO");
 		  //cria o nó do identificador e insere a esquerda da atribuição
 		  treeNode *idAux = newTreeNode();
 		  fillTreeNode(idAux, currentIdentifier, "MATRIZ");
@@ -1124,6 +1128,16 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 } token_fechacol token_atribuicao EXPR {
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
+	
+		//adiciono o nó de expressão a direita do nó de atribuição
+    	attributionNode->children[1] = expressionNode;
+    	//retorno o nós de atribuição para null
+    	expressionNode=NULL;
+    
+    	//adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
+    	//verifica que nao esta dentro de condicional tambem (enquanto ou se)
+    	addAttributionNodeIntoGlobalTree();
+	
 		if(!verifyRelationship(varRelations, currentRelationPos))
 		{
 		  printf("Tipos incompativeis na linha %d.\n", nLine);
@@ -2877,13 +2891,16 @@ main()
       }
 
 	//execute
-	//executeTree(globalTree);
+	executeTree(globalTree);
 	
  	//	List* l = lookupStringVariable(hashVariables, "c");
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
-
- 		//List* l = lookupStringVariable(hashVariables, "a");
- 		//printf("a: %d\n", *( (int*) ( (variable*) l->info )->value) );
+ 	//	List* l = lookupStringVariable(hashVariables, "str");
+ 	//	printf("str: %s\n", ( (char*) ( (variable*) l->info )->value) );
+ 		List* l = lookupStringVariable(hashVariables, "a");
+ 		printf("a: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
+ 		l = lookupStringVariable(hashVariables, "ch");
+ 		printf("ch: %c\n", *( (char*) ( (variable*) l->info )->value) );
  		//l = lookupStringVariable(hashVariables, "b");
  		//printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	List* l = lookupStringVariable(hashVariables, "a");
