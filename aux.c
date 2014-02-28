@@ -70,7 +70,8 @@ return counter;
 }
 
 int convertValuesTreeNode(char v[50],char t[50]){
-
+	if(!strcmp(t, "LITERAL")) return -2;	
+	if(!strcmp(t, "CARACTER")) return -1;	
 	if(!strcmp(t, "LOGICO")) return 0;
 	if(!strcmp(t, "INTEIRO")) return 1;
 	if(!strcmp(t, "REAL")) return 2;
@@ -101,7 +102,7 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v,"condicao-seleciona")) return 27;
 	if(!strcmp(v, "^")) return 28;
 	
-	return -1;
+	return -1000;
 	
 }
 
@@ -137,4 +138,10 @@ int findArgumentType(int argumentNumber, List* aux)
   }
   return ((int)(aux2->info));
   
+}
+
+void retiraAspasFinal(char* s){
+	int i;
+	for(i=0;s[i];i++);
+	s[i-1] = '\0';	
 }

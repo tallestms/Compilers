@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "lists.h"
+#include "aux.h"
 
 #define T_INTEIRO 0
 #define T_CARACTER 1

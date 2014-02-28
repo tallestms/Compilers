@@ -32,8 +32,8 @@ void executeTree(treeNode* t){
 void* executeNode(treeNode* t){
 	int *intReturn = (int*)malloc(sizeof(int));
 	double *doubleReturn = (double*)malloc(sizeof(double));
-	char stringReturn[50];
-	char *charReturn;
+	char* stringReturn = (char*)malloc(sizeof(char) * MAX_LITERAL_DECLARATION);
+	char *charReturn = (char*) malloc(sizeof(char));
 	variable* var;
 	List* list;
 	char type[50];
@@ -43,8 +43,44 @@ void* executeNode(treeNode* t){
 	int j1;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
-	//printf("tipo convertido: %d\n",c);
+	printf("tipo convertido: %d\n",c);
 	switch (c) {
+	case -2: //literal
+		strcpy(stringReturn, t->value);
+		return stringReturn;
+	case -1: //caracter
+		if( ((char*)t->value)[1] == '\\' ){
+			char ch = ((char*)t->value)[2];
+			switch (ch){
+			case 'n':
+				*charReturn = '\n'; break;
+			case '0':
+				*charReturn = '\0'; break;
+			case '\\':
+				*charReturn = '\\'; break;
+			case 'r':
+				*charReturn = '\r'; break;
+			case 't':
+				*charReturn = '\t'; break;
+			case 'v':
+				*charReturn = '\v'; break;
+			case 'f':
+				*charReturn = '\f'; break;
+			case '7':
+				*charReturn = '\7'; break;
+			case 'a':
+				*charReturn = '\a'; break;
+			case '\'':
+				*charReturn = '\''; break;
+			case '"':
+				*charReturn = '"'; break;
+			default: 
+				*charReturn = '\0'; break;;
+			}
+		}else {
+			*charReturn = ((char*)t->value)[1];
+		}
+		return charReturn;
 	case 0: // verdadeiro - falso
 		if(!strcmp(t->value, "verdadeiro")) *intReturn = 1;
 		else *intReturn = 0;
@@ -59,12 +95,62 @@ void* executeNode(treeNode* t){
 	case 3: // :=
 		 list = (lookupStringVariable(hashVariables, t->children[0]->value));
 		 var = (variable*) ( list->info );
-		 if(var->matrix) { strcpy(globalVarName,  var->name); executeNode(t->children[1]); return; }
+		 //atribuição de matrizes completa
+		 if(var->matrix && !strcmp(t->children[0]->type,"VARIAVEL") ) {  strcpy(globalVarName,  var->name); executeNode(t->children[1]); return; }
+		 //atribuição de matrizes por posição
+		 if(var->matrix && var->dimension == 1) {
+		 	i = *((int*)executeNode(t->children[0]->children[0]));
+		 	//inteiros
+		 	if ( var->type == 0 ) { 
+		 		((int*)var->value)[i] = * ((int*)executeNode(t->children[1]));
+		 		return;
+		 	}
+		 	//reais
+		 	if ( var->type == 3 ) { 
+		 		((double*)var->value)[i] = * ((double*)executeNode(t->children[1]));
+		 		return;
+		 	}
+		 	//caracter
+		 	if ( var->type == 1 ) { 
+		 		((char*)var->value)[i] = * ((char*)executeNode(t->children[1]));
+		 		return;
+		 	}
+		 	//literais
+		 	if ( var->type == 2 ) { 
+		 		strcpy( ((char*)var->value + MAX_LITERAL_DECLARATION*i*sizeof(char) ) , ((char*)executeNode(t->children[1])) );
+		 		return;
+		 	}
+		 } 
+		 if(var->matrix && var->dimension == 2){
+		 	i = *((int*)executeNode(t->children[0]->children[0]));
+		 	j = *((int*)executeNode(t->children[0]->children[1]));
+		 	//inteiros
+		 	if ( var->type == 0 ) { 
+		 		((int*)var->value+(i*sizeof(int)) )[j] = *((int*)executeNode(t->children[1]));
+		 		return;
+		 	}
+		 	//reais
+		 	if ( var->type == 3 ) { 
+		 		((double*)var->value+(i*sizeof(double)) )[j] = *((double*)executeNode(t->children[1]));
+		 		return;
+		 	}
+		 	//caracter
+		 	if ( var->type == 1 ) { 
+		 		((char*)var->value+(i*sizeof(char)) )[j] = *((char*)executeNode(t->children[1]));
+		 		return;
+		 	}
+		 	//literais
+		 	if ( var->type == 2 ) { 
+		 		strcpy( ((char*)var->value + (i*var->nColumn+j)*MAX_LITERAL_DECLARATION*sizeof(char) ), ((char*)executeNode(t->children[1])) );
+		 		return;
+		 	}
+		 }
 		 //inteiro ou logico
 		 if(var->type == 4 || var->type == 0){ var->value = (int*)(executeNode(t->children[1]) ) ; return; }
 		 //caracter
-	//	 if(var->type == 1){ var->value = (char*) (executeNode(t->children[1])); return; }
-		 if(var->type == 2){ strcpy(var->value, (char*)(executeNode(t->children[0]))); return; }
+		 if(var->type == 1){ var->value = (char*) (executeNode(t->children[1])); return; }
+		 //literal
+		 if(var->type == 2){ strcpy((char*)var->value, (char*)(executeNode(t->children[1]))); return; }
 		 if(var->type == 3){ var->value = (double*)executeNode(t->children[1]); return; }
 		 return;	
 	case 4: // /
@@ -99,6 +185,7 @@ void* executeNode(treeNode* t){
 		 	*intReturn = *((int*)executeNode(t->children[0])) % *((int*)executeNode(t->children[1])); 
 		 	return intReturn; 
 		 }
+		 //Não funciona para real
 		 return;
 	case 7: // +
 		//Percorre os filhos a esquerda para identificar o tipo que só pode ser inteiro ou float
@@ -165,46 +252,102 @@ void* executeNode(treeNode* t){
 		if(var->dimension == 1){
 			aux = t->children[0];
 			for (i=0;i<var->nColumn;i++){
-				if (var->type == 0 || var->type == 4) {
+				//inteiro
+				if (var->type == 0) {
 					((int*)var->value)[i] = *((int*)(executeNode(aux)));
 				}
+				//caracter
+				if (var->type == 1) {
+					((char*)var->value)[i] = *((char*)(executeNode(aux)));
+				}
+				//literal
+				if (var->type == 2) {
+					strcpy( ((char*)var->value + MAX_LITERAL_DECLARATION*i*sizeof(char) ) , ((char*)executeNode(aux)) );
+				}
+				//real
+				if (var->type == 3) {
+					((double*)var->value)[i] = *((double*)(executeNode(aux)));
+				}
+				//incrementa
 				aux = aux->next;
 			}
-			//printf("n = [%p,%p,%p,%p]\n", ((int*)(var->value +0*sizeof(int) )), ((int*)(var->value +1*sizeof(int) )) , ((int*)(var->value +2*sizeof(int))), ((int*)(var->value+3*sizeof(int))));
-			//printf("n = [%d,%d,%d,%d]\n", *((int*)(var->value +0*sizeof(int) )), *((int*)(var->value +1*sizeof(int) )) , *((int*)(var->value +2*sizeof(int))), *((int*)(var->value+3*sizeof(int))));
-			
 		} else { 
 			aux = t->children[0];
 			for(i = 0; i<var->nLine;i++){
 				aux2 = aux->children[0];
 				for(j=0;j<var->nColumn;j++){
-					if (var->type == 0 || var->type == 4) {
+					//inteiro
+					if (var->type == 0) {
 						((int*)(var->value+j*sizeof(int)))[i] = *((int*)(executeNode(aux2)));
 					}
+					//caracter
+					if (var->type == 1) {
+						((char*)(var->value+j*sizeof(char)))[i] = *((char*)(executeNode(aux2)));
+					}
+					//literal
+					if (var->type == 2) {
+						strcpy( ((char*)var->value + (i*var->nColumn+j)*MAX_LITERAL_DECLARATION*sizeof(char) ), ((char*)executeNode(aux2)) );
+					}
+					//real
+					if (var->type == 3) {
+						((double*)(var->value+j*sizeof(double)))[i] = *((double*)(executeNode(aux2)));
+					}
+					//incrementa coluna
 					aux2 = aux2->next;
 				}
+				//incrementa linha
 				aux = aux->next;
 			}
-			
-			/*for(i=0;i<globalVar->nLine;i++){
-				printf("%d , %d , %d , %d \n", *((int*)(globalVar->value+(globalVar->nColumn*0+i)*sizeof(int))), *((int*)(globalVar->value+(globalVar->nColumn+i)*sizeof(int))), *((int*)(globalVar->value+(globalVar->nColumn*2+i)*sizeof(int))), *((int*)(globalVar->value+(globalVar->nColumn*3+i)*sizeof(int))) );
-			}*/
-					
 		}
-		
 		return;
 	case 13: //Matriz
 		 list = (List*)(lookupStringVariable(hashVariables, t->value)); 
 		 var = (variable*) list->info;
 		 if(var->dimension == 1){
 		 	i = *((int*)executeNode(t->children[0]));
-		 	*intReturn = ((int*) var->value)[i];
-		 	return intReturn;
+		 	//inteiro
+		 	if(var->type == 0){
+		 		*intReturn = ((int*) var->value)[i];
+		 		return intReturn;
+			}
+			//caracter
+			if(var->type == 1){
+				*charReturn = ((char*) var->value)[i];
+				return charReturn;
+			}		 
+		 	//literal
+			if(var->type == 2){
+				strcpy(stringReturn, ((char*) var->value + i*MAX_LITERAL_DECLARATION*sizeof(char)));
+				return stringReturn;
+			}
+			//real
+			if(var->type == 3){
+				*doubleReturn = ((double*) var->value)[i];
+		 		return doubleReturn;
+			}
+			
 		 }else{ 
 		 	i = *((int*)executeNode(t->children[0]));
 		 	j = *((int*)executeNode(t->children[1]));
-		 	*intReturn = ((int*) (var->value + j*sizeof(int)) )[i];
-		 	return intReturn;
+		 	if(var->type == 0) {
+			 	*intReturn = ((int*) (var->value + j*sizeof(int)) )[i];
+			 	return intReturn;
+			}
+			//caracter
+			if(var->type == 1) {
+			 	*charReturn = ((char*) (var->value + j*sizeof(char)) )[i];
+			 	return charReturn;
+			}
+			//literais TODO nao tah funcionando
+			if(var->type == 2){
+				strcpy( stringReturn, ((char*)var->value + (j*var->nColumn+i)*MAX_LITERAL_DECLARATION*sizeof(char)) );
+				return stringReturn;
+			}
+			//reais 
+			if(var->type == 3) {
+			 	*doubleReturn = ((double*) (var->value + j*sizeof(double)) )[i];
+			 	return doubleReturn;
+			}
 		 }
 		return;
 	case 14: // >
