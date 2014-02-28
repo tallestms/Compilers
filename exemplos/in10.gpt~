@@ -24,9 +24,9 @@ fim
 */
 
 variáveis
-	a : real;
-	b : inteiro;
-	d:inteiro;
+	//a : real;
+	//b : inteiro;
+	//d:inteiro;
 	//b:inteiro;
 	//c:lógico;
 	//a : real;
@@ -36,12 +36,16 @@ variáveis
 	//c:real;
 	//d:inteiro;
 	//m:matriz[4][3] de inteiros;
-	//n:matriz[4] de inteiros;
+	n:matriz[4] de inteiros;
+	ch : caracter;
+	str : literal;
 fim-variáveis
 
 início
-
-	a := 1 + 2 ^ (3 * 4);
+	ch := '\n';
+	str := "literalmente";
+	//b := soma4(1,2,3,4);
+	//a := 2^2;
 
 	//c := verdadeiro;
 	//a := soma2(d*a+d*d*a,a+d*a*d*d);

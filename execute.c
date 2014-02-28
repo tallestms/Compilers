@@ -99,6 +99,7 @@ void* executeNode(treeNode* t){
 		 	*intReturn = *((int*)executeNode(t->children[0])) % *((int*)executeNode(t->children[1])); 
 		 	return intReturn; 
 		 }
+		 //Não funciona para real
 		 return;
 	case 7: // +
 		//Percorre os filhos a esquerda para identificar o tipo que só pode ser inteiro ou float

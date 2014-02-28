@@ -1017,11 +1017,39 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		  varRelations[currentRelationPos] = currentTypeInt;
 		  ++currentRelationPos;
 		  ++currentRelationComparison;
+		  
+		  //cria o nó da arvore de atribuição
+		  attributionNode = newTreeNode();
+		  fillTreeNode(attributionNode,yytext,"ATRIBUICAO");
+		  //cria o nó do identificador e insere a esquerda da atribuição
+		  treeNode *idAux = newTreeNode();
+		  fillTreeNode(idAux, currentIdentifier, "MATRIZ");
+		  attributionNode->children[0] = idAux;
+		  //cria o no com o valor da coluna acessada
+		  char s[50];
+    	  sprintf(s,"%d",currentNumber);
+		  treeNode *numCol = newTreeNode();
+		  fillTreeNode(numCol,s,"INTEIRO");
+		  idAux->children[0] = numCol;
+		  //seta para null o nó de expressão (que será construído na parte de expressão)
+		  expressionNode = NULL;
+		  
 		}
 	}else{
 		printf("Variavel nao declarada na linha %d\n",nLine);
 	}
+	
+	
+	
+	
+	
 } EXPR {
+
+	//adiciono o nó de expressão a direita do nó de atribuição
+    attributionNode->children[1] = expressionNode;
+    //retorno o nós de atribuição para null
+    expressionNode=NULL;
+
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
 		if(!verifyRelationship(varRelations, currentRelationPos))
@@ -1056,6 +1084,23 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		if(((variable*)(currVariable->info))->nColumn <= currentNumber ){
 			printf("Erro na linha %d, %s possui %d colunas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
 		}
+		
+		  //cria o nó da arvore de atribuição
+		  attributionNode = newTreeNode();
+		  fillTreeNode(attributionNode,yytext,"ATRIBUICAO");
+		  //cria o nó do identificador e insere a esquerda da atribuição
+		  treeNode *idAux = newTreeNode();
+		  fillTreeNode(idAux, currentIdentifier, "MATRIZ");
+		  attributionNode->children[0] = idAux;
+		  //cria o no com o valor da coluna acessada
+		  char s[50];
+    	  sprintf(s,"%d",currentNumber);
+		  treeNode *numCol = newTreeNode();
+		  fillTreeNode(numCol,s,"INTEIRO");
+		  idAux->children[0] = numCol;
+		  //seta para null o nó de expressão (que será construído na parte de expressão)
+		  expressionNode = NULL;
+		
 	}else{
 		printf("Variavel nao declarada na linha %d.\n",nLine);
 	}
@@ -1066,6 +1111,12 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		if(((variable*)(currVariable->info))->nLine <= currentNumber ){
 			printf("Erro na linha %d, %s possui %d linhas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
 		}
+		  //cria o no com o valor da linha acessada
+		  char s[50];
+    	  sprintf(s,"%d",currentNumber);
+		  treeNode *numLin = newTreeNode();
+		  fillTreeNode(numLin,s,"INTEIRO");
+		  attributionNode->children[0]->children[1] = numLin;
 	}
 } token_fechacol token_atribuicao EXPR {
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
@@ -2137,30 +2188,45 @@ Aqui sera feita analise de matriz com apenas um index
  
 | token_variavel_caracter 
 {
-  //if(in_function!=1)
-  {
+
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
     ++currentRelationComparison;
-  }
+	
+	//preenche arvore de expressão
+    treeNode* aux = newTreeNode();
+    fillTreeNode(aux, yytext, "CARACTER");
+    if (expressionNode == NULL) {
+      expressionNode = aux;
+    }else{
+    	expressionNode->children[1] = aux;
+    }
   
 }
 | token_string 
 {
   if(strlen(limitString) > MAX_LITERAL)
   {
-    printf("Tamanho de literal passou do limite de 200 caracteres na linha %d\n", nLine);
+    printf("Tamanho de literal passou do limite de 50 caracteres na linha %d\n", nLine);
   }
   else
   {
-    //if(in_function!=1)
-    {
+   
       int currentTypeInt = convertType(currentType);
       varRelations[currentRelationPos] = currentTypeInt;
       ++currentRelationPos;
       ++currentRelationComparison;
-    }
+    
+    	//preenche arvore de expressão
+    	treeNode* aux = newTreeNode();
+    	fillTreeNode(aux, yytext, "LITERAL");
+    	if (expressionNode == NULL) {
+    	  expressionNode = aux;
+    	}else{
+    		expressionNode->children[1] = aux;
+    	}
+    
   }
 }
 | token_abrep {
@@ -2794,13 +2860,13 @@ main()
       }
 
 	//execute
-	executeTree(globalTree);
+	//executeTree(globalTree);
 	
  	//	List* l = lookupStringVariable(hashVariables, "c");
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );
- 		List* l = lookupStringVariable(hashVariables, "a");
- 		printf("a: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
- 	//	l = lookupStringVariable(hashVariables, "b");
+ 	//	List* l = lookupStringVariable(hashVariables, "a");
+ 	//	printf("a: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
+ 	//	List *l = lookupStringVariable(hashVariables, "b");
  	//	printf("b: %d\n", *( (int*) ( (variable*) l->info )->value) );
  	//	l = lookupStringVariable(hashVariables, "b");
 	//	printf("b: %.2f\n", *( (double*) ( (variable*) l->info )->value) );
