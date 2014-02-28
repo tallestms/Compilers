@@ -32,7 +32,7 @@ void executeTree(treeNode* t){
 void* executeNode(treeNode* t){
 	int *intReturn = (int*)malloc(sizeof(int));
 	double *doubleReturn = (double*)malloc(sizeof(double));
-	char* stringReturn = (char*)malloc(sizeof(char) * 53);
+	char* stringReturn = (char*)malloc(sizeof(char) * MAX_LITERAL_DECLARATION);
 	char *charReturn = (char*) malloc(sizeof(char));
 	variable* var;
 	List* list;
@@ -117,7 +117,7 @@ void* executeNode(treeNode* t){
 		 	}
 		 	//literais
 		 	if ( var->type == 2 ) { 
-		 		strcpy( ((char*)var->value + 53*i*sizeof(char) ) , ((char*)executeNode(t->children[1])) );
+		 		strcpy( ((char*)var->value + MAX_LITERAL_DECLARATION*i*sizeof(char) ) , ((char*)executeNode(t->children[1])) );
 		 		return;
 		 	}
 		 } 
@@ -141,7 +141,7 @@ void* executeNode(treeNode* t){
 		 	}
 		 	//literais
 		 	if ( var->type == 2 ) { 
-		 		strcpy( ((char*)var->value + (i*var->nColumn+j)*53*sizeof(char) ), ((char*)executeNode(t->children[1])) );
+		 		strcpy( ((char*)var->value + (i*var->nColumn+j)*MAX_LITERAL_DECLARATION*sizeof(char) ), ((char*)executeNode(t->children[1])) );
 		 		return;
 		 	}
 		 }
@@ -262,7 +262,7 @@ void* executeNode(treeNode* t){
 				}
 				//literal
 				if (var->type == 2) {
-					strcpy( ((char*)var->value + 53*i*sizeof(char) ) , ((char*)executeNode(aux)) );
+					strcpy( ((char*)var->value + MAX_LITERAL_DECLARATION*i*sizeof(char) ) , ((char*)executeNode(aux)) );
 				}
 				//real
 				if (var->type == 3) {
@@ -286,7 +286,7 @@ void* executeNode(treeNode* t){
 					}
 					//literal
 					if (var->type == 2) {
-						strcpy( ((char*)var->value + (i*var->nColumn+j)*53*sizeof(char) ), ((char*)executeNode(aux2)) );
+						strcpy( ((char*)var->value + (i*var->nColumn+j)*MAX_LITERAL_DECLARATION*sizeof(char) ), ((char*)executeNode(aux2)) );
 					}
 					//real
 					if (var->type == 3) {
@@ -317,7 +317,7 @@ void* executeNode(treeNode* t){
 			}		 
 		 	//literal
 			if(var->type == 2){
-				strcpy(stringReturn, ((char*) var->value + i*53*sizeof(char)));
+				strcpy(stringReturn, ((char*) var->value + i*MAX_LITERAL_DECLARATION*sizeof(char)));
 				return stringReturn;
 			}
 			//real
@@ -338,9 +338,9 @@ void* executeNode(treeNode* t){
 			 	*charReturn = ((char*) (var->value + j*sizeof(char)) )[i];
 			 	return charReturn;
 			}
-			//literais TODO nao tah funcionando
+			//literais
 			if(var->type == 2){
-				strcpy( stringReturn, ((char*)var->value + (j*var->nColumn+i)*53*sizeof(char)) );
+				strcpy( stringReturn, ((char*)var->value + (j*var->nColumn+i)*MAX_LITERAL_DECLARATION*sizeof(char)) );
 				return stringReturn;
 			}
 			//reais 
@@ -482,7 +482,6 @@ void* executeNode(treeNode* t){
 		}
 		 return;
 	default: return;
-	
 	}
 
 

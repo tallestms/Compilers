@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "lists.h"
 
+#define MAX_LITERAL_DECLARATION 53
+
 int verifyRelationship(int *varRelations, int currentRelationPos);
 void printRelationship(int *varRelations, int currentRelationPos);
 int numSpaces(char *s);

@@ -145,3 +145,8 @@ void retiraAspasFinal(char* s){
 	for(i=0;s[i];i++);
 	s[i-1] = '\0';	
 }
+
+void terminate(){
+		//TODO desalocar
+		exit(0);
+}
