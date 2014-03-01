@@ -32,6 +32,7 @@ extern int currentNumber;
 char currentVariable[MAX_VARIABLE + MAX_FUNCTION + 2];
 char currentScope[MAX_FUNCTION] = "main";
 char currentFunction[MAX_FUNCTION];
+char returnVariableGlobal[MAX_VARIABLE];
 int currentFunctionArity = 0;
 int currentRelationPos = 0;
 int currentRelationComparison = 0;
@@ -101,7 +102,7 @@ FILE *abre_arquivo(char *filename, char *modo) {
 void compila(char *nome_programa) {
 
 	yyin = abre_arquivo(nome_programa, "r");
-	if (yyin == NULL) return NULL;
+	if (yyin == NULL) exit(1);
 
 	//...
 
@@ -110,9 +111,7 @@ void compila(char *nome_programa) {
 	//...
 
 	fclose(yyin);
-	return;
 }
-
 
 void addAttributionNodeIntoGlobalTree(){
 	if(globalTree==NULL){
@@ -547,7 +546,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
 	fillTreeNode(functionNode, yytext, "FUNCAO");
 	//Default eh funcao sem retorno...
 	treeNode *returnNode = newTreeNode();
-	fillTreeNode(returnNode, "RETORNO VARIAVEL", "VOID");
+	fillTreeNode(returnNode, "TIPO RETORNO", "VOID");
 	functionNode->children[0] = returnNode;
 	//addNodeIntoGlobalTree(functionNode);
 	
@@ -607,7 +606,7 @@ FUNCAO
 	fillTreeNode(functionNode, yytext, "FUNCAO");
 	//Default eh funcao sem retorno...
 	treeNode *returnNode = newTreeNode();
-	fillTreeNode(returnNode, "RETORNO VARIAVEL","VOID");
+	fillTreeNode(returnNode, "TIPO RETORNO","VOID");
 	functionNode->children[0] = returnNode;
 	//addNodeIntoGlobalTree(functionNode);
 	
@@ -751,7 +750,7 @@ FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_inicio BLOCO_FUNCAO toke
   List *aux = lookupStringFunction(hashFunction, currentScope);
   if(aux!=NULL)
     ((function*)(aux->info))->returnType = convertType(currentType);
-    
+  convertTypeReverseUpper(convertType(currentType),functionNode->children[0]->type);  
   returnFlag = 0;
 }
 VARIAVEIS 
@@ -763,7 +762,7 @@ token_inicio BLOCO_FUNCAO token_fim
   List *aux = lookupStringFunction(hashFunction, currentScope);
   if(aux!=NULL)
     ((function*)(aux->info))->returnType = convertType(currentType);
-    
+      convertTypeReverseUpper(convertType(currentType),functionNode->children[0]->type);  
   returnFlag = 0;
 }
 token_inicio BLOCO_FUNCAO token_fim
@@ -857,43 +856,46 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
 | /*Empty*/;  
 
 COMANDO:
-token_retorne token_identificador token_pontov
+token_retorne {expressionNode=NULL; } EXPR token_pontov
 {
   if(strcmp(currentScope, "main") != 0)
   {
     List* functionList = lookupStringFunction(hashFunction, currentScope);
     function* functionAux = ((function*)(functionList->info));
-    if(functionAux->returnType==T_SEMRETORNO){
+    if(functionAux->returnType==T_SEMRETORNO)
+    {
       printf("A funcao %s nao possui retorno.\n", currentScope);
       terminate();
-    }else
-    {
-      char auxVariable[100];
-      strcpy(auxVariable, currentIdentifier);
-      strcat(auxVariable, " ");
-      strcat(auxVariable, currentScope);
-      List* variableList = lookupStringVariable(hashVariables, auxVariable);
-      if(variableList != NULL)
-      {
-	  variable* variableAux = ((variable*)(variableList->info));
-	  if(variableAux -> used == 0)
-	  {
-	    printf("Variavel %s nao foi utilizada durante a funcao %s.\n", currentIdentifier, currentScope);
-	    terminate();
-	  }
-	  else if(variableAux->type!=functionAux->returnType)
-	  {
-	    printf("Variavel de retorno %s nao e compativel com o retorno da funcao %s.\n", currentIdentifier, currentScope);
-	    terminate();
-	  }
-	  else
-	    returnFlag = 1;
-      }
-      else{
-		printf("Variavel %s nao foi declarada na funcao %s.\n", currentIdentifier, currentScope);
-		terminate();
-	  }
     }
+    else
+    {
+      treeNode *returnNode = newTreeNode();
+      fillTreeNode(returnNode, "RETORNO FUNCAO", "RETORNO FUNCAO");
+      returnNode->children[0] = expressionNode; 
+      addNodeIntoGlobalTree(returnNode);
+      
+      if(in_logico==1 && in_condicional == 0)
+      {
+	  if(functionAux->returnType != 4)
+	  {
+	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+	    terminate();
+	  }
+	  in_logico=0;
+      }
+      else if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
+      {
+	printf("Tipos nao compativeis no retorno na funcao %s na linha %d\n", currentScope, nLine);
+      }
+      else if( functionAux->returnType != varRelations[0] && in_comparacao == 0)
+      {
+	printf("Expressao de retorno nao e compativel com o retorno da funcao %s na linha %d.\n", currentScope, nLine);
+      }
+      else
+      {
+	returnFlag = 1;
+      }
+      }
   }
   else
   {
@@ -901,11 +903,15 @@ token_retorne token_identificador token_pontov
     terminate();
   }
   
+  currentRelationPos = 0;
+  expressionNode=NULL;
   strcpy(identifiers, "\0");
 }
 |
-token_imprima token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
-token_imprimaln token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+token_imprima
+token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+token_imprimaln
+token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
 token_leia token_abrep token_identificador
 {
   	List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
@@ -1269,6 +1275,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     List *identifier_temp = lookupStringVariable(hashVariables, auxVariable);
     if(identifier_temp != NULL)
     {
+      strcpy(returnVariableGlobal, auxVariable);
       typeAttribute = ((variable *)(identifier_temp->info))->type;  
       //cria o nó da arvore de atribuição
       attributionNode = newTreeNode();
@@ -1295,11 +1302,10 @@ EXPR
     //adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
     //verifica que nao esta dentro de condicional tambem (enquanto ou se)
     addAttributionNodeIntoGlobalTree();
-
   if(strcmp(currentScope, "main") == 0)
     { 
-			  	
-      char* returnVariable = strtok(identifiers, " ");
+	//printf("%s\n", identifiers);
+      char* returnVariable = returnVariableGlobal;
       if (returnVariable != NULL)
       { 
 	List *identifier_temp = lookupStringVariable(hashVariables, returnVariable);
@@ -1340,6 +1346,7 @@ EXPR
 	else
 	{
 	  ((variable*)(identifier_temp->info))->used=1;
+
 	}
 	currentRelationPos = 0;
 	in_comparacao = 0;
@@ -3178,7 +3185,7 @@ main()
      if(IN_DEBUG_MODE){
   	treeNode* aux = globalTree;
 
-  	printNode(aux, 12, 0);
+  	printNode(aux, 13, 0);
 	printf("\n ---------- \n");
 	printf(" ---------- \n");
       }
