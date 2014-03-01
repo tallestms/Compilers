@@ -3185,16 +3185,18 @@ main()
     char lixo;
     char * programa;
     
+    
     while(1){
     
 		option = showMenu();
 		
 		switch(option){
 		case 1: //Compilar
-			programa = solicitaNomePrograma();
+			programa = (char*)solicitaNomePrograma();
 			printf("Abrindo %s\n", programa);
 			program = compila(programa);
-	   		listPrograms = insertList(listPrograms, program);    		
+	   		listPrograms = insertList(listPrograms, program);
+	   		scanf("%c",&lixo);
 			break;
 		case 2: //Executar
 			tam = sizeList(listPrograms);
@@ -3207,7 +3209,7 @@ main()
 				scanf("%d",&option);
 				scanf("%c",&lixo);
 				if(program != NULL) {
-					executeTree(program);
+					//executeProgram(program);
 					printNode(program->exec, 13, 0);
 					scanf("%c",&lixo);
 				}else
@@ -3221,6 +3223,7 @@ main()
 		}
 	
 	}
+	
     
 	if(IN_DEBUG_MODE){
 	  	treeNode* aux = globalTree;

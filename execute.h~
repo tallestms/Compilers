@@ -10,6 +10,7 @@
 #include "program.h"
 
 void *executeFunction(treeNode *func);
+void executeProgram(Program* p)
 void executeTree(treeNode* t);
 void* executeNode(treeNode* t);
 

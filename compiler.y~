@@ -120,10 +120,7 @@ Program* compila(char *nome_programa) {
 	hashFunction = NULL;
 	
 	fclose(yyin);
-<<<<<<< HEAD
-=======
 	return p;
->>>>>>> 408a8a45d3da32d1a46434ad2edc0b42ff5a576e
 }
 
 void addAttributionNodeIntoGlobalTree(){
@@ -3188,13 +3185,14 @@ main()
     char lixo;
     char * programa;
     
+    
     while(1){
     
 		option = showMenu();
 		
 		switch(option){
 		case 1: //Compilar
-			programa = solicitaNomePrograma();
+			programa = (char*)solicitaNomePrograma();
 			printf("Abrindo %s\n", programa);
 			program = compila(programa);
 	   		listPrograms = insertList(listPrograms, program);    		
@@ -3210,7 +3208,7 @@ main()
 				scanf("%d",&option);
 				scanf("%c",&lixo);
 				if(program != NULL) {
-					executeTree(program);
+					//executeProgram(program);
 					printNode(program->exec, 13, 0);
 					scanf("%c",&lixo);
 				}else
@@ -3224,6 +3222,7 @@ main()
 		}
 	
 	}
+	
     
 	if(IN_DEBUG_MODE){
 	  	treeNode* aux = globalTree;

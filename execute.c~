@@ -29,7 +29,7 @@ void *executeFunction(treeNode *func){
 	variable *var;
 	int numVariables = 0;
 	void* retorno = NULL;
-	void* flag = 0x1;
+	void* flag = (void*)0x1;
 	int i;
 	
 	/*empilhar variaveis da função chamada*/
@@ -99,20 +99,23 @@ void *executeFunction(treeNode *func){
 	return retorno;
 }
 
-void executeTree(Program* p){
-	treeNode *t;
+void executeProgram(Program* p){
 	if(p!=NULL){
 		//restaura hashVariables TODO copiar
 		hashVariables = p->hashVariables;
 		//restaura hashFunction TODO copiar
 		hashFunction = p->hashFunctions;
 		//Executa programa TODO copiar
-		t=p->exec;
-		while(t != NULL){
-			executeNode(t);
-			t = t->next;
-		}	
+		executeP(p->exec);
 	}
+	return;
+}
+
+void executeTree(treeNode* t){
+	while(t != NULL){
+		executeNode(t);
+		t = t->next;
+	}	
 	return;
 }
 
