@@ -5776,7 +5776,7 @@ main()
 		
 		switch(option){
 		case 1: //Compilar
-			programa = solicitaNomePrograma();
+			programa = (char*) solicitaNomePrograma();
 			printf("Abrindo %s\n", programa);
 			program = compila(programa);
 	   		listPrograms = insertList(listPrograms, program);    		
@@ -5792,13 +5792,19 @@ main()
 				scanf("%d",&option);
 				scanf("%c",&lixo);
 				if(program != NULL) {
-					executeTree(program);
-					printNode(program->exec, 13, 0);
+					executeProgram(program);
 					scanf("%c",&lixo);
 				}else
 					printf("O programa não pode ser recuperado\n");
 
 			}
+			break;
+		case 3:
+			printf("Entre com o programa do qual deseja ver a arvore\n");
+			scanf("%d",&option);
+			scanf("%c",&lixo);
+			printNode(program->exec, 13, 0);		
+			scanf("%c",&lixo);
 			break;
 		case 5:
 			return 0;
