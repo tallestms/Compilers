@@ -64,6 +64,7 @@ treeNode* conditionNode = NULL;
 treeNode* commandNode = NULL;
 treeNode* caseNode = NULL;
 treeNode* functionNode = NULL;
+treeNode* functionInternalVariables = NULL;
 
 List* functionVariablesList = NULL;
 //Adiciona no no stack global que ficara responsavel para controlar escopo dentro do programa
@@ -427,7 +428,21 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	  int intVarType = convertType(currentType);
 	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
-	  addInfoVariable(hashVariables, auxVariable, newVar);  
+	  addInfoVariable(hashVariables, auxVariable, newVar);
+	  
+	  treeNode* internalArgument = newTreeNode();
+	  fillTreeNode(internalArgument, auxVariable, "VARIAVEL INTERNA FUNCAO");
+	  if(functionInternalVariables==NULL)
+	  {
+	   functionInternalVariables=internalArgument; 
+	  }
+	  else
+	  {
+	    treeNode* auxInternalArgument = functionInternalVariables;
+	    while(auxInternalArgument->next != NULL)
+	      auxInternalArgument=auxInternalArgument->next;
+	    auxInternalArgument->next = internalArgument;
+	  }
 	}
 	else
 	{
@@ -454,6 +469,8 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 		setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 		isMatrix = 0;  //Próxima variável entrar como não matriz
 		addInfoVariable(hashVariables, varName, newVar);
+		
+		
       }  
       else
       {
@@ -480,6 +497,20 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);
+	  
+	   treeNode* internalArgument = newTreeNode();
+	  fillTreeNode(internalArgument, auxVariable, "VARIAVEL INTERNA FUNCAO");
+	  if(functionInternalVariables==NULL)
+	  {
+	   functionInternalVariables=internalArgument; 
+	  }
+	  else
+	  {
+	    treeNode* auxInternalArgument = functionInternalVariables;
+	    while(auxInternalArgument->next != NULL)
+	      auxInternalArgument=auxInternalArgument->next;
+	    auxInternalArgument->next = internalArgument;
+	  }
 	} 
 	else
 	{
@@ -526,7 +557,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[2] = commandNode;
+	functionNode->children[3] = commandNode;
     }
     else
     {
@@ -586,7 +617,7 @@ FUNCAO
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[2] = commandNode;
+	functionNode->children[3] = commandNode;
     }
     else
     {
@@ -714,7 +745,7 @@ BLOCO_SWITCH_AUX: token_caso token_abrep FATOR_CASE token_fechap token_doisp BLO
 | token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_AUXILIAR;
 
 FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_inicio BLOCO_FUNCAO token_fim 
-| token_abrep VARIAVEIS_FUNCAO token_fechap VARIAVEIS token_inicio BLOCO_FUNCAO token_fim 
+| token_abrep VARIAVEIS_FUNCAO token_fechap VARIAVEIS {functionNode->children[2] = functionInternalVariables;} token_inicio BLOCO_FUNCAO token_fim 
 | token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp TIPOS_VARIAVEIS 
 {
 // Em tipos_variaveis ira retornar o tipo de retorno da funcao, a qual sera acrescentada.
@@ -724,7 +755,9 @@ FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_inicio BLOCO_FUNCAO toke
     
   returnFlag = 0;
 }
-VARIAVEIS token_inicio BLOCO_FUNCAO token_fim
+VARIAVEIS 
+{functionNode->children[2] = functionInternalVariables;}
+token_inicio BLOCO_FUNCAO token_fim
 | token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp TIPOS_VARIAVEIS 
 /*Retorno sera verificado aqui em todas as funcoes com mesmo nome!*/
 {
@@ -913,7 +946,7 @@ token_identificador
     function* functionAux = ((function*)(functionList)->info);
     functionNode = newTreeNode();
     fillTreeNode(functionNode, currentFunction, "CHAMADA-FUNCAO");
-    functionNode->children[1] = functionAux -> functionTree; 
+    functionNode->children[0] = functionAux -> functionTree; 
     //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   }
 }
@@ -1779,7 +1812,7 @@ ARGUMENTOS_FUNCAO: EXPR
       terminate();
     }
     
-    if(functionNode->children[0] == NULL)
+    if(functionNode->children[1] == NULL)
     {
       treeNode *functionArgument = newTreeNode();
       copyTreeNodes(functionArgument, functionAux->functionTree->children[1]);
@@ -1790,7 +1823,7 @@ ARGUMENTOS_FUNCAO: EXPR
       sprintf(strAux, "%d", argumentNumber);
       fillTreeNode(argumentNode, strAux, "ARGUMENTO");
       
-      functionNode->children[0] = argumentNode;
+      functionNode->children[1] = argumentNode;
       argumentNode->children[0] = expressionNode;
       argumentNode->children[1] = functionArgument;
     }
@@ -1803,7 +1836,7 @@ ARGUMENTOS_FUNCAO: EXPR
       sprintf(strAux, "%d", argumentNumber);
       fillTreeNode(argumentNode, strAux, "ARGUMENTO");
       
-      treeNode *aux = functionNode->children[0];
+      treeNode *aux = functionNode->children[1];
       while(aux->next!=NULL)
       {
 	aux = aux->next;
@@ -1850,7 +1883,7 @@ ARGUMENTOS_FUNCAO: EXPR
       terminate();
     }
     
-    if(functionNode->children[0] == NULL)
+    if(functionNode->children[1] == NULL)
     {
       treeNode *functionArgument = newTreeNode();
       copyTreeNodes(functionArgument, functionAux->functionTree->children[1]);
@@ -1861,7 +1894,7 @@ ARGUMENTOS_FUNCAO: EXPR
       sprintf(strAux, "%d", argumentNumber);
       fillTreeNode(argumentNode, strAux, "ARGUMENTO");
       
-      functionNode->children[0] = argumentNode;
+      functionNode->children[1] = argumentNode;
       argumentNode->children[0] = expressionNode;
       argumentNode->children[1] = functionArgument;
     }
@@ -1875,7 +1908,7 @@ ARGUMENTOS_FUNCAO: EXPR
       sprintf(strAux, "%d", argumentNumber);
       fillTreeNode(argumentNode, strAux, "ARGUMENTO");
       
-      treeNode *aux = functionNode->children[0];
+      treeNode *aux = functionNode->children[1];
       while(aux->next!=NULL)
       {
 	aux = aux->next;
@@ -2628,7 +2661,7 @@ Aqui sera feita analise de matriz com apenas um index
       function* functionAux = ((function*)(functionList)->info);
       functionNode = newTreeNode();
       fillTreeNode(functionNode, currentFunction, "CHAMADA-FUNCAO");
-      functionNode->children[1] = functionAux -> functionTree; 
+      functionNode->children[0] = functionAux -> functionTree; 
       
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;
