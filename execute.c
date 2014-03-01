@@ -1,13 +1,13 @@
 #include <string.h>
 #include <math.h>
 #include "execute.h"
-#include "variables.h"
-#include "hash.h"
 
 extern hashTable* hashVariables;
+extern hashTable* hashFunction;
 extern Stack* stackVariables;
 extern Stack* stackVariablesAux;
 char globalVarName[50];
+int globalRetornoFlag = 0;
 
 char* findType(treeNode *t, char* s){
 	treeNode* aux = t;
@@ -21,29 +21,98 @@ char* findType(treeNode *t, char* s){
 		else if (var->type == 0) strcpy(s, "INTEIRO");
 	}
 }
-/*
+
 void *executeFunction(treeNode *func){
-	/*empilhar variaveis da função chamada/
+	treeNode *auxParam;
+	treeNode *auxFunc;
+	List *list;
+	variable *var;
+	int numVariables = 0;
+	void* retorno = NULL;
+	void* flag = (void*)0x1;
+	int i;
+	
+	/*empilhar variaveis da função chamada*/
 	if (stackVariables==NULL)
 		stackVariables = createStack();
 	//percorrer a lista de variáveis empilhando-as
-	
-	
-	/*executar a função
-	  empilhar o retorno
-	*/ 
-
-	/*desempilhar o retorno/
-	/*desempilhar as variaveis da função chamada usando o size e a pilha auxiliar/
-	return;
-}*/
-
-void executeTree(treeNode* t){
-	while(t != NULL){
-		executeNode(t);
-		t = t->next;
+	//Empilhando parametros
+	auxParam = func->children[0]->children[1];
+	while(auxParam!=NULL){
+		list = (lookupStringVariable(hashVariables, auxParam->value));
+		if(list!=NULL){
+			var = (variable*) ( list->info );
+			pushStack(stackVariables, (void*)retornaValor(var->type, var->value));
+			numVariables++;
+		}
+		auxParam = auxParam->next;
+	}
+	auxParam = func->children[0]->children[2];
+	while(auxParam!=NULL){
+		list = lookupStringVariable(hashVariables, auxParam->value);
+		if(list!=NULL) {
+			var = (variable*) ( list->info );
+		
+			pushStack(stackVariables, (void*)retornaValor(var->type, var->value));
+			numVariables++;
+		}
+		auxParam = auxParam->next;
 	}
 	
+	
+	//	executar a função empilhando o retorno quando houver
+	auxFunc = func->children[0]->children[3];
+	while(auxFunc!=NULL && globalRetornoFlag != 0){
+		executeNode(auxFunc);
+		auxFunc = auxFunc->next;
+	}
+	
+	/*desempilhar o retorno*/
+	if(strcmp(func->children[0]->children[0]->type,"VOID")!=0)
+		retorno = popStack(stackVariables);
+
+	/*desempilhar as variaveis da função chamada usando o size e a pilha auxiliar*/
+	if(stackVariablesAux==NULL)
+		stackVariablesAux = createStack();
+	for (i=0;i<numVariables;i++){
+		pushStack(stackVariablesAux, popStack(stackVariables));
+	}
+	auxParam = func->children[0]->children[1];
+	while(auxParam!=NULL){
+		list = (lookupStringVariable(hashVariables, auxParam->value));
+		if(list!=NULL){
+			var = (variable*) ( list->info );
+			var->value = popStack(stackVariablesAux);
+		}
+		auxParam = auxParam->next;
+	}
+	auxParam = func->children[0]->children[2];
+	while(auxParam!=NULL){
+		list = lookupStringVariable(hashVariables, auxParam->value);
+		if(list!=NULL) {
+			var = (variable*) ( list->info );
+			var->value = popStack(stackVariablesAux);
+		}
+		auxParam = auxParam->next;
+	}
+	
+	return retorno;
+}
+
+void executeTree(Program* p){
+	treeNode *t;
+	if(p!=NULL){
+		//restaura hashVariables TODO copiar
+		hashVariables = p->hashVariables;
+		//restaura hashFunction TODO copiar
+		hashFunction = p->hashFunctions;
+		//Executa programa TODO copiar
+		t=p->exec;
+		while(t != NULL){
+			executeNode(t);
+			t = t->next;
+		}	
+	}
 	return;
 }
 
@@ -61,7 +130,7 @@ void* executeNode(treeNode* t){
 	int j1;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
-	printf("tipo convertido: %d\n",c);
+	//printf("tipo convertido: %d\n",c);
 	switch (c) {
 	case -2: //literal
 		strcpy(stringReturn, t->value);
@@ -499,6 +568,12 @@ void* executeNode(treeNode* t){
 		 	return doubleReturn;
 		}
 		 return;
+	case 29: // Chamada de função
+		return executeFunction(t);
+	case 30: //TODO Retorno
+		//empilha valor do retorno
+		pushStack(stackVariables, executeNode(t->children[0]));
+		globalRetornoFlag = 1;
 	default: return;
 	}
 

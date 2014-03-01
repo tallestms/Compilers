@@ -2,13 +2,19 @@ algoritmo declaracao_de_variaveis;
 
 função soma2(x: inteiro, y: inteiro, z: inteiro, w: inteiro, o: inteiro, p: inteiro): lógico
   a:inteiro;
+  c:inteiro;
   b:real;
+
 início
   b := 10.10;
   a := x + y;
   retorne a+x+x > y;
   a := z + w + a;
   retorne a > w e y < w ou (a*x+y*z-2+10) < x*10;
+  retorne a;
+  a := z + w;
+  b := 10.10;
+  retorne a;
 fim
 
 /*
@@ -42,7 +48,7 @@ variáveis
 	//a : real;
 	//b : real;
 	//c : lógico;
-	z : lógico;
+	//z : lógico;
 	//c:real;
 	//d:inteiro;
 	//m:matriz[2][2] de literais;
@@ -54,6 +60,8 @@ fim-variáveis
 início
 	a := soma2(1,2,3,4,5,6);
 	//z := a > a e (a*a+a*a-2+10) < (a*10);
+	a:=10;
+	a:=soma2(1,2,3,4,5,6);
 	//m[0][0] := "casa";
 	//m[1][1] := 20.2;
 	//m[0][1] := 5.05;
@@ -102,9 +110,13 @@ início
 	//a := 10;
 	//d := 20;
 	
+<<<<<<< HEAD
 	//a := 10;
 	//a:=a+soma2(a*(a+a),a,a,a,a*a,a+a+a)*a;
 	//imprima(a);
+=======
+	
+>>>>>>> 408a8a45d3da32d1a46434ad2edc0b42ff5a576e
 
 	//a:=10;
 	//b:=0;

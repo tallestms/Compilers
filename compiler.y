@@ -9,6 +9,7 @@
 #include "tree.h"
 #include "stack.h"
 #include "execute.h"
+#include "program.h"
 
 #define MAX_HASH 1000
 #define MAX_VARIABLE 32 //maior nome de variavel
@@ -44,6 +45,7 @@ int typeAttribute;
 extern int isMatrix;
 int dimension, dim1, dim2;
 List* currentParameters = NULL;
+List* listPrograms = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
 char limitString[50]; //limitador de tamanho de string no programa
@@ -99,18 +101,26 @@ FILE *abre_arquivo(char *filename, char *modo) {
 	return file;
 }
 
-void compila(char *nome_programa) {
+Program* compila(char *nome_programa) {
 
 	yyin = abre_arquivo(nome_programa, "r");
 	if (yyin == NULL) exit(1);
 
-	//...
-
 	yyparse();
 
-	//...
-
+	Program *p = createProgram();
+	//Copia as paradas
+	p->name = nome_programa;
+	p->exec = globalTree;
+	p->hashVariables = hashVariables;
+	p->hashFunctions = hashFunction;
+	//Seta como null
+	globalTree = NULL;
+	hashVariables = NULL;
+	hashFunction = NULL;
+	
 	fclose(yyin);
+	return p;
 }
 
 void addAttributionNodeIntoGlobalTree(){
@@ -370,7 +380,7 @@ void delimitadorNivelUm(){
 PROG:  token_algoritmo token_identificador token_pontov { strcpy(identifiers, "\0");} BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
   //verifyMatrix(hashVariables);
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 
 }
 |
@@ -378,7 +388,7 @@ token_algoritmo token_identificador
 token_pontov { strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
  // verifyMatrix(hashVariables);
-  verifyUsed(hashVariables);
+ // verifyUsed(hashVariables);
 }
 ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
@@ -427,7 +437,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);
-	  
+
 	  treeNode* internalArgument = newTreeNode();
 	  fillTreeNode(internalArgument, auxVariable, "VARIAVEL INTERNA FUNCAO");
 	  if(functionInternalVariables==NULL)
@@ -488,6 +498,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	strcpy(auxVariable, varName);
 	strcat(auxVariable, " ");
 	strcat(auxVariable, currentScope);
+	printf("%s\n", auxVariable);
 	if(lookupStringVariable(hashVariables, auxVariable)==NULL)
 	{
 	  variable* newVar = createVariable();
@@ -3165,33 +3176,61 @@ void createPrimitives()
 
 main()
 {
-      hashVariables = createHash(MAX_HASH);
-      hashFunction = createHash(MAX_HASH);
-      createPrimitives();
-      //yyparse();
-      char *programa;
-      char lixo;
-      
-       	printf("Compilar Programa\n");
-	programa = (char *) calloc(50, sizeof(char));
-	//printf("Digite o nome do programa: \n");
-	//scanf("%[^\n]", programa);
-	//scanf("%c", &lixo);
-	strcpy(programa, "exemplos/in10.gpt"); //executando exemplo in10.gpt
-	
-	printf("Abrindo %s\n", programa);
-        compila(programa);
-     
-     if(IN_DEBUG_MODE){
-  	treeNode* aux = globalTree;
+    //Criando as hash
+    hashVariables = createHash(MAX_HASH);
+    hashFunction = createHash(MAX_HASH);
+    createPrimitives();
+    Program *program;
+    int option, tam, i;
+    char lixo;
+    char * programa;
+    
+    while(1){
+    
+		option = showMenu();
+		
+		switch(option){
+		case 1: //Compilar
+			programa = solicitaNomePrograma();
+			printf("Abrindo %s\n", programa);
+			program = compila(programa);
+	   		listPrograms = insertList(listPrograms, program);    		
+			break;
+		case 2: //Executar
+			tam = sizeList(listPrograms);
+			if(tam==0) printf("Não há programas a serem executados!");
+			else {
+				for(i=0;i<tam;i++){
+					program = (Program*)getListPosition(listPrograms,i);
+					printf("%d - %s\n", i+1, program->name);
+				}
+				scanf("%d",&option);
+				scanf("%c",&lixo);
+				if(program != NULL) {
+					executeTree(program);
+					printNode(program->exec, 13, 0);
+					scanf("%c",&lixo);
+				}else
+					printf("O programa não pode ser recuperado\n");
 
+			}
+			break;
+		case 5:
+			return 0;
+		default: break;
+		}
+	
+	}
+    
+	if(IN_DEBUG_MODE){
+	  	treeNode* aux = globalTree;
   	printNode(aux, 13, 0);
 	printf("\n ---------- \n");
 	printf(" ---------- \n");
       }
 
-	//execute
-	//executeTree(globalTree);
+
+	
 	
  	//	List* l = lookupStringVariable(hashVariables, "c");
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );

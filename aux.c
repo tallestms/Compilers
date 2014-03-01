@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "aux.h"
 
 int verifyRelationship(int *varRelations, int currentRelationPos)
@@ -101,6 +102,9 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v,"condicao-para")) return 26;
 	if(!strcmp(v,"condicao-seleciona")) return 27;
 	if(!strcmp(v, "^")) return 28;
+	if(!strcmp(t, "CHAMADA-FUNCAO")) return 29;
+	if(1) return 30; //TODO Retorno
+	
 	
 	return -1000;
 	
@@ -145,6 +149,32 @@ void retiraAspasFinal(char* s){
 	for(i=0;s[i];i++);
 	s[i-1] = '\0';	
 }
+
+void *retornaValor(int type, void* point){
+	if (point == NULL) return NULL;
+	if(type == 0 || type ==4 ){
+		int* intReturn = (int*)malloc(sizeof(int));
+		*intReturn = *((int*)point);
+		return intReturn;
+	}
+	if(type == 1) {
+		char *  charReturn = (char*) malloc(sizeof(char));
+		*charReturn = *((char*)point);
+		return charReturn;
+	}
+	if(type == 2) {
+		char *  stringReturn = (char*) malloc(53*sizeof(char));
+		strcpy(stringReturn,((char*)point));
+		return stringReturn;
+	}
+	if(type == 3){
+		double * doubleReturn = (double*)malloc(sizeof(double));
+		*doubleReturn = *((double*)point);
+		return doubleReturn;
+	}
+	return;
+}
+
 
 void terminate(){
 		//TODO desalocar
