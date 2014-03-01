@@ -191,7 +191,11 @@ void verifyUsed(hashTable *hashtable)
 	    if(((variable*)(temp->info))->used == 0 && ((variable*)(temp->info))->matrix == 0)
 	    {
 	      char* varAux;
+<<<<<<< HEAD
 	      char varAux2[100];
+=======
+	      char varAux2[100];	
+>>>>>>> 408a8a45d3da32d1a46434ad2edc0b42ff5a576e
 	      strcpy(varAux2,((variable*)(temp->info))->name);
 	      varAux = strtok(varAux2, " ");
 	      printf("Aviso: Variavel %s nao foi utilizada durante o programa", ((variable*)(temp->info))->name);

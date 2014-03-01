@@ -29,7 +29,7 @@ void *executeFunction(treeNode *func){
 	variable *var;
 	int numVariables = 0;
 	void* retorno = NULL;
-	void* flag = 0x1;
+	void* flag = (void*)0x1;
 	int i;
 	
 	/*empilhar variaveis da função chamada*/
@@ -68,9 +68,10 @@ void *executeFunction(treeNode *func){
 	}
 	
 	/*desempilhar o retorno*/
-	if(strcmp(func->children[0]->children[0]->type,"VOID")!=0)
-		retorno = popStack(stackVariables);
-
+//	if(strcmp(func->children[0]->children[0]->type,"VOID")!=0) {
+//		retorno = popStack(stackVariables);
+//	}
+	printf("variaveis empilhadas: %d\n", numVariables);
 	/*desempilhar as variaveis da função chamada usando o size e a pilha auxiliar*/
 	if(stackVariablesAux==NULL)
 		stackVariablesAux = createStack();

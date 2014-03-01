@@ -32,16 +32,6 @@ List* insertList(List* list, void* info)
     return list;
 }
 
-void* getListPosition(List *list, int pos){
-	List *aux = list;
-	int i;
-	for(i=0;aux!=NULL && i<pos;aux=aux->next);
-	if(i<pos){
-		return NULL;
-	}
-	return aux->info;
-}
-
 void* removeList(List** list)
 {
     List* aux;
@@ -59,6 +49,28 @@ void* removeList(List** list)
         free(aux);
         return info;
     }
+}
+
+List* reverseList(List* list)
+{
+	List *before = NULL, *after, *auxList;
+	if(list != NULL)
+	{
+		after = list->next;
+		while(list->next != NULL && after != NULL)
+		{
+			list->next = before;
+			auxList = after->next;
+			after->next = list;
+			list = auxList;
+			before = after;
+			if(list == NULL)
+				return before;
+			after = list->next;
+			list->next = before;
+		}
+	}
+	return list;
 }
 
 void destroyList(List *l)
@@ -85,3 +97,12 @@ int sizeList(List *l)
 	return i;
 }
 
+void* getListPosition(List *list, int pos){
+	List *aux = list;
+	int i;
+	for(i=0;aux!=NULL && i<pos;aux=aux->next);
+	if(i<pos){
+		return NULL;
+	}
+	return aux->info;
+}

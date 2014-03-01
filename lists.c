@@ -22,7 +22,8 @@ List* insertList(List* list, void* info)
     }
     s->info = info;
     if(list==NULL){
-    	list=s;
+    	s->next = NULL;
+      list=s;
     } else {
     	aux = list;
     	while(aux->next) aux = aux->next;
