@@ -2,12 +2,11 @@
 #define EXECUTE_H_
 
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
-#include "lists.h"
 #include "tree.h"
-#include "aux.h"
-#include "stack.h"
+#include "hash.h"
+#include "variables.h"
+#include "stack.h" 
 
 void executeTree(treeNode* t);
 void* executeNode(treeNode* t);

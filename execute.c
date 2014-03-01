@@ -1,8 +1,9 @@
 #include <string.h>
 #include <math.h>
 #include "execute.h"
-#include "variables.h"
-#include "hash.h"
+
+
+
 
 extern hashTable* hashVariables;
 extern Stack* stackVariables;

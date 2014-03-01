@@ -9,6 +9,7 @@
 #include "tree.h"
 #include "stack.h"
 #include "execute.h"
+#include "program.h"
 
 #define MAX_HASH 1000
 #define MAX_VARIABLE 32 //maior nome de variavel
@@ -3125,30 +3126,23 @@ void createPrimitives()
 
 main()
 {
-      hashVariables = createHash(MAX_HASH);
-      hashFunction = createHash(MAX_HASH);
-      createPrimitives();
-      //yyparse();
-      char *programa;
-      char lixo;
-      
-       	printf("Compilar Programa\n");
-	programa = (char *) calloc(50, sizeof(char));
-	//printf("Digite o nome do programa: \n");
-	//scanf("%[^\n]", programa);
-	//scanf("%c", &lixo);
-	strcpy(programa, "exemplos/in10.gpt"); //executando exemplo in10.gpt
+    //Criando as hash
+    hashVariables = createHash(MAX_HASH);
+    hashFunction = createHash(MAX_HASH);
+    createPrimitives();
+     
+    char * programa = solicitaNomePrograma();
 	
 	printf("Abrindo %s\n", programa);
-        compila(programa);
+	compila(programa);
      
-     if(IN_DEBUG_MODE){
-  	treeNode* aux = globalTree;
+	if(IN_DEBUG_MODE){
+	  	treeNode* aux = globalTree;
 
-  	printNode(aux, 12, 0);
-	printf("\n ---------- \n");
-	printf(" ---------- \n");
-      }
+	  	printNode(aux, 12, 0);
+		printf("\n ---------- \n");
+		printf(" ---------- \n");
+	}
 
 	//execute
 	//executeTree(globalTree);
