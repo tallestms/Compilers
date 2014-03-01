@@ -8,6 +8,7 @@
 #include "variables.h"
 #include "stack.h" 
 
+void *executeFunction(treeNode *func);
 void executeTree(treeNode* t);
 void* executeNode(treeNode* t);
 

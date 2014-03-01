@@ -42,7 +42,7 @@ List *lookupStringVariable(hashTable *hashtable, char *str)
     unsigned int hashval = hash(hashtable, str);
 
     for(list = hashtable->table[hashval]; list != NULL; list = list->next) {
-        if (strcmp(str, (char*)(((variable*)(list->info))->name)) == 0) return list;
+        if (strcmp(str, (char*)(((variable*)(list->info))->name)) == 0){ return list;}
     }
     return NULL;
 }
@@ -63,6 +63,7 @@ int addInfoVariable(hashTable *hashtable, char*str, void *info)
     List *newList;
     List *currentList;
     unsigned int hashval = hash(hashtable, str);
+
 
     if ((newList = malloc(sizeof(List))) == NULL) return 1;
 
