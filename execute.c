@@ -5,6 +5,8 @@
 #include "hash.h"
 
 extern hashTable* hashVariables;
+extern Stack* stackVariables;
+extern Stack* stackVariablesAux;
 char globalVarName[50];
 
 char* findType(treeNode *t, char* s){
@@ -19,13 +21,29 @@ char* findType(treeNode *t, char* s){
 		else if (var->type == 0) strcpy(s, "INTEIRO");
 	}
 }
+/*
+void *executeFunction(treeNode *func){
+	/*empilhar variaveis da função chamada/
+	if (stackVariables==NULL)
+		stackVariables = createStack();
+	//percorrer a lista de variáveis empilhando-as
+	
+	
+	/*executar a função
+	  empilhar o retorno
+	*/ 
+
+	/*desempilhar o retorno/
+	/*desempilhar as variaveis da função chamada usando o size e a pilha auxiliar/
+	return;
+}*/
 
 void executeTree(treeNode* t){
 	while(t != NULL){
 		executeNode(t);
 		t = t->next;
 	}
-
+	
 	return;
 }
 

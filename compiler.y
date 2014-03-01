@@ -17,6 +17,7 @@
 #define IN_DEBUG_MODE 1
 
 extern char* yytext;
+extern FILE* yyin;
 extern int in_function;
 extern int in_logico;
 extern int in_comparacao;
@@ -52,6 +53,8 @@ Stack* stackParentesis = NULL;
 Stack* stackGlobal = NULL;
 Stack* stackIfThenElse = NULL;
 Stack* stackExpressionNode = NULL;
+Stack* stackVariables = NULL;
+Stack* stackVariablesAux = NULL;
 
 treeNode* globalTree = NULL;
 treeNode* expressionNode = NULL;
@@ -65,7 +68,6 @@ List* functionVariablesList = NULL;
 //Adiciona no no stack global que ficara responsavel para controlar escopo dentro do programa
 Stack* addNodeIntoStack(treeNode *info, Stack* aux){
 	if(aux==NULL){
-
 		aux = createStack();
 		pushStack(aux, (void*)info);
 		return aux;
@@ -85,6 +87,32 @@ treeNode* tempDelimitadorNivelUm = NULL;
 /**
 *	FUNÇÕES
 **/
+
+FILE *abre_arquivo(char *filename, char *modo) {
+	FILE *file;
+
+	if (!(file = fopen(filename, modo))) {
+		printf("Erro na abertura do arquivo %s\n", filename);
+	}
+	return file;
+}
+
+void compila(char *nome_programa) {
+
+	yyin = abre_arquivo(nome_programa, "r");
+	if (yyin == NULL) return NULL;
+
+	//...
+
+	yyparse();
+
+	//...
+
+	fclose(yyin);
+	return;
+}
+
+
 void addAttributionNodeIntoGlobalTree(){
 	if(globalTree==NULL){
 		globalTree = attributionNode;
@@ -3100,8 +3128,20 @@ main()
       hashVariables = createHash(MAX_HASH);
       hashFunction = createHash(MAX_HASH);
       createPrimitives();
-      yyparse(); 
- 
+      //yyparse();
+      char *programa;
+      char lixo;
+      
+       	printf("Compilar Programa\n");
+	programa = (char *) calloc(50, sizeof(char));
+	//printf("Digite o nome do programa: \n");
+	//scanf("%[^\n]", programa);
+	//scanf("%c", &lixo);
+	strcpy(programa, "exemplos/in10.gpt"); //executando exemplo in10.gpt
+	
+	printf("Abrindo %s\n", programa);
+        compila(programa);
+     
      if(IN_DEBUG_MODE){
   	treeNode* aux = globalTree;
 
