@@ -3,6 +3,7 @@
 #include "execute.h"
 
 extern hashTable* hashVariables;
+extern hashTable* hashFunction;
 extern Stack* stackVariables;
 extern Stack* stackVariablesAux;
 char globalVarName[50];
@@ -98,12 +99,20 @@ void *executeFunction(treeNode *func){
 	return retorno;
 }
 
-void executeTree(treeNode* t){
-	while(t != NULL){
-		executeNode(t);
-		t = t->next;
+void executeTree(Program* p){
+	treeNode *t;
+	if(p!=NULL){
+		//restaura hashVariables TODO copiar
+		hashVariables = p->hashVariables;
+		//restaura hashFunction TODO copiar
+		hashFunction = p->hashFunctions;
+		//Executa programa TODO copiar
+		t=p->exec;
+		while(t != NULL){
+			executeNode(t);
+			t = t->next;
+		}	
 	}
-	
 	return;
 }
 

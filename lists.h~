@@ -16,7 +16,6 @@ List* insertList(List* list, void* info);
 void* removeList(List** list);
 void destroyList(List* l);
 int sizeList(List *l);
-List* reverseList(List* list);
 void* getListPosition(List *list, int pos);
 
 #endif /* LIST_H_ */

@@ -44,6 +44,7 @@ int typeAttribute;
 extern int isMatrix;
 int dimension, dim1, dim2;
 List* currentParameters = NULL;
+List* listPrograms = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
 char limitString[50]; //limitador de tamanho de string no programa
@@ -115,10 +116,10 @@ Program* compila(char *nome_programa) {
 	//Seta como null
 	globalTree = NULL;
 	hashVariables = NULL;
-	hashFunctions = NULL;
+	hashFunction = NULL;
 	
 	fclose(yyin);
-	return;
+	return p;
 }
 
 
@@ -3171,12 +3172,48 @@ main()
     hashVariables = createHash(MAX_HASH);
     hashFunction = createHash(MAX_HASH);
     createPrimitives();
-     
-    char * programa = solicitaNomePrograma();
+    Program *program;
+    int option, tam, i;
+    char lixo;
+    char * programa;
+    
+    while(1){
+    
+		option = showMenu();
+		
+		switch(option){
+		case 1: //Compilar
+			programa = solicitaNomePrograma();
+			printf("Abrindo %s\n", programa);
+			program = compila(programa);
+	   		listPrograms = insertList(listPrograms, program);    		
+			break;
+		case 2: //Executar
+			tam = sizeList(listPrograms);
+			if(tam==0) printf("Não há programas a serem executados!");
+			else {
+				for(i=0;i<tam;i++){
+					program = (Program*)getListPosition(listPrograms,i);
+					printf("%d - %s\n", i+1, program->name);
+				}
+				scanf("%d",&option);
+				scanf("%c",&lixo);
+				if(program != NULL) {
+					executeTree(program);
+					printNode(program->exec, 13, 0);
+					scanf("%c",&lixo);
+				}else
+					printf("O programa não pode ser recuperado\n");
+
+			}
+			break;
+		case 5:
+			return 0;
+		default: break;
+		}
 	
-	printf("Abrindo %s\n", programa);
-	compila(programa);
-     
+	}
+    
 	if(IN_DEBUG_MODE){
 	  	treeNode* aux = globalTree;
 
@@ -3185,8 +3222,7 @@ main()
 		printf(" ---------- \n");
 	}
 
-	//execute
-	executeTree(globalTree);
+	
 	
  	//	List* l = lookupStringVariable(hashVariables, "c");
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );

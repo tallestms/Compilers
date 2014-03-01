@@ -9,6 +9,7 @@
 #include "tree.h"
 #include "stack.h"
 #include "execute.h"
+#include "program.h"
 
 #define MAX_HASH 1000
 #define MAX_VARIABLE 32 //maior nome de variavel
@@ -17,6 +18,7 @@
 #define IN_DEBUG_MODE 1
 
 extern char* yytext;
+extern FILE* yyin;
 extern int in_function;
 extern int in_logico;
 extern int in_comparacao;
@@ -42,6 +44,7 @@ int typeAttribute;
 extern int isMatrix;
 int dimension, dim1, dim2;
 List* currentParameters = NULL;
+List* listPrograms = NULL;
 hashTable* hashVariables = NULL;
 hashTable* hashFunction = NULL;
 char limitString[50]; //limitador de tamanho de string no programa
@@ -52,6 +55,8 @@ Stack* stackParentesis = NULL;
 Stack* stackGlobal = NULL;
 Stack* stackIfThenElse = NULL;
 Stack* stackExpressionNode = NULL;
+Stack* stackVariables = NULL;
+Stack* stackVariablesAux = NULL;
 
 treeNode* globalTree = NULL;
 treeNode* expressionNode = NULL;
@@ -66,7 +71,6 @@ List* functionVariablesList = NULL;
 //Adiciona no no stack global que ficara responsavel para controlar escopo dentro do programa
 Stack* addNodeIntoStack(treeNode *info, Stack* aux){
 	if(aux==NULL){
-
 		aux = createStack();
 		pushStack(aux, (void*)info);
 		return aux;
@@ -86,6 +90,39 @@ treeNode* tempDelimitadorNivelUm = NULL;
 /**
 *	FUNÇÕES
 **/
+
+FILE *abre_arquivo(char *filename, char *modo) {
+	FILE *file;
+
+	if (!(file = fopen(filename, modo))) {
+		printf("Erro na abertura do arquivo %s\n", filename);
+	}
+	return file;
+}
+
+Program* compila(char *nome_programa) {
+
+	yyin = abre_arquivo(nome_programa, "r");
+	if (yyin == NULL) return NULL;
+
+	yyparse();
+
+	Program *p = createProgram();
+	//Copia as paradas
+	p->name = nome_programa;
+	p->exec = globalTree;
+	p->hashVariables = hashVariables;
+	p->hashFunctions = hashFunction;
+	//Seta como null
+	globalTree = NULL;
+	hashVariables = NULL;
+	hashFunction = NULL;
+	
+	fclose(yyin);
+	return p;
+}
+
+
 void addAttributionNodeIntoGlobalTree(){
 	if(globalTree==NULL){
 		globalTree = attributionNode;
@@ -343,7 +380,7 @@ void delimitadorNivelUm(){
 PROG:  token_algoritmo token_identificador token_pontov { strcpy(identifiers, "\0");} BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
   //verifyMatrix(hashVariables);
-  verifyUsed(hashVariables);
+  //verifyUsed(hashVariables);
 
 }
 |
@@ -351,7 +388,7 @@ token_algoritmo token_identificador
 token_pontov { strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
  // verifyMatrix(hashVariables);
-  verifyUsed(hashVariables);
+ // verifyUsed(hashVariables);
 }
 ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |
@@ -400,7 +437,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);
-	  
+
 	  treeNode* internalArgument = newTreeNode();
 	  fillTreeNode(internalArgument, auxVariable, "VARIAVEL INTERNA FUNCAO");
 	  if(functionInternalVariables==NULL)
@@ -461,6 +498,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	strcpy(auxVariable, varName);
 	strcat(auxVariable, " ");
 	strcat(auxVariable, currentScope);
+	printf("%s\n", auxVariable);
 	if(lookupStringVariable(hashVariables, auxVariable)==NULL)
 	{
 	  variable* newVar = createVariable();
@@ -3130,21 +3168,60 @@ void createPrimitives()
 
 main()
 {
-      hashVariables = createHash(MAX_HASH);
-      hashFunction = createHash(MAX_HASH);
-      createPrimitives();
-      yyparse(); 
- 
-     if(IN_DEBUG_MODE){
-  	treeNode* aux = globalTree;
+    //Criando as hash
+    hashVariables = createHash(MAX_HASH);
+    hashFunction = createHash(MAX_HASH);
+    createPrimitives();
+    Program *program;
+    int option, tam, i;
+    char lixo;
+    char * programa;
+    
+    while(1){
+    
+		option = showMenu();
+		
+		switch(option){
+		case 1: //Compilar
+			programa = solicitaNomePrograma();
+			printf("Abrindo %s\n", programa);
+			program = compila(programa);
+	   		listPrograms = insertList(listPrograms, program);    		
+			break;
+		case 2: //Executar
+			tam = sizeList(listPrograms);
+			if(tam==0) printf("Não há programas a serem executados!");
+			else {
+				for(i=0;i<tam;i++){
+					program = (Program*)getListPosition(listPrograms,i);
+					printf("%d - %s\n", i+1, program->name);
+				}
+				scanf("%d",&option);
+				scanf("%c",&lixo);
+				if(program != NULL) {
+					executeTree(program);
+					scanf("%c",&lixo);
+				}else
+					printf("O programa não pode ser recuperado\n");
 
-  	printNode(aux, 13, 0);
-	printf("\n ---------- \n");
-	printf(" ---------- \n");
-      }
+			}
+			break;
+		case 5:
+			return 0;
+		default: break;
+		}
+	
+	}
+    
+	if(IN_DEBUG_MODE){
+	  	treeNode* aux = globalTree;
 
-	//execute
-	//executeTree(globalTree);
+	  	printNode(aux, 13, 0);
+		printf("\n ---------- \n");
+		printf(" ---------- \n");
+	}
+
+	
 	
  	//	List* l = lookupStringVariable(hashVariables, "c");
  	//	printf("c: %d\n", *( (int*) ( (variable*) l->info )->value) );

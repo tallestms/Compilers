@@ -42,6 +42,10 @@ int showMenu(){
 	printf("##                     ##\n");
 	printf("#########################\n");
 	printf("#########################\n\n");
+	printf(" 1 - Compilar \n");
+	printf(" 2 - Executar \n");
+	printf(" 3 - Mostrar árvore \n");
+	printf(" 4 - Ver programas \n\n");
 	
 	scanf("%d",&i);
 	scanf("%c",&lixo);
