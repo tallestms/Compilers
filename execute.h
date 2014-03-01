@@ -7,6 +7,7 @@
 #include "lists.h"
 #include "tree.h"
 #include "aux.h"
+#include "stack.h"
 
 void executeTree(treeNode* t);
 void* executeNode(treeNode* t);
