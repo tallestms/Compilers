@@ -60,6 +60,7 @@ treeNode* conditionNode = NULL;
 treeNode* commandNode = NULL;
 treeNode* caseNode = NULL;
 treeNode* functionNode = NULL;
+treeNode* functionInternalVariables = NULL;
 
 List* functionVariablesList = NULL;
 //Adiciona no no stack global que ficara responsavel para controlar escopo dentro do programa
@@ -376,6 +377,7 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	else
 	{
 	  printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
+	  terminate();
 	}
 	varName = strtok(NULL, " ");
       }
@@ -397,11 +399,26 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	  int intVarType = convertType(currentType);
 	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
-	  addInfoVariable(hashVariables, auxVariable, newVar);  
+	  addInfoVariable(hashVariables, auxVariable, newVar);
+	  
+	  treeNode* internalArgument = newTreeNode();
+	  fillTreeNode(internalArgument, auxVariable, "VARIAVEL INTERNA FUNCAO");
+	  if(functionInternalVariables==NULL)
+	  {
+	   functionInternalVariables=internalArgument; 
+	  }
+	  else
+	  {
+	    treeNode* auxInternalArgument = functionInternalVariables;
+	    while(auxInternalArgument->next != NULL)
+	      auxInternalArgument=auxInternalArgument->next;
+	    auxInternalArgument->next = internalArgument;
+	  }
 	}
 	else
 	{
 	  printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
+	  terminate();
 	}
 	varName = strtok(NULL, " ");
       }
@@ -423,10 +440,13 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 		setVariable(newVar, varName, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 		isMatrix = 0;  //Próxima variável entrar como não matriz
 		addInfoVariable(hashVariables, varName, newVar);
+		
+		
       }  
       else
       {
 		printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
+		terminate();
       }
       varName = strtok(NULL, " ");
     }
@@ -448,10 +468,25 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	  setVariable(newVar, auxVariable, currentScope, intVarType, isMatrix, dimension, dim1, dim2); 
 	  isMatrix = 0;  //Próxima variável entrar como não matriz
 	  addInfoVariable(hashVariables, auxVariable, newVar);
+	  
+	   treeNode* internalArgument = newTreeNode();
+	  fillTreeNode(internalArgument, auxVariable, "VARIAVEL INTERNA FUNCAO");
+	  if(functionInternalVariables==NULL)
+	  {
+	   functionInternalVariables=internalArgument; 
+	  }
+	  else
+	  {
+	    treeNode* auxInternalArgument = functionInternalVariables;
+	    while(auxInternalArgument->next != NULL)
+	      auxInternalArgument=auxInternalArgument->next;
+	    auxInternalArgument->next = internalArgument;
+	  }
 	} 
 	else
 	{
 	  printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
+	  terminate();
 	}
 	varName = strtok(NULL, " ");
       }
@@ -493,11 +528,12 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[2] = commandNode;
+	functionNode->children[3] = commandNode;
     }
     else
     {
       printf("Erro semantico na linha %d. Funcao %s redeclarada.\n", nLine, currentIdentifier);
+      terminate();
       destroyList(currentParameters);
     }
 
@@ -517,7 +553,8 @@ FUNCAO
     {
       if(returnFlag == 0)
       {
-	printf("Funcao %s precisa de retorno e nao possui.\n", currentScope);
+		printf("Funcao %s precisa de retorno e nao possui.\n", currentScope);
+		terminate();
       }
     }
   }
@@ -551,11 +588,12 @@ FUNCAO
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[2] = commandNode;
+	functionNode->children[3] = commandNode;
     }
     else
     {
       printf("Erro semantico na linha %d. Funcao %s redeclarada.\n", nLine, currentIdentifier);
+      terminate();
     }
 
   strcpy(identifiers, "\0");
@@ -574,7 +612,8 @@ FUNCAO
     {
       if(returnFlag == 0)
       {
-	printf("Funcao %s precisa de retorno e nao possui.\n", currentScope);
+		printf("Funcao %s precisa de retorno e nao possui.\n", currentScope);
+		terminate();
       }
     }
   }
@@ -677,7 +716,7 @@ BLOCO_SWITCH_AUX: token_caso token_abrep FATOR_CASE token_fechap token_doisp BLO
 | token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_AUXILIAR;
 
 FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_inicio BLOCO_FUNCAO token_fim 
-| token_abrep VARIAVEIS_FUNCAO token_fechap VARIAVEIS token_inicio BLOCO_FUNCAO token_fim 
+| token_abrep VARIAVEIS_FUNCAO token_fechap VARIAVEIS {functionNode->children[2] = functionInternalVariables;} token_inicio BLOCO_FUNCAO token_fim 
 | token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp TIPOS_VARIAVEIS 
 {
 // Em tipos_variaveis ira retornar o tipo de retorno da funcao, a qual sera acrescentada.
@@ -687,7 +726,9 @@ FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_inicio BLOCO_FUNCAO toke
     
   returnFlag = 0;
 }
-VARIAVEIS token_inicio BLOCO_FUNCAO token_fim
+VARIAVEIS 
+{functionNode->children[2] = functionInternalVariables;}
+token_inicio BLOCO_FUNCAO token_fim
 | token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp TIPOS_VARIAVEIS 
 /*Retorno sera verificado aqui em todas as funcoes com mesmo nome!*/
 {
@@ -737,6 +778,7 @@ VARIAVEIS_FUNCAO: token_identificador token_doisp TIPOS_VARIAVEIS
     else
     {
       printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, currentScope);
+      terminate();
     }
   strcpy(identifiers, "\0");
 }
@@ -779,6 +821,7 @@ VARIAVEIS_FUNCAO token_virgula token_identificador token_doisp TIPOS_VARIAVEIS
     else
     {
       printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, currentIdentifier);
+      terminate();
     }
     
   strcpy(identifiers, "\0");
@@ -792,9 +835,10 @@ token_retorne token_identificador token_pontov
   {
     List* functionList = lookupStringFunction(hashFunction, currentScope);
     function* functionAux = ((function*)(functionList->info));
-    if(functionAux->returnType==T_SEMRETORNO)
+    if(functionAux->returnType==T_SEMRETORNO){
       printf("A funcao %s nao possui retorno.\n", currentScope);
-    else
+      terminate();
+    }else
     {
       char auxVariable[100];
       strcpy(auxVariable, currentIdentifier);
@@ -807,21 +851,26 @@ token_retorne token_identificador token_pontov
 	  if(variableAux -> used == 0)
 	  {
 	    printf("Variavel %s nao foi utilizada durante a funcao %s.\n", currentIdentifier, currentScope);
+	    terminate();
 	  }
 	  else if(variableAux->type!=functionAux->returnType)
 	  {
 	    printf("Variavel de retorno %s nao e compativel com o retorno da funcao %s.\n", currentIdentifier, currentScope);
+	    terminate();
 	  }
 	  else
 	    returnFlag = 1;
       }
-      else
-	printf("Variavel %s nao foi declarada na funcao %s.\n", currentIdentifier, currentScope);
+      else{
+		printf("Variavel %s nao foi declarada na funcao %s.\n", currentIdentifier, currentScope);
+		terminate();
+	  }
     }
   }
   else
   {
     printf("Nao pode utilizar o retorno dentro do programa principal");
+    terminate();
   }
   
   strcpy(identifiers, "\0");
@@ -835,6 +884,7 @@ token_leia token_abrep token_identificador
 	if(identifier_temp==NULL)
 	{
 	  printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
+	  terminate();
 	} 
 	else
 	{
@@ -848,6 +898,7 @@ token_leialn token_abrep token_identificador
 	if(identifier_temp==NULL)
 	{
 	  printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
+	  terminate();
 	} 
 	else
 	{
@@ -866,7 +917,7 @@ token_identificador
     function* functionAux = ((function*)(functionList)->info);
     functionNode = newTreeNode();
     fillTreeNode(functionNode, currentFunction, "CHAMADA-FUNCAO");
-    functionNode->children[1] = functionAux -> functionTree; 
+    functionNode->children[0] = functionAux -> functionTree; 
     //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   }
 }
@@ -876,12 +927,14 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   if(functionList == NULL)
   {
     printf("Funcao %s nao declarada na linha %d.\n", currentFunction, nLine);
+    terminate();
   }
   else
   {
     if(argumentNumber != ((function*)(functionList->info))->arity)
     {  
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+      terminate();
     }
   
   }
@@ -1010,15 +1063,19 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	if (currVariable != NULL){\
 		if(((variable*)(currVariable->info))->used!=1 && ((variable*)(currVariable->info))->matrix==0){
 			printf("Erro, variavel nao inicializada na linha %d.\n", nLine);
+			terminate();
 		}
 		if(((variable*)(currVariable->info))->matrix!=1){
 			printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(currVariable->info))->name);
+			terminate();
 		}
 		if(((variable*)(currVariable->info))->dimension != 1){
 			printf("Erro na linha %d, %s possui dimensao 2.\n", nLine, ((variable*)(currVariable->info))->name);
+			terminate();
 		}
 		if(((variable*)(currVariable->info))->nColumn <= currentNumber ){
 			printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
+			terminate();
 		}
 		else
 		{
@@ -1047,6 +1104,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		}
 	}else{
 		printf("Variavel nao declarada na linha %d\n",nLine);
+		terminate();
 	}
 	
 	
@@ -1069,9 +1127,11 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		if(!verifyRelationship(varRelations, currentRelationPos))
 		{
 		  printf("Tipos incompativeis na linha %d\n", nLine);
+		  terminate();
 		}
 		else if(((variable*)(currVariable->info))->type!=varRelations[0]){
 			printf("Atribuição de tipos invalidos na linha %d.\n", nLine);
+			terminate();
 		}
 	}
   strcpy(identifiers, "\0");
@@ -1088,15 +1148,19 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	if (currVariable != NULL){
 		if(((variable*)(currVariable->info))->used!=1 && ((variable*)(currVariable->info))->matrix==0){
 			printf("Erro, variavel nao inicializada na linha %d.\n", nLine);
+			terminate();
 		}
 		if(((variable*)(currVariable->info))->matrix!=1){
 			printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(currVariable->info))->name);
+			terminate();
 		}
 		if(((variable*)(currVariable->info))->dimension != 2){
 			printf("Erro na linha %d, %s possui dimensao 1.\n", nLine, ((variable*)(currVariable->info))->name);
+			terminate();
 		}
 		if(((variable*)(currVariable->info))->nColumn <= currentNumber ){
 			printf("Erro na linha %d, %s possui %d colunas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
+			terminate();
 		}
 		
 		  //cria o nó da arvore de atribuição
@@ -1117,6 +1181,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		
 	}else{
 		printf("Variavel nao declarada na linha %d.\n",nLine);
+		terminate();
 	}
 }
  token_numinteiro {
@@ -1124,6 +1189,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	if (currVariable != NULL){
 		if(((variable*)(currVariable->info))->nLine <= currentNumber ){
 			printf("Erro na linha %d, %s possui %d linhas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
+			terminate();
 		}
 		  //cria o no com o valor da linha acessada
 		  char s[50];
@@ -1148,9 +1214,11 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 		if(!verifyRelationship(varRelations, currentRelationPos))
 		{
 		  printf("Tipos incompativeis na linha %d.\n", nLine);
+		  terminate();
 		}
 		else if(((variable*)(currVariable->info))->type!=varRelations[0]){
 			printf("Atribuição de tipos invalidos na linha %d.\n", nLine);
+			terminate();
 		}
 	}
   strcpy(identifiers, "\0");
@@ -1211,16 +1279,19 @@ EXPR
 	if(identifier_temp==NULL)
 	{
 	  printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
+	  terminate();
 	} 
 	else if((varRelations[0] == T_LITERAL || varRelations[0] == T_CARACTER) && currentRelationPos > 1) //caracter ou literal
 	{
 	  printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
+	  terminate();
 	}
 	else if(in_logico==1 && in_condicional == 0)
 	{
 	  if((((variable*)(identifier_temp->info))->type) != 4)
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+	    terminate();
 	  }
 	  else
 	    ((variable*)(identifier_temp->info))->used=1;
@@ -1230,10 +1301,12 @@ EXPR
 	{
 	  //printRelationship(varRelations, currentRelationPos);
 	  printf("Valores incompativeis na linha %d.\n", nLine);
+	  terminate();
 	}
 	else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
 	{	
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+	  terminate();
 	 // printf("Tipo da varivel: %d -> Tipo da expressao: %d.\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
 	}
 	else
@@ -1258,6 +1331,7 @@ EXPR
 	if(!verifyRelationship(varRelations, currentRelationPos))
 	{
 	  printf("Valores incompativeis na linha %d.\n", nLine);
+	  terminate();
 	}
 	else
 	{
@@ -1267,16 +1341,19 @@ EXPR
 	  if(identifier_temp == NULL)
 	  {
 	    printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
+	    terminate();
 	  }
 	  else if((varRelations[0] == T_CARACTER || varRelations[0] == T_LITERAL) && currentRelationPos > 1) //caracter ou literal
 	  {
 	    printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
+	    terminate();
 	  }
 	  else if(in_logico==1 && in_condicional == 0)
 	  {
 	    if((((variable*)(identifier_temp->info))->type) != 4)
 	    {
 	      printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+	      terminate();
 	    }
 	    else
 	      ((variable*)(identifier_temp->info))->used=1;
@@ -1285,6 +1362,7 @@ EXPR
 	  else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+	    terminate();
 	  //  printf("Tipo da varivel: %d -> Tipo da expressao: %d\n",((variable*)(identifier_temp->info))->type, varRelations[0]);
 	  }
 	  else
@@ -1493,6 +1571,7 @@ token_fechap
 if(!verifyRelationship(varRelations, currentRelationPos))
   {
     printf("Valores incompativeis na linha %d\n", nLine);
+    terminate();
   }
 strcpy(identifiers,"\0"); 
 currentRelationPos = 0;
@@ -1514,10 +1593,12 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
-    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-    else
+      terminate();
+    }else
     {  
     //if(in_function!=1)
     {
@@ -1540,10 +1621,12 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
-    else if(((variable*)(identifier_temp->info))->used == 0 &&((variable*)(identifier_temp->info))->matrix == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 &&((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-    else
+      terminate();
+    }else
     {  
     //if(in_function!=1)
     {
@@ -1627,6 +1710,7 @@ LOGICOS:
     if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	  terminate();
 	}
     currentRelationComparison=0;
     in_comparacao = 0;
@@ -1639,6 +1723,7 @@ LOGICOS:
     if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	  terminate();
 	}
     currentRelationComparison=0;
     in_comparacao = 0;
@@ -1655,6 +1740,7 @@ token_e |
     if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	  terminate();
 	}
     currentRelationComparison=0;
     in_comparacao = 0;
@@ -1667,6 +1753,7 @@ token_e |
     if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	  terminate();
 	}
     currentRelationComparison=0;
     in_comparacao = 0;
@@ -1684,16 +1771,19 @@ ARGUMENTOS_FUNCAO: EXPR
   {
     int returnTypeArgument = findArgumentType(argumentNumber, aux);
     //printf("%d %d\n", returnTypeArgument, varRelations[0]);
+
     if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
     {
       printf("Valores incompativeis na linha %d.\n", nLine);
+      terminate();
     }
     else if(returnTypeArgument != varRelations[0] && in_comparacao == 0)
     {	
       printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+      terminate();
     }
     
-    if(functionNode->children[0] == NULL)
+    if(functionNode->children[1] == NULL)
     {
       treeNode *functionArgument = newTreeNode();
       copyTreeNodes(functionArgument, functionAux->functionTree->children[1]);
@@ -1704,7 +1794,7 @@ ARGUMENTOS_FUNCAO: EXPR
       sprintf(strAux, "%d", argumentNumber);
       fillTreeNode(argumentNode, strAux, "ARGUMENTO");
       
-      functionNode->children[0] = argumentNode;
+      functionNode->children[1] = argumentNode;
       argumentNode->children[0] = expressionNode;
       argumentNode->children[1] = functionArgument;
     }
@@ -1717,7 +1807,7 @@ ARGUMENTOS_FUNCAO: EXPR
       sprintf(strAux, "%d", argumentNumber);
       fillTreeNode(argumentNode, strAux, "ARGUMENTO");
       
-      treeNode *aux = functionNode->children[0];
+      treeNode *aux = functionNode->children[1];
       while(aux->next!=NULL)
       {
 	aux = aux->next;
@@ -1733,6 +1823,7 @@ ARGUMENTOS_FUNCAO: EXPR
       argumentNode->children[0] = expressionNode;
       argumentNode->children[1] = functionArgument;
     }
+
   }
   //strcpy(functionArguments, "\0");
   strcpy(identifiers, "\0");
@@ -1751,16 +1842,19 @@ ARGUMENTOS_FUNCAO: EXPR
   {
     int returnTypeArgument = findArgumentType(argumentNumber, aux);
   //("%d %d\n", returnTypeArgument, varRelations[0]);
+
     if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
     {
       printf("Valores incompativeis na linha %d.\n", nLine);
+      terminate();
     }
     else if(returnTypeArgument != varRelations[0] && in_comparacao == 0)
     {	
       printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+      terminate();
     }
     
-    if(functionNode->children[0] == NULL)
+    if(functionNode->children[1] == NULL)
     {
       treeNode *functionArgument = newTreeNode();
       copyTreeNodes(functionArgument, functionAux->functionTree->children[1]);
@@ -1771,7 +1865,7 @@ ARGUMENTOS_FUNCAO: EXPR
       sprintf(strAux, "%d", argumentNumber);
       fillTreeNode(argumentNode, strAux, "ARGUMENTO");
       
-      functionNode->children[0] = argumentNode;
+      functionNode->children[1] = argumentNode;
       argumentNode->children[0] = expressionNode;
       argumentNode->children[1] = functionArgument;
     }
@@ -1785,7 +1879,7 @@ ARGUMENTOS_FUNCAO: EXPR
       sprintf(strAux, "%d", argumentNumber);
       fillTreeNode(argumentNode, strAux, "ARGUMENTO");
       
-      treeNode *aux = functionNode->children[0];
+      treeNode *aux = functionNode->children[1];
       while(aux->next!=NULL)
       {
 	aux = aux->next;
@@ -1806,6 +1900,7 @@ ARGUMENTOS_FUNCAO: EXPR
       argumentNode->children[1] = functionArgument;
       functionArgument->next=NULL;
     }
+
   }
   //strcpy(functionArguments, "\0");
   strcpy(identifiers, "\0");
@@ -1825,6 +1920,7 @@ EXPR: SIEXPR { swapoutDoisUm(); swapoutTresDois(); }
     if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	  terminate();
 	}
     currentRelationComparison=0;
     in_comparacao = 1;
@@ -1834,6 +1930,7 @@ EXPR: SIEXPR { swapoutDoisUm(); swapoutTresDois(); }
     if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
+	  terminate();
 	}
     currentRelationComparison=0;
   }
@@ -1955,6 +2052,7 @@ TERMO: MATRIZ | FATOR
   if(strcmp(currentType, "inteiro")!=0)
   {
     printf("Operador %% so aceita inteiros na linha %d.\n", nLine);
+    terminate();
   }
 } 
 token_mod { operadorDeNivelZero("%"); } FATOR 
@@ -1962,6 +2060,7 @@ token_mod { operadorDeNivelZero("%"); } FATOR
     if(strcmp(currentType, "inteiro")!=0)
     {
       printf("Operador %% so aceita inteiro na linha %d.\n", nLine);
+      terminate();
     }
 } 
 { swapoutUmZero(); }
@@ -2027,10 +2126,12 @@ e se ela foi declarada.
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
-    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-    else
+      terminate();
+    }else
     {  
     //if(in_function!=1)
     {
@@ -2063,10 +2164,12 @@ e se ela foi declarada.
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
-    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-    else
+      terminate();
+    }else
     {  
     //if(in_function!=1)
     {
@@ -2098,9 +2201,12 @@ e se ela foi declarada.
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
     else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
-      printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
+    {  printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
+       terminate();
+    }
     else
     {  
     //if(in_function!=1)
@@ -2137,10 +2243,12 @@ e se ela foi declarada.
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
-    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
+    else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-    else
+      terminate();
+    }else
     {  
     //if(in_function!=1)
     {
@@ -2183,6 +2291,7 @@ Aqui sera feita analise de matriz com apenas um index
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
   }
   else
@@ -2195,6 +2304,7 @@ Aqui sera feita analise de matriz com apenas um index
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
   }
   if(identifier_temp != NULL)
@@ -2202,13 +2312,16 @@ Aqui sera feita analise de matriz com apenas um index
   	//monta a arvore
   	treeMatrixOneDimension( ((variable*)(identifier_temp->info))->name , currentNumber);
   	
-    if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
+    if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-    else if(((variable*)(identifier_temp->info))->matrix!=1){
+      terminate();
+    }else if(((variable*)(identifier_temp->info))->matrix!=1){
       printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(identifier_temp->info))->name);
+      terminate();
     }
     else if(((variable*)(identifier_temp->info))->nColumn <= currentNumber ){
 	printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nColumn );
+	terminate();
     }
     else
     {  
@@ -2234,6 +2347,7 @@ Aqui sera feita analise de matriz com apenas um index
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
   }
   else
@@ -2246,6 +2360,7 @@ Aqui sera feita analise de matriz com apenas um index
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
   }
   if(identifier_temp != NULL)
@@ -2253,13 +2368,16 @@ Aqui sera feita analise de matriz com apenas um index
   	//monta a arvore com uma dimensão
   	treeMatrixOneDimension( ((variable*)(identifier_temp->info))->name , currentNumber);
   
-    if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
+    if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-    else if(((variable*)(identifier_temp->info))->matrix!=1){
+      terminate();
+    }else if(((variable*)(identifier_temp->info))->matrix!=1){
       printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(identifier_temp->info))->name);
+      terminate();
     }
     else if(((variable*)(identifier_temp->info))->nColumn <= currentNumber ){
 	printf("Erro na linha %d, %s possui %d colunas.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nColumn );
+	terminate();
     }
   }
 }
@@ -2272,6 +2390,7 @@ Aqui sera feita analise de matriz com apenas um index
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
+      terminate();
     }
   }
   else
@@ -2298,6 +2417,7 @@ Aqui sera feita analise de matriz com apenas um index
       if(((variable*)(identifier_temp->info))->nLine <= currentNumber )
       {
 	printf("Erro na linha %d, %s possui %d linhas.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nLine );
+	terminate();
       }
       //else if(in_function!=1)
       {
@@ -2332,7 +2452,8 @@ Aqui sera feita analise de matriz com apenas um index
 {
   if(strlen(limitString) > MAX_LITERAL+2)
   {
-    printf("Tamanho de literal passou do limite de 50 caracteres na linha %d\n", nLine);
+    printf("Tamanho de literal passou do limite de %d caracteres na linha %d\n", MAX_LITERAL,nLine);
+    terminate();
   }
   else
   {
@@ -2452,6 +2573,7 @@ Aqui sera feita analise de matriz com apenas um index
       else
       {
 	printf("Retorno nao valido na funcao maximo na linha %d\n", nLine);
+	terminate();
 	in_function = 0;
       }
      }
@@ -2478,6 +2600,7 @@ Aqui sera feita analise de matriz com apenas um index
       else
       {
 	printf("Retorno nao valido na funcao minimo na linha %d\n", nLine);
+	terminate();
 	in_function = 0;
       }
      }
@@ -2498,6 +2621,7 @@ Aqui sera feita analise de matriz com apenas um index
       else
       {
 	printf("Retorno nao valido na funcao media na linha %d\n", nLine);
+	terminate();
 	in_function = 0;
       }
      }
@@ -2508,7 +2632,7 @@ Aqui sera feita analise de matriz com apenas um index
       function* functionAux = ((function*)(functionList)->info);
       functionNode = newTreeNode();
       fillTreeNode(functionNode, currentFunction, "CHAMADA-FUNCAO");
-      functionNode->children[1] = functionAux -> functionTree; 
+      functionNode->children[0] = functionAux -> functionTree; 
       
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;
@@ -2521,12 +2645,14 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   if(functionList == NULL)
   {
     printf("Funcao %s nao declarada na linha %d.\n", currentFunction, nLine);
+    terminate();
   }
   else
   {
     if(argumentNumber != ((function*)(functionList->info))->arity)
     {  
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
+      terminate();
     }
   
   }
@@ -2669,6 +2795,7 @@ FATOR_CASE: SINALFATOR | token_numinteiro
   if(switchType != T_INTEIRO)
   {
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
+    terminate();
   }
   {
     treeNode* fatorAux = newTreeNode();
@@ -2682,6 +2809,7 @@ FATOR_CASE: SINALFATOR | token_numinteiro
   if(switchType != T_REAL)
   {
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
+    terminate();
   }
     {
     treeNode* fatorAux = newTreeNode();
@@ -2695,6 +2823,7 @@ FATOR_CASE: SINALFATOR | token_numinteiro
   if(switchType != T_CARACTER)
   {
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
+    terminate();
   }
     {
     treeNode* fatorAux = newTreeNode();
@@ -2717,6 +2846,7 @@ MATRIZ: token_abrec { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm 
 		int numLine = ((variable*)(identifier_temp->info))->nLine;
 		if(countLine != numLine) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+			terminate();
 			((variable*)(identifier_temp->info))->used = 0;
 		}else{
 			((variable*)(identifier_temp->info))->used = 1;
@@ -2741,6 +2871,7 @@ MATRIZ: token_abrec { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm 
 		int numColumn = ((variable*)(identifier_temp->info))->nColumn;
 		if(countColumn != numColumn) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+			terminate();
 			((variable*)(identifier_temp->info))->used = 0;
 		}else{
 			((variable*)(identifier_temp->info))->used = 1;
@@ -2769,6 +2900,7 @@ List *identifier_temp = NULL;
 		int numColum = ((variable*)(identifier_temp->info))->nColumn;
 		if(countColumn != numColum) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+			terminate();
 			((variable*)(identifier_temp->info))->used = 0;
 		}
 	}
@@ -2792,6 +2924,7 @@ List *identifier_temp = NULL;
 	if(identifier_temp != NULL){
 		if (((variable*)(identifier_temp->info))->nColumn != countColumn){
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
+			terminate();
 			((variable*)(identifier_temp->info))->used =0;
 		}
 	}
@@ -2811,6 +2944,7 @@ BLOCO_MATRIZ: FATOR
 	if(identifier_temp != NULL){
 		if (((variable*)(identifier_temp->info))->type != varRelations[0]){
 			printf("Tipo errado associado a matriz na linha %d\n",nLine);
+			terminate();
 		} 
 	}
 	countColumn++;
@@ -2834,6 +2968,7 @@ BLOCO_MATRIZ: FATOR
 	if(identifier_temp != NULL){
 		if (((variable*)(identifier_temp->info))->type != varRelations[0]){
 			printf("Tipo errado associado a matriz na linha %d\n",nLine);
+			terminate();
 		}
 	}	
 	countColumn++;
@@ -3037,5 +3172,6 @@ main()
 yyerror (void)
 {
 	printf("Erro na Linha: %d\n", nLine);
+	terminate();
 }
 

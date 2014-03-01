@@ -2,6 +2,7 @@ algoritmo declaracao_de_variaveis;
 
 função soma2(x: inteiro, y: inteiro, z: inteiro, w: inteiro, o: inteiro, p: inteiro):inteiro
   a:inteiro;
+  b:real;
 início
   a := x + y;
   retorne a;

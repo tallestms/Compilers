@@ -338,7 +338,7 @@ void* executeNode(treeNode* t){
 			 	*charReturn = ((char*) (var->value + j*sizeof(char)) )[i];
 			 	return charReturn;
 			}
-			//literais TODO nao tah funcionando
+			//literais
 			if(var->type == 2){
 				strcpy( stringReturn, ((char*)var->value + (j*var->nColumn+i)*MAX_LITERAL_DECLARATION*sizeof(char)) );
 				return stringReturn;
@@ -482,7 +482,6 @@ void* executeNode(treeNode* t){
 		}
 		 return;
 	default: return;
-	
 	}
 
 
