@@ -99,20 +99,23 @@ void *executeFunction(treeNode *func){
 	return retorno;
 }
 
-void executeTree(Program* p){
-	treeNode *t;
+void executeProgram(Program* p){
 	if(p!=NULL){
 		//restaura hashVariables TODO copiar
 		hashVariables = p->hashVariables;
 		//restaura hashFunction TODO copiar
 		hashFunction = p->hashFunctions;
 		//Executa programa TODO copiar
-		t=p->exec;
-		while(t != NULL){
-			executeNode(t);
-			t = t->next;
-		}	
+		executeTree(p->exec);
 	}
+	return;
+}
+
+void executeTree(treeNode* t){
+	while(t != NULL){
+		executeNode(t);
+		t = t->next;
+	}	
 	return;
 }
 
