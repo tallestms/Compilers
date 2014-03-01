@@ -99,17 +99,24 @@ FILE *abre_arquivo(char *filename, char *modo) {
 	return file;
 }
 
-void compila(char *nome_programa) {
+Program* compila(char *nome_programa) {
 
 	yyin = abre_arquivo(nome_programa, "r");
 	if (yyin == NULL) return NULL;
 
-	//...
-
 	yyparse();
 
-	//...
-
+	Program *p = createProgram();
+	//Copia as paradas
+	p->name = nome_programa;
+	p->exec = globalTree;
+	p->hashVariables = hashVariables;
+	p->hashFunctions = hashFunction;
+	//Seta como null
+	globalTree = NULL;
+	hashVariables = NULL;
+	hashFunctions = NULL;
+	
 	fclose(yyin);
 	return;
 }
