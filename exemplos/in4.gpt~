@@ -8,7 +8,6 @@ início
 	imprimaln("oioi");
 	leia(r);
 	//leialn(r);
-	imprima(r);
 	i := maximo(10,20);
 	r := maximo(10.0,20.0);
 	i := minimo(10,20);

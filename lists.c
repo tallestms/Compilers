@@ -20,9 +20,9 @@ List* insertList(List* list, void* info)
     {
         exit(1);
     }
+    s->next = NULL;
     s->info = info;
     if(list==NULL){
-    	s->next = NULL;
       list=s;
     } else {
     	aux = list;
@@ -102,7 +102,7 @@ void* getListPosition(List *list, int pos){
 	List *aux = list;
 	int i;
 	for(i=0;aux!=NULL && i<pos;i++){aux=aux->next;}
-	if(i<pos){
+	if(aux==NULL){
 		return NULL;
 	}
 	return aux->info;

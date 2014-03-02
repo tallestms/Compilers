@@ -208,8 +208,3 @@ int verifyPrimitivesMaxMinMed(char* currentFunction)
       return 0;  
 }
 
-void terminate(){
-		//TODO desalocar
-		err = 1;
-		//exit(0);
-}
