@@ -1,7 +1,7 @@
 algoritmo declaracao_de_variaveis;
 
 função soma(a: inteiro, b:inteiro):inteiro
-  c : inteiro
+  c : inteiro;
 início
   c := a + b;
   retorne c;

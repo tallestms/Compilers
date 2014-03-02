@@ -17,7 +17,7 @@ início
 	imprima(", ");
 	 se (c>0) então
 		soma(a,b);
-	 	//fibonacci(b, d, i);
+	 	fibonacci(b, d, i);
 	fim-se
 fim
 

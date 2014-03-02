@@ -2284,7 +2284,7 @@ yyreduce:
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[3] = commandNode;
+	//functionNode->children[3] = commandNode;
     }
     else
     {
@@ -2352,7 +2352,7 @@ yyreduce:
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[3] = commandNode;
+	//functionNode->children[3] = commandNode;
     }
     else
     {

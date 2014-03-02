@@ -517,7 +517,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[3] = commandNode;
+	//functionNode->children[3] = commandNode;
     }
     else
     {
@@ -575,7 +575,7 @@ FUNCAO
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[3] = commandNode;
+	//functionNode->children[3] = commandNode;
     }
     else
     {
@@ -771,6 +771,8 @@ token_inicio BLOCO_FUNCAO token_fim
       currentFunctionArity = 0;
     currentParameters = reverseList(currentParameters);
     functionAux->parameters=currentParameters;
+        currentParameters = startList();
+
    }
   returnFlag = 0;
 }

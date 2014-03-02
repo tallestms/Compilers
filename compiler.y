@@ -517,7 +517,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[3] = commandNode;
+	//functionNode->children[3] = commandNode;
     }
     else
     {
@@ -575,7 +575,7 @@ FUNCAO
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[3] = commandNode;
+	//functionNode->children[3] = commandNode;
     }
     else
     {
