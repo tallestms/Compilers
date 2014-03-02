@@ -2806,7 +2806,7 @@ yyreduce:
 	  treeNode* leiaNodeChildren0 = newTreeNode();
 	  treeNode* leiaNodeChildren1 = newTreeNode();
 	  fillTreeNode(leiaNodeChildren0, "RETORNO", typeLeia);
-	  fillTreeNode(leiaNodeChildren1, "VARIAVEL RETORNO", auxVariable->name);
+	  fillTreeNode(leiaNodeChildren1,auxVariable->name, "VARIAVEL RETORNO");
 	  
 	  leiaNode->children[0] = leiaNodeChildren0;
 	  leiaNode->children[1] = leiaNodeChildren1;
@@ -2846,7 +2846,7 @@ yyreduce:
 	  treeNode* leiaNodeChildren0 = newTreeNode();
 	  treeNode* leiaNodeChildren1 = newTreeNode();
 	  fillTreeNode(leiaNodeChildren0, "RETORNO", typeLeia);
-	  fillTreeNode(leiaNodeChildren1, "VARIAVEL RETORNO", auxVariable->name);
+	  fillTreeNode(leiaNodeChildren1,auxVariable->name, "VARIAVEL RETORNO");
 	  
 	  leiaNode->children[0] = leiaNodeChildren0;
 	  leiaNode->children[1] = leiaNodeChildren1;
