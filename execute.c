@@ -31,7 +31,6 @@ void *executeFunction(treeNode *func){
 	void* retorno = NULL;
 	void* flag = (void*)0x1;
 	int i;
-	printf("empilhando\n");
 	/*empilhar variaveis da função chamada*/
 	if (stackVariables==NULL)
 		stackVariables = createStack();
@@ -59,7 +58,6 @@ void *executeFunction(treeNode *func){
 		auxParam = auxParam->next;
 	}
 	
-	printf("empilhei\n");
 	//	executar a função empilhando o retorno quando houver
 	auxFunc = func->children[0]->children[3];
 	while(auxFunc!=NULL && globalRetornoFlag != 0){
@@ -636,7 +634,7 @@ void* executeNode(treeNode* t){
 		}
 		return;
 	case 35: //leia
-		list = (List*)(lookupStringVariable(hashVariables, t->children[0]->value)); 
+		list = (List*)(lookupStringVariable(hashVariables, t->children[1]->value)); 
 		var = (variable*) list->info;
 		
 		if(var->type == 0 || var->type == 4){
@@ -677,7 +675,7 @@ void* executeNode(treeNode* t){
 		}
 		return;
 	case 37: //leialn
-		list = (List*)(lookupStringVariable(hashVariables, t->children[0]->value)); 
+		list = (List*)(lookupStringVariable(hashVariables, t->children[1]->value)); 
 		var = (variable*) list->info;
 		//Só faz sentido para string
 		if(var->type==2){
