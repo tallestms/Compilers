@@ -517,7 +517,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[3] = commandNode;
+	//functionNode->children[3] = commandNode;
     }
     else
     {
@@ -575,7 +575,7 @@ FUNCAO
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	functionNode->children[3] = commandNode;
+	//functionNode->children[3] = commandNode;
     }
     else
     {
@@ -771,6 +771,8 @@ token_inicio BLOCO_FUNCAO token_fim
       currentFunctionArity = 0;
     currentParameters = reverseList(currentParameters);
     functionAux->parameters=currentParameters;
+        currentParameters = startList();
+
    }
   returnFlag = 0;
 }
@@ -2775,10 +2777,7 @@ Aqui sera feita analise de matriz com apenas um index
     List *functionList = lookupStringFunction(hashFunction, currentFunction);
     if(verifyPrimitivesMaxMinMed(currentFunction)) 
     {
-<<<<<<< HEAD
-=======
       functionNode->children[0] = returnNode;
->>>>>>> cd40fce686c248b1c458ac9593fb2d286dac1e95
       fillTreeNode(functionNode, currentIdentifier, "PRIMITIVA");   
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;

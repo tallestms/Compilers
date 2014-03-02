@@ -98,11 +98,20 @@ void showMenu2(){
 	//noecho();			/* Don't echo() while we do getch */
 	//mvprintw(row/2, col/2, "You Entered: %s", str);
 	int i;
-	//for(;;);
-	mvprintw(1,1,"############################################################");
-	mvprintw(2,1,"############################################################");
-	mvprintw(7,1,"############################################################");
-	mvprintw(8,1,"############################################################");
+	strcpy(str,"Jackson Willian Brito ; Talles Tatagiba Martins de Souza");
+	mvprintw(0,(col-strlen(str))/2,str);
+	for(i=1;i<col-1;i++){
+		mvprintw(1,i,"#");
+		mvprintw(2,i,"#");
+		mvprintw(8,i,"#");
+		mvprintw(9,i,"#");
+		mvprintw(row-3,i,"#");
+		mvprintw(row-2,i,"#");
+	}
+	for(i=10;i<row-3;i++){
+		mvprintw(i,1,"##");
+		mvprintw(i,col-3,"##");
+	}
 	
 	refresh();			/* Print it on to the real screen */
     getch();			/* Wait for user input */

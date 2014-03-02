@@ -85,17 +85,20 @@ void *executeFunction(treeNode *func){
 	}
 	//	executar a função empilhando o retorno quando houver 
 	list = lookupStringFunction(hashFunction, func->children[0]->value);
-	function* aux = (function*) list->info;
-	auxFunc = aux->functionTree;
-	while(auxFunc!=NULL && globalRetornoFlag == 0){
-		executeNode(auxFunc);
-		auxFunc = auxFunc->next;
-	}
+	if(list != NULL){
+		function* funcAux = (function*) list->info;
+		auxFunc = funcAux->functionTree;
+		printNode(auxFunc, 13,6);
+		while(auxFunc!=NULL && globalRetornoFlag == 0){
+			executeNode(auxFunc);
+			auxFunc = auxFunc->next;
+		}
 	
-	/*desempilhar o retorno*/
-	if(strcmp(func->children[0]->children[0]->type,"VOID")!=0) {
-		retorno = popStack(stackVariables);
-	}
+		/*desempilhar o retorno*/
+		if(strcmp(func->children[0]->children[0]->type,"VOID")!=0) {
+			retorno = popStack(stackVariables);
+		}
+	}	
 	/*desempilhar as variaveis da função chamada usando o size e a pilha auxiliar*/
 	if(stackVariablesAux==NULL)
 		stackVariablesAux = createStack();

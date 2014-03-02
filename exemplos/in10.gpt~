@@ -21,9 +21,9 @@ início
 	 fim-se
 =======
 		soma(a,b);
-	 	//fibonacci(b, d, i);
+	 	fibonacci(b, d, i);
 	fim-se
->>>>>>> cd40fce686c248b1c458ac9593fb2d286dac1e95
+>>>>>>> d9c96c0f85f07be402be00b84d80401eb822042c
 fim
 
 
