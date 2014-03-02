@@ -2627,7 +2627,6 @@ Aqui sera feita analise de matriz com apenas um index
 
     functionNode = newTreeNode();
     treeNode* returnNode = newTreeNode();
-    functionNode->children[0] = returnNode;
       
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
@@ -2728,6 +2727,7 @@ Aqui sera feita analise de matriz com apenas um index
     List *functionList = lookupStringFunction(hashFunction, currentFunction);
     if(verifyPrimitivesMaxMinMed(currentFunction)) 
     {
+      functionNode->children[0] = returnNode;
       fillTreeNode(functionNode, currentIdentifier, "PRIMITIVA");   
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;
@@ -2738,7 +2738,6 @@ Aqui sera feita analise de matriz com apenas um index
       functionNode = newTreeNode();
       fillTreeNode(functionNode, currentFunction, "CHAMADA FUNCAO");
       functionNode->children[0] = functionAux -> functionTree; 
-      
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;
     }

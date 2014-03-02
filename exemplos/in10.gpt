@@ -1,5 +1,6 @@
 algoritmo declaracao_de_variaveis;
 função soma(a : inteiro, b:inteiro ):inteiro
+x : inteiro;
 início
   retorne a+b;
 fim

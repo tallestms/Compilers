@@ -12,4 +12,6 @@ fim-variáveis
 início
 	a := 10;
 	b := 20;	
+	a := soma(a,b);
+	imprimaln(a);
 fim
