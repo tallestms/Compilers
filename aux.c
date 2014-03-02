@@ -209,6 +209,8 @@ int verifyPrimitivesMaxMinMed(char* currentFunction)
 }
 
 void terminate(){
+  	  //freeTable(hashVariables);
+      //freeTableFunction(hashFunction);
 		//TODO desalocar
 		err = 1;
 		//exit(0);

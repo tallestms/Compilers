@@ -105,7 +105,7 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v,"condicao-seleciona")) return 27;
 	if(!strcmp(v, "^")) return 28;
 	if(!strcmp(t, "CHAMADA FUNCAO")) return 29;
-	if(!strcmp(t,"RETORNO")) return 30; 
+	if(!strcmp(t,"RETORNO FUNCAO")) return 30; 
 	if(!strcmp(v, "maximo")) return 31;
 	if(!strcmp(v, "minimo")) return 32;
 	if(!strcmp(v, "media")) return 33;
