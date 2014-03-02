@@ -517,7 +517,7 @@ BLOCO_FUNCOES: BLOCO_FUNCOES token_funcao token_identificador
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	//functionNode->children[3] = commandNode;
+	functionNode->children[3] = commandNode;
     }
     else
     {
@@ -575,7 +575,7 @@ FUNCAO
 	stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
 	globalTree = commandNode;
 	expressionNode = NULL;
-	//functionNode->children[3] = commandNode;
+	functionNode->children[3] = commandNode;
     }
     else
     {
@@ -1025,8 +1025,10 @@ token_identificador
   {
     function* functionAux = ((function*)(functionList)->info);
     functionNode = newTreeNode();
-    fillTreeNode(functionNode, currentFunction, "CHAMADA FUNCAO");
-    functionNode->children[0] = functionAux -> functionTree; 
+      treeNode* auxFunctionNode;
+      copyTreeNodes(auxFunctionNode, functionAux -> functionTree);
+      functionNode->children[0] = auxFunctionNode;
+      functionNode->children[0]->children[3] = NULL;
     //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   }
 }
@@ -2787,7 +2789,11 @@ Aqui sera feita analise de matriz com apenas um index
       function* functionAux = ((function*)(functionList)->info);
       functionNode = newTreeNode();
       fillTreeNode(functionNode, currentFunction, "CHAMADA FUNCAO");
-      functionNode->children[0] = functionAux -> functionTree; 
+      
+      treeNode* auxFunctionNode = newTreeNode();
+      copyTreeNodes(auxFunctionNode, functionAux -> functionTree);
+      functionNode->children[0] = auxFunctionNode;
+      functionNode->children[0]->children[3] = NULL;
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;
     }
