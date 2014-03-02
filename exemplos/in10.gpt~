@@ -4,7 +4,7 @@ função fibonacci(a:inteiro,b:inteiro,c:inteiro)
 	i:inteiro;
 início
 	d:=a+b;
-	e:=c-1;
+	i:=c-1;
 	imprima(d);
 	imprima(", ");
 	 se (c>0) então

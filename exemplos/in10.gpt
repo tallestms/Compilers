@@ -9,6 +9,7 @@ início
 	imprima(", ");
 	 se (c>0) então
 	 	fibonacci(b, d, i);
+	 fim-se
 fim
 
 

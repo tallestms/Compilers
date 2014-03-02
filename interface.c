@@ -4,6 +4,7 @@
 #include "interface.h"
 #include <sys/types.h>
 #include <dirent.h>
+#include <ncurses.h>
 
 char* solicitaNomePrograma(){
 	char *programa;
@@ -82,5 +83,31 @@ int showMenu(){
 	scanf("%c",&lixo);
 	
 	return i;
+}
+
+void showMenu2(){
+	
+	int row,col;
+	char * str = (char*) malloc(50*sizeof(char));
+
+	initscr();			/* Start curses mode 		*/
+	getmaxyx(stdscr,row,col);		/* get the number of rows and columns */
+	//raw();				/* Line buffering disabled	*/
+	//keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
+	//getstr(str);
+	//noecho();			/* Don't echo() while we do getch */
+	//mvprintw(row/2, col/2, "You Entered: %s", str);
+	int i;
+	for()
+	mvprintw(1,1,"############################################################");
+	mvprintw(2,1,"############################################################");
+	mvprintw(7,1,"############################################################");
+	mvprintw(8,1,"############################################################");
+	
+	refresh();			/* Print it on to the real screen */
+    getch();			/* Wait for user input */
+	endwin();			/* End curses mode		  */
+	
+	
 }
 

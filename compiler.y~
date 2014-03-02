@@ -2728,8 +2728,6 @@ Aqui sera feita analise de matriz com apenas um index
     List *functionList = lookupStringFunction(hashFunction, currentFunction);
     if(verifyPrimitivesMaxMinMed(currentFunction)) 
     {
-      printf("eita porra");
-      printf("%s", cu
       fillTreeNode(functionNode, currentIdentifier, "PRIMITIVA");   
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;
@@ -3295,7 +3293,7 @@ main()
     
     while(1){
     
-		option = showMenu();
+		option = showMenu2();
 		
 		switch(option){
 		case 1: //Compilar

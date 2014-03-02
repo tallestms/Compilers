@@ -3,6 +3,8 @@
 
 char* solicitaNomePrograma();
 
+void listarFiles();
+
 int showMenu();
 
 #endif /*INTERFACE_H_*/

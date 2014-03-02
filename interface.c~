@@ -4,6 +4,7 @@
 #include "interface.h"
 #include <sys/types.h>
 #include <dirent.h>
+#include <ncurses.h>
 
 char* solicitaNomePrograma(){
 	char *programa;
@@ -35,7 +36,8 @@ void listarFiles(){
     		len = strlen(dp->d_name);
     		if(len>4){
     			if( p = strstr(dp->d_name, ".gpt") ){
-    				printf("%d - %s\n", ++i,dp->d_name);	
+    				if(p[4] == '\0')
+	    				printf("%d - %s\n", ++i,dp->d_name);	
     			}	
     		}
    	     }else{
@@ -81,5 +83,31 @@ int showMenu(){
 	scanf("%c",&lixo);
 	
 	return i;
+}
+
+void showMenu(){
+	
+	int row,col;
+	char * str = (char*) malloc(50*sizeof(char));
+
+	initscr();			/* Start curses mode 		*/
+	getmaxyx(stdscr,row,col);		/* get the number of rows and columns */
+	//raw();				/* Line buffering disabled	*/
+	//keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
+	//getstr(str);
+	//noecho();			/* Don't echo() while we do getch */
+	//mvprintw(row/2, col/2, "You Entered: %s", str);
+	int i;
+	for()
+	mvprintw(1,1,"############################################################");
+	mvprintw(2,1,"############################################################");
+	mvprintw(7,1,"############################################################");
+	mvprintw(8,1,"############################################################");
+	
+	refresh();			/* Print it on to the real screen */
+    getch();			/* Wait for user input */
+	endwin();			/* End curses mode		  */
+	
+	
 }
 

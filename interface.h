@@ -7,4 +7,6 @@ void listarFiles();
 
 int showMenu();
 
+void showMenu2();
+
 #endif /*INTERFACE_H_*/

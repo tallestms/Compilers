@@ -5906,7 +5906,7 @@ main()
     
     while(1){
     
-		option = showMenu();
+		option = showMenu2();
 		
 		switch(option){
 		case 1: //Compilar
