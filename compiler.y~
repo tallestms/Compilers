@@ -1025,7 +1025,8 @@ token_identificador
   {
     function* functionAux = ((function*)(functionList)->info);
     functionNode = newTreeNode();
-      treeNode* auxFunctionNode;
+    fillTreeNode(functionNode, currentFunction, "CHAMADA FUNCAO");
+      treeNode* auxFunctionNode = newTreeNode();
       copyTreeNodes(auxFunctionNode, functionAux -> functionTree);
       functionNode->children[0] = auxFunctionNode;
       functionNode->children[0]->children[3] = NULL;
@@ -2791,6 +2792,7 @@ Aqui sera feita analise de matriz com apenas um index
       fillTreeNode(functionNode, currentFunction, "CHAMADA FUNCAO");
       
       treeNode* auxFunctionNode = newTreeNode();
+      fillTreeNode(auxFunctionNode, currentFunction, "CHAMADA FUNCAO");
       copyTreeNodes(auxFunctionNode, functionAux -> functionTree);
       functionNode->children[0] = auxFunctionNode;
       functionNode->children[0]->children[3] = NULL;
