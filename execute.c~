@@ -31,7 +31,7 @@ void *executeFunction(treeNode *func){
 	void* retorno = NULL;
 	void* flag = (void*)0x1;
 	int i;
-	
+	printf("empilhando\n");
 	/*empilhar variaveis da função chamada*/
 	if (stackVariables==NULL)
 		stackVariables = createStack();
@@ -59,7 +59,7 @@ void *executeFunction(treeNode *func){
 		auxParam = auxParam->next;
 	}
 	
-	
+	printf("empilhei\n");
 	//	executar a função empilhando o retorno quando houver
 	auxFunc = func->children[0]->children[3];
 	while(auxFunc!=NULL && globalRetornoFlag != 0){
@@ -67,10 +67,10 @@ void *executeFunction(treeNode *func){
 		auxFunc = auxFunc->next;
 	}
 	
-	/*desempilhar o retorno*/ //TODO
-//	if(strcmp(func->children[0]->children[0]->type,"VOID")!=0) {
-//		retorno = popStack(stackVariables);
-//	}
+	/*desempilhar o retorno*/ 
+	if(strcmp(func->children[0]->children[0]->type,"VOID")!=0) {
+		retorno = popStack(stackVariables);
+	}
 	/*desempilhar as variaveis da função chamada usando o size e a pilha auxiliar*/
 	if(stackVariablesAux==NULL)
 		stackVariablesAux = createStack();
@@ -628,7 +628,7 @@ void* executeNode(treeNode* t){
 		if(!strcmp(type, "REAL")){
 			printf("%.2f", *((double*)executeNode(t->children[1])));
 		}
-		if(!strcmp(type, "literal")){
+		if(!strcmp(type, "LITERAL")){
 			printf("%s", ((char*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "CARACTER")){
@@ -669,7 +669,7 @@ void* executeNode(treeNode* t){
 		if(!strcmp(type, "REAL")){
 			printf("%.2f\n", *((double*)executeNode(t->children[1])));
 		}
-		if(!strcmp(type, "literal")){
+		if(!strcmp(type, "LITERAL")){
 			printf("%s\n", ((char*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "CARACTER")){
