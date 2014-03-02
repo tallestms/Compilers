@@ -15,7 +15,7 @@
 #define MAX_VARIABLE 32 //maior nome de variavel
 #define MAX_FUNCTION 32 //maior nome de funcao
 #define MAX_LITERAL 50
-#define IN_DEBUG_MODE 1
+#define IN_DEBUG_MODE 0
 
 extern FILE* yyin;
 
@@ -2377,7 +2377,6 @@ Aqui sera feita analise de matriz com apenas um index
 	swapDoisUm = (treeNode*) popStack(stackParenthesis);
 	swapUmZero = (treeNode*) popStack(stackParenthesis);
 	swapZeroMenor =(treeNode*) popStack(stackParenthesis);
-	printf("FINAL\n");
 	//printNode(expressionNode,13,0);
 } 
 | token_verdadeiro 
@@ -2920,6 +2919,7 @@ FILE *abre_arquivo(char *filename, char *modo) {
 
 	if (!(file = fopen(filename, modo))) {
 		printf("Erro na abertura do arquivo %s\n", filename);
+		err=1;
 	}
 	return file;
 }
@@ -2954,6 +2954,12 @@ void ZerarGlobais(){
 	tempDelimitadorNivelUm = NULL;
 }
 
+void terminate(){
+      freeTable(hashVariables);
+      freeTableFunction(hashFunction);
+      err = 1;
+}
+
 Program* compila(char *nome_programa) {
 	
 	//Limpando coisas necessárias: TODO dar free
@@ -2971,15 +2977,18 @@ Program* compila(char *nome_programa) {
 	err = 0;
     
 	yyin = abre_arquivo(nome_programa, "r");
-	if (yyin == NULL) exit(1);
-
-	yyparse();
+	if (yyin != NULL) {
+		yyparse();
+	} else {
+		err = 1;
+		return NULL;
+	}
 	
 	//Reiniciando o buffer do flex
 	YY_FLUSH_BUFFER;
 	
+
 	if(err==1){
-		printf("err == 1\n");
 		return NULL;
 	}
 	
@@ -3008,7 +3017,7 @@ main()
     char lixo;
     char * programa;
     
-    
+    showBoasVindas();
     while(1){
     
 		option = showMenu();
@@ -3018,7 +3027,6 @@ main()
 			programa = (char*) solicitaNomePrograma();
 			printf("Abrindo %s\n", programa);
 			program = compila(programa);
-			printf("%p\n", program);
 			if(program==NULL || err == 1){
 				printf("Não foi possível compilar o programa devido a discordâncias da linguagem de entrada. Por favor verifique as linhas indicadas acima e tente novamente.\n");
 			}else {
@@ -3029,7 +3037,7 @@ main()
 			break;
 		case 2: //Executar
 			tam = sizeList(listPrograms);
-			if(tam==0) printf("Não há programas a serem executados. Favor compilar algum programa e voltar a tentar.\n");
+			if(tam==0){ printf("Não há programas a serem executados. Favor compilar algum programa e voltar a tentar.\n"); scanf("%c",&lixo);}
 			else {
 				for(i=0;i<tam;i++){
 					program = (Program*)getListPosition(listPrograms,i);
@@ -3050,19 +3058,24 @@ main()
 					printf("O programa desejado não pode se executado ou não existe.\n");
 			}
 			break;
-		case 3:
+		case 3: //Mostrar a árvore  
+			tam = sizeList(listPrograms);
+			if(tam==0){ printf("Não há programas compilados. Favor compilar algum programa e voltar a tentar.\n"); scanf("%c",&lixo); break;}
 			printf("Entre com o programa do qual deseja ver a arvore\n");
 			scanf("%d",&option);
 			scanf("%c",&lixo);
-			printNode(program->exec, 13, 0);		
+			if(option<1 || option>tam){printf("O programa desejado não pode ser encontrado.\n"); }
+			else { 
+				program = (Program*)getListPosition(listPrograms,option-1);
+				printNode(program->exec, 13, 0);		
+			}
 			scanf("%c",&lixo);
 			break;
-		case 4:
+		case 4: //Listar programas compilados
 			tam = sizeList(listPrograms);
 			if(tam==0) printf("Não há programas compilados. Você pode compilar programas na opção 1 do menu.\n");
 			else {
 				for(i=0;i<tam;i++){
-					printf("%d\n",tam);
 					program = (Program*)getListPosition(listPrograms,i);
 					if (program)
 						printf("%d - %s\n", i+1, program->name);
@@ -3070,15 +3083,19 @@ main()
 			}
 			scanf("%c",&lixo);
 			break;
-		case 5: 
+		case 5: //listar aquivos .gpt
 			listarFiles();
 			scanf("%c",&lixo);
 			break;
-		case 6:
+		case 6: //sobre
+			showSobre();
+			break;
+		case 7: //sair
+			showDespedida();
 			return 0;
 		default: break;
 		}
-	
+		
 	}
 	
     
@@ -3120,10 +3137,3 @@ yyerror (void)
 	printf("Erro na Linha: %d\n", nLine);
 	terminate();
 }
-
-void terminate(){
-      freeTable(hashVariables);
-      freeTableFunction(hashFunction);
-	
-}
-

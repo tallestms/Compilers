@@ -5,8 +5,10 @@ char* solicitaNomePrograma();
 
 void listarFiles();
 
+void showSobre();
+
 int showMenu();
 
-void showMenu2();
+void showDespedida();
 
 #endif /*INTERFACE_H_*/
