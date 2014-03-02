@@ -1511,6 +1511,7 @@ token_abrep EXPR
   conditionNode -> children[0] = expressionNode; 
   conditionNode -> children[1] = commandNode;
   commandNode ->children[0] = conditionNode;
+  expressionNode = NULL;
 }
 
 token_fechap {currentRelationPos = 0;} token_entao BLOCO_AUXILIAR

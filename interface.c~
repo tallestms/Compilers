@@ -4,7 +4,7 @@
 #include "interface.h"
 #include <sys/types.h>
 #include <dirent.h>
-#include <ncurses.h>
+//#include <ncurses.h>
 
 char* solicitaNomePrograma(){
 	char *programa;
@@ -112,12 +112,12 @@ void showMenu2(){
 		mvprintw(i,1,"##");
 		mvprintw(i,col-3,"##");
 	}
-	
+	/*
 	"* ######   ######   ##     ##   ######    ####   ##      ######  *"
 	"* ##       ##  ##   #### ####   ##  ##     ##    ##      ##  ##  *"
 	"* ##       ##  ##   ##  #  ##   ######     ##    ##      ######  *"
 	"* ##       ##  ##   ##     ##   ##         ##    ##      ##  ##  *"
-	"* ######   ######   ##     ##   ##        ####   #####   ##  ##  *"
+	"* ######   ######   ##     ##   ##        ####   #####   ##  ##  *"*/
 	refresh();			/* Print it on to the real screen */
     getch();			/* Wait for user input */
 	endwin();			/* End curses mode		  */
