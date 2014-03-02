@@ -18,43 +18,47 @@
 #define IN_DEBUG_MODE 1
 
 //extern YY_FLUSH_BUFFER;
-extern int err;
-extern char* yytext;
 extern FILE* yyin;
-extern int in_function;
+
+extern int err;
 extern int in_logico;
 extern int in_comparacao;
 extern int in_condicional;
 extern int nLine;
+extern int varRelations[50]; //Vetor que armazena relacoes de uma dada expressao
+extern int currentNumber;
+extern int isMatrix;
+
+extern char* yytext;
 extern char identifiers[10*MAX_VARIABLE];
 extern char functionArguments[10*MAX_VARIABLE];
 extern char currentType[10];
 extern char currentIdentifier[MAX_VARIABLE];
-extern int varRelations[50]; //Vetor que armazena relacoes de uma dada expressao
-extern int currentNumber;
+
 char currentVariable[MAX_VARIABLE + MAX_FUNCTION + 2];
 char currentScope[MAX_FUNCTION] = "main";
 char currentFunction[MAX_FUNCTION];
 char returnVariableGlobal[MAX_VARIABLE];
+char limitString[50]; //limitador de tamanho de string no programa
+
 int currentFunctionArity = 0;
 int currentRelationPos = 0;
 int currentRelationComparison = 0;
-char returnFunctionType[10];
 int switchType;
 int countLine = 0;
 int countColumn = 0;
 int typeAttribute;
-extern int isMatrix;
 int dimension, dim1, dim2;
-List* currentParameters = NULL;
-List* listPrograms = NULL;
-hashTable* hashVariables = NULL;
-hashTable* hashFunction = NULL;
-char limitString[50]; //limitador de tamanho de string no programa
 int returnFlag = 0;
 int argumentNumber = 0;
 
-Stack* stackParentesis = NULL;
+List* currentParameters = NULL;
+List* listPrograms = NULL;
+
+hashTable* hashVariables = NULL;
+hashTable* hashFunction = NULL;
+
+Stack* stackParenthesis = NULL;
 Stack* stackGlobal = NULL;
 Stack* stackIfThenElse = NULL;
 Stack* stackExpressionNode = NULL;
@@ -70,19 +74,6 @@ treeNode* caseNode = NULL;
 treeNode* functionNode = NULL;
 treeNode* functionInternalVariables = NULL;
 
-List* functionVariablesList = NULL;
-//Adiciona no no stack global que ficara responsavel para controlar escopo dentro do programa
-Stack* addNodeIntoStack(treeNode *info, Stack* aux){
-	if(aux==NULL){
-		aux = createStack();
-		pushStack(aux, (void*)info);
-		return aux;
-	}else{
-		pushStack(aux, (void*)info);
-		return aux;
-	}
-}
-
 treeNode* swapZeroMenor = NULL;
 treeNode* swapUmZero = NULL;
 treeNode* swapDoisUm = NULL;
@@ -94,26 +85,15 @@ treeNode* tempDelimitadorNivelUm = NULL;
 *	FUNÇÕES
 **/
 
-
-void addAttributionNodeIntoGlobalTree(){
-	if(globalTree==NULL){
-		globalTree = attributionNode;
+//Adiciona no no stack global que ficara responsavel para controlar escopo dentro do programa
+Stack* addNodeIntoStack(treeNode *info, Stack* aux){
+	if(aux==NULL){
+		aux = createStack();
+		pushStack(aux, (void*)info);
+		return aux;
 	}else{
-
-		treeNode *aux = globalTree;
-		while(aux->next!=NULL) aux = aux->next;
-		aux->next = attributionNode;
-	}
-	attributionNode = NULL;	
-}
-
-void addConditionNodeIntoGlobalTree(){
-	if(globalTree==NULL){
-		globalTree = conditionNode;
-	}else{
-		treeNode *aux = globalTree;
-		while(aux->next!=NULL) aux = aux->next;
-		aux->next = conditionNode;
+		pushStack(aux, (void*)info);
+		return aux;
 	}
 }
 
@@ -991,7 +971,6 @@ token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} |
 token_identificador
 {
   strcpy(currentFunction, currentIdentifier);
-  in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
   List *functionList = lookupStringFunction(hashFunction, currentFunction);
   if(functionList!=NULL)
   {
@@ -1201,7 +1180,7 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     
     //adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
     //verifica que nao esta dentro de condicional tambem (enquanto ou se)
-    addAttributionNodeIntoGlobalTree();
+    addNodeIntoGlobalTree(attributionNode);
 
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
@@ -1217,7 +1196,6 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	}
   strcpy(identifiers, "\0");
   currentRelationPos = 0;
-  in_function = 0;
 } token_pontov
 | token_identificador token_abrecol token_numinteiro token_fechacol token_abrecol {
 	strcpy(currentVariable, currentIdentifier);
@@ -1290,8 +1268,8 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
     
     	//adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
     	//verifica que nao esta dentro de condicional tambem (enquanto ou se)
-    	addAttributionNodeIntoGlobalTree();
-	
+    	addNodeIntoGlobalTree(attributionNode);
+    	
 		if(!verifyRelationship(varRelations, currentRelationPos))
 		{
 		  printf("Tipos incompativeis na linha %d.\n", nLine);
@@ -1304,7 +1282,6 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
 	}
   strcpy(identifiers, "\0");
   currentRelationPos = 0;
-  in_function = 0;
 } token_pontov
 | token_identificador token_atribuicao 
 {  
@@ -1348,7 +1325,7 @@ EXPR
     
     //adiciono o nó de atribuição na árvore de execução do programa (in main, falta fazer arvores para funções)
     //verifica que nao esta dentro de condicional tambem (enquanto ou se)
-    addAttributionNodeIntoGlobalTree();
+    addNodeIntoGlobalTree(attributionNode);
   if(strcmp(currentScope, "main") == 0)
     { 
 	//printf("%s\n", identifiers);
@@ -1462,7 +1439,7 @@ currentRelationComparison = 0;
     //cria o nó da arvore de condicao
     conditionNode = newTreeNode();
     fillTreeNode(conditionNode,"condicao-se","CONDICIONAL");   
-    addConditionNodeIntoGlobalTree();
+    addNodeIntoGlobalTree(conditionNode);
     
     //retorno os nós de atribuição para null
     expressionNode = NULL;
@@ -1517,7 +1494,7 @@ token_enquanto token_abrep EXPR
     fillTreeNode(conditionNode,"condicao-faca-enquanto","CONDICIONAL");
      conditionNode->children[0] = expressionNode;
      conditionNode->children[1] = commandNode;
-     addConditionNodeIntoGlobalTree();
+     addNodeIntoGlobalTree(conditionNode);
 }
 token_fechap {in_condicional = 0;} token_pontov | 
 token_enquanto token_abrep 
@@ -1537,8 +1514,8 @@ EXPR
     //adiciona o no de comando a direita
     fillTreeNode(commandNode, "comando-enquanto", "COMANDO");
     conditionNode->children[1] = commandNode;
-    addConditionNodeIntoGlobalTree();
-
+    addNodeIntoGlobalTree(conditionNode);
+    
     //adicionando no global no stack, para ser recuperado depois
     stackGlobal = addNodeIntoStack(globalTree, stackGlobal);
     //mudando no global para o comando
@@ -1564,7 +1541,7 @@ token_para
 {
   conditionNode = newTreeNode();
   fillTreeNode(conditionNode,"condicao-para","CONDICAO");
-  addConditionNodeIntoGlobalTree();
+  addNodeIntoGlobalTree(conditionNode);
 
 }
 token_abrep {strcpy(identifiers,"\0"); currentRelationPos=0;} token_identificador
@@ -1729,7 +1706,7 @@ token_seleciona {strcpy(identifiers, "\0"); currentRelationPos=0;} token_abrep t
     fillTreeNode(idAux, currentIdentifier, "VARIAVEL");
     
     conditionNode->children[0] = idAux;
-    addConditionNodeIntoGlobalTree();
+    addNodeIntoGlobalTree(conditionNode);
     
     caseNode = newTreeNode();
     commandNode = newTreeNode();
@@ -2580,27 +2557,27 @@ Aqui sera feita analise de matriz com apenas um index
 		expressionNode->children[1] = aux;
 	}
 	//coloco o nó atual de expressão na pilha e seto para null
-	if(stackParentesis == NULL) stackParentesis = createStack();
-	stackParentesis = addNodeIntoStack(swapZeroMenor, stackParentesis);
-	stackParentesis = addNodeIntoStack(swapUmZero, stackParentesis);
-	stackParentesis = addNodeIntoStack(swapDoisUm, stackParentesis);
-	stackParentesis = addNodeIntoStack(swapTresDois, stackParentesis);
-	stackParentesis = addNodeIntoStack(expressionNode, stackParentesis);
+	if(stackParenthesis == NULL) stackParenthesis = createStack();
+	stackParenthesis = addNodeIntoStack(swapZeroMenor, stackParenthesis);
+	stackParenthesis = addNodeIntoStack(swapUmZero, stackParenthesis);
+	stackParenthesis = addNodeIntoStack(swapDoisUm, stackParenthesis);
+	stackParenthesis = addNodeIntoStack(swapTresDois, stackParenthesis);
+	stackParenthesis = addNodeIntoStack(expressionNode, stackParenthesis);
 	
 	swapZeroMenor = swapUmZero = swapDoisUm = swapTresDois = expressionNode = NULL;
 
 } EXPR token_fechap {
-	treeNode* aux = (treeNode*) popStack(stackParentesis);
+	treeNode* aux = (treeNode*) popStack(stackParenthesis);
 	if(aux->children[0] == NULL){
 		aux->children[0] = expressionNode;
 	} else {
 		aux->children[1]->children[0] = expressionNode; 
 	}
 	expressionNode = aux;
-	swapTresDois = 	(treeNode*) popStack(stackParentesis);
-	swapDoisUm = (treeNode*) popStack(stackParentesis);
-	swapUmZero = (treeNode*) popStack(stackParentesis);
-	swapZeroMenor =(treeNode*) popStack(stackParentesis);
+	swapTresDois = 	(treeNode*) popStack(stackParenthesis);
+	swapDoisUm = (treeNode*) popStack(stackParenthesis);
+	swapUmZero = (treeNode*) popStack(stackParenthesis);
+	swapZeroMenor =(treeNode*) popStack(stackParenthesis);
 	printf("FINAL\n");
 	//printNode(expressionNode,13,0);
 } 
@@ -2653,7 +2630,6 @@ Aqui sera feita analise de matriz com apenas um index
       
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
-  in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
   List *identifier_temp = lookupStringFunction(hashFunction, currentIdentifier);
   if(identifier_temp!=NULL)
   {
@@ -2689,7 +2665,6 @@ Aqui sera feita analise de matriz com apenas um index
       {
 	printf("Retorno nao valido na funcao maximo na linha %d\n", nLine);
 	terminate();
-	in_function = 0;
       }
      }
      if(strcmp(currentIdentifier, "minimo")==0)
@@ -2722,7 +2697,6 @@ Aqui sera feita analise de matriz com apenas um index
       {
 	printf("Retorno nao valido na funcao minimo na linha %d\n", nLine);
 	terminate();
-	in_function = 0;
       }
      }
      if(strcmp(currentIdentifier, "media")==0)
@@ -2747,7 +2721,6 @@ Aqui sera feita analise de matriz com apenas um index
       {
 	printf("Retorno nao valido na funcao media na linha %d\n", nLine);
 	terminate();
-	in_function = 0;
       }
      }
   
@@ -2920,7 +2893,6 @@ token_abrep ARGUMENTOS_FUNCAO token_fechap
   strcpy(functionArguments, "\0");
   //strcpy(identifiers, "\0");
   //currentRelationPos = 0;
-  in_function = 0;
   };
 
 FATOR_CASE: SINALFATOR | token_numinteiro
