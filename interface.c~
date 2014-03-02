@@ -110,7 +110,7 @@ void showMenu2(){
 	}
 	for(i=10;i<row-3;i++){
 		mvprintw(i,1,"##");
-		mvprintw(i,row-3,"##");
+		mvprintw(i,col-3,"##");
 	}
 	
 	refresh();			/* Print it on to the real screen */

@@ -113,6 +113,11 @@ void showMenu2(){
 		mvprintw(i,col-3,"##");
 	}
 	
+	"* ######   ######   ##     ##   ######    ####   ##      ######  *"
+	"* ##       ##  ##   #### ####   ##  ##     ##    ##      ##  ##  *"
+	"* ##       ##  ##   ##  #  ##   ######     ##    ##      ######  *"
+	"* ##       ##  ##   ##     ##   ##         ##    ##      ##  ##  *"
+	"* ######   ######   ##     ##   ##        ####   #####   ##  ##  *"
 	refresh();			/* Print it on to the real screen */
     getch();			/* Wait for user input */
 	endwin();			/* End curses mode		  */

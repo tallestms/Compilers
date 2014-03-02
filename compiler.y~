@@ -1025,7 +1025,7 @@ token_identificador
   {
     function* functionAux = ((function*)(functionList)->info);
     functionNode = newTreeNode();
-      treeNode* auxFunctionNode;
+      treeNode* auxFunctionNode = newTreeNode();
       copyTreeNodes(auxFunctionNode, functionAux -> functionTree);
       functionNode->children[0] = auxFunctionNode;
       functionNode->children[0]->children[3] = NULL;
