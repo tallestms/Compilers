@@ -7,16 +7,10 @@ início
   retorne c;
 fim
 */
-função fibonacci(a:inteiro,b:inteiro,c:inteiro)
+função fibonacci(a:inteiro, b:inteiro,c:inteiro)
 	d:inteiro;
 	i:inteiro;
 início
-	imprimaln("parametros:");
-	imprima(a);
-	imprima(" ");
-	imprima(b);
-	imprima(" ");
-	imprimaln(c);
 	d:=a+b;
 	i:=c-1;
 	imprima(d);
@@ -26,13 +20,11 @@ início
 	 fim-se
 fim
 
-
-
 variáveis
 	a : inteiro;
 	b : inteiro;
 fim-variáveis
 
 início
-	fibonacci(1,1,30);
+	fibonacci(1,1,10);
 fim	

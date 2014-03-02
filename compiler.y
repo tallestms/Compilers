@@ -3299,7 +3299,40 @@ FILE *abre_arquivo(char *filename, char *modo) {
 	return file;
 }
 
+void ZerarGlobais(){
+	currentParameters = NULL;
+
+	hashVariables = NULL;
+	hashFunction = NULL;
+
+	stackParenthesis = NULL;
+	stackGlobal = NULL;
+	stackIfThenElse = NULL;
+	stackExpressionNode = NULL;
+	stackVariables = NULL;
+	stackVariablesAux = NULL;
+
+	globalTree = NULL;
+	expressionNode = NULL;
+	attributionNode = NULL;
+	conditionNode = NULL;
+	commandNode = NULL;
+	caseNode = NULL;
+	functionNode = NULL;
+	functionInternalVariables = NULL;
+
+	swapZeroMenor = NULL;
+	swapUmZero = NULL;
+	swapDoisUm = NULL;
+	swapTresDois = NULL;
+	tempDelimitadorNivelZero = NULL;
+	tempDelimitadorNivelUm = NULL;
+}
+
 Program* compila(char *nome_programa) {
+	
+	//Limpando coisas necessárias: TODO dar free
+	ZerarGlobais();
 
 	//Criando as hash
     hashVariables = createHash(MAX_HASH);
@@ -3321,15 +3354,18 @@ Program* compila(char *nome_programa) {
 	YY_FLUSH_BUFFER;
 	
 	if(err==1){
+		printf("err == 1\n");
 		return NULL;
 	}
 	
 	Program *p = createProgram();
 	//Copia as paradas
-	p->name = nome_programa;
+	p->name = (char*)malloc(strlen(nome_programa+2)*sizeof(char));
+	strcpy(p->name, nome_programa);
 	p->exec = globalTree;
 	p->hashVariables = hashVariables;
 	p->hashFunctions = hashFunction;
+	
 	//Seta como null
 	globalTree = NULL;
 	hashVariables = NULL;
@@ -3357,6 +3393,7 @@ main()
 			programa = (char*) solicitaNomePrograma();
 			printf("Abrindo %s\n", programa);
 			program = compila(programa);
+			printf("%p\n", program);
 			if(program==NULL || err == 1){
 				printf("Não foi possível compilar o programa devido a discordâncias da linguagem de entrada. Por favor verifique as linhas indicadas acima e tente novamente.\n");
 			}else {
@@ -3376,6 +3413,11 @@ main()
 				}
 				scanf("%d",&option);
 				scanf("%c",&lixo);
+				if(option<1 || option> tam){ 
+					printf("O programa desejado não pode se executado ou não existe.\n");
+					break; 
+				}
+				program = (Program*)getListPosition(listPrograms,option-1);
 				if(program != NULL) {
 					executeProgram(program);
 					scanf("%c",&lixo);

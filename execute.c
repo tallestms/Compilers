@@ -2,10 +2,10 @@
 #include <math.h>
 #include "execute.h"
 
-extern hashTable* hashVariables;
-extern hashTable* hashFunction;
-extern Stack* stackVariables;
-extern Stack* stackVariablesAux;
+hashTable* hashExecuteVariables = NULL;
+hashTable* hashExecuteFunctions = NULL;
+Stack* stackExecuteVariables = NULL;
+Stack* stackExecuteVariablesAux = NULL;
 char globalVarName[50];
 int globalRetornoFlag = 0;
 
@@ -15,7 +15,7 @@ char* findType(treeNode *t, char* s){
 	strcpy(s,aux->type);
 	variable *var;
 	if(!strcmp(s, "VARIAVEL")){
-		List *l = lookupStringVariable(hashVariables, aux->value);
+		List *l = lookupStringVariable(hashExecuteVariables, aux->value);
 		var = (variable*) l->info;
 		if (var->type == 3) strcpy(s, "REAL");
 		else if (var->type == 0) strcpy(s, "INTEIRO");
@@ -37,27 +37,27 @@ void *executeFunction(treeNode *func){
 	int i;
 	
 	/*empilhar variaveis da função chamada*/
-	if (stackVariables==NULL)
-		stackVariables = createStack();
+	if (stackExecuteVariables==NULL)
+		stackExecuteVariables = createStack();
 	//percorrer a lista de variáveis empilhando-as
 	//Empilhando parametros
 	auxParam = func->children[0]->children[1];
 	while(auxParam!=NULL){
-		list = (lookupStringVariable(hashVariables, auxParam->value));
+		list = (lookupStringVariable(hashExecuteVariables, auxParam->value));
 		if(list!=NULL){
 			var = (variable*) ( list->info );
-			pushStack(stackVariables, (void*)retornaValor(var->type, var->value));
+			pushStack(stackExecuteVariables, (void*)retornaValor(var->type, var->value));
 			numVariables++;
 		}
 		auxParam = auxParam->next;
 	}
 	auxParam = func->children[0]->children[2];
 	while(auxParam!=NULL){
-		list = lookupStringVariable(hashVariables, auxParam->value);
+		list = lookupStringVariable(hashExecuteVariables, auxParam->value);
 		if(list!=NULL) {
 			var = (variable*) ( list->info );
 		
-			pushStack(stackVariables, (void*)retornaValor(var->type, var->value));
+			pushStack(stackExecuteVariables, (void*)retornaValor(var->type, var->value));
 			numVariables++;
 		}
 		auxParam = auxParam->next;
@@ -70,40 +70,40 @@ void *executeFunction(treeNode *func){
 	**/
 	auxParam = func->children[1];
 	while(auxParam!=NULL) {
-		//list = lookupStringVariable(hashVariables, auxParam->children[0]->type);
+		//list = lookupStringVariable(hashExecuteVariables, auxParam->children[0]->type);
 		//printf(">>>%s\n",auxParam->children[0]->value);
 				//empilha
 		var = (variable*) ( list->info );
-		pushStack(stackVariables, (void*)executeNode(auxParam->children[0]));
-		printNode(auxParam->children[0],3,6);
-		printf("empilhado %d\n", *((int*)executeNode(auxParam->children[0])));
+		pushStack(stackExecuteVariables, (void*)executeNode(auxParam->children[0]));
+		//printNode(auxParam->children[0],3,6);
+		//printf("empilhado %d\n", *((int*)executeNode(auxParam->children[0])));
 		numParams++;
 		auxParam = auxParam->next;		
 	}
 	//Usa pilha auxiliar
-	if(stackVariablesAux==NULL)
-		stackVariablesAux = createStack();
+	if(stackExecuteVariablesAux==NULL)
+		stackExecuteVariablesAux = createStack();
 	for (i=0;i<numParams;i++){
-		pushStack(stackVariablesAux, popStack(stackVariables));
+		pushStack(stackExecuteVariablesAux, popStack(stackExecuteVariables));
 	}
 	//Desempilham na ordem
 	auxParam = func->children[1];
 	while(auxParam!=NULL){
-		list = lookupStringVariable(hashVariables, auxParam->children[1]->value);
+		list = lookupStringVariable(hashExecuteVariables, auxParam->children[1]->value);
 		if(list!=NULL) {
 			var = (variable*) ( list->info );
 			if(var->type == 0 || var->type == 4){ //int
-				*((int*)var->value) = *((int*)popStack(stackVariablesAux));
-				printf("variavel %s recebendo da pilha valor %d\n", var->name, *((int*)var->value) );
+				*((int*)var->value) = *((int*)popStack(stackExecuteVariablesAux));
+				//printf("variavel %s recebendo da pilha valor %d\n", var->name, *((int*)var->value) );
 			}
 			if(var->type == 1){ //char
-				*((char*)var->value) = *((char*)popStack(stackVariablesAux));
+				*((char*)var->value) = *((char*)popStack(stackExecuteVariablesAux));
 			}
 			if(var->type == 2){ //literal
-				strcpy(((char*)var->value), (char*)popStack(stackVariablesAux));
+				strcpy(((char*)var->value), (char*)popStack(stackExecuteVariablesAux));
 			}
 			if(var->type == 3){ //real
-				*((double*)var->value) = *((double*)popStack(stackVariablesAux));
+				*((double*)var->value) = *((double*)popStack(stackExecuteVariablesAux));
 			}
 		}
 		auxParam = auxParam->next;
@@ -111,13 +111,13 @@ void *executeFunction(treeNode *func){
 	
 	
 	//	executar a função empilhando o retorno quando houver 
-	list = lookupStringFunction(hashFunction, func->children[0]->value);
+	list = lookupStringFunction(hashExecuteFunctions, func->children[0]->value);
 	if(list != NULL){
 		function* funcAux = (function*) list->info;
 		auxFunc = funcAux->functionTree->children[3];
-		printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-		printNode(funcAux->functionTree, 13, 2);
-		printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
+		//printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+		//printNode(funcAux->functionTree, 13, 2);
+		//printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
 		//printNode(auxFunc, 13,6);
 		while(auxFunc!=NULL && globalRetornoFlag == 0){
 			executeNode(auxFunc);
@@ -126,30 +126,30 @@ void *executeFunction(treeNode *func){
 	
 		/*desempilhar o retorno*/
 		if(strcmp(func->children[0]->children[0]->type,"VOID")!=0) {
-			retorno = popStack(stackVariables);
+			retorno = popStack(stackExecuteVariables);
 		}
 	}	
 	/*desempilhar as variaveis da função chamada usando o size e a pilha auxiliar*/
-	if(stackVariablesAux==NULL)
-		stackVariablesAux = createStack();
+	if(stackExecuteVariablesAux==NULL)
+		stackExecuteVariablesAux = createStack();
 	for (i=0;i<numVariables;i++){
-		pushStack(stackVariablesAux, popStack(stackVariables));
+		pushStack(stackExecuteVariablesAux, popStack(stackExecuteVariables));
 	}
 	auxParam = func->children[0]->children[1];
 	while(auxParam!=NULL){
-		list = (lookupStringVariable(hashVariables, auxParam->value));
+		list = (lookupStringVariable(hashExecuteVariables, auxParam->value));
 		if(list!=NULL){
 			var = (variable*) ( list->info );
-			var->value = popStack(stackVariablesAux);
+			var->value = popStack(stackExecuteVariablesAux);
 		}
 		auxParam = auxParam->next;
 	}
 	auxParam = func->children[0]->children[2];
 	while(auxParam!=NULL){
-		list = lookupStringVariable(hashVariables, auxParam->value);
+		list = lookupStringVariable(hashExecuteVariables, auxParam->value);
 		if(list!=NULL) {
 			var = (variable*) ( list->info );
-			var->value = popStack(stackVariablesAux);
+			var->value = popStack(stackExecuteVariablesAux);
 		}
 		auxParam = auxParam->next;
 	}
@@ -160,11 +160,14 @@ void *executeFunction(treeNode *func){
 void executeProgram(Program* p){
 	if(p!=NULL){
 		//restaura hashVariables TODO copiar
-		hashVariables = p->hashVariables;
+		hashExecuteVariables = p->hashVariables;
 		//restaura hashFunction TODO copiar
-		hashFunction = p->hashFunctions;
+		hashExecuteFunctions = p->hashFunctions;
 		//Executa programa TODO copiar
 		executeTree(p->exec);
+		//Limpa estruturas TODO dar free
+		hashExecuteVariables = NULL;
+		hashExecuteFunctions = NULL;
 	}
 	return;
 }
@@ -243,7 +246,7 @@ void* executeNode(treeNode* t){
 		return (void*)doubleReturn;
 		return;
 	case 3: // :=
-		 list = (lookupStringVariable(hashVariables, t->children[0]->value));
+		 list = (lookupStringVariable(hashExecuteVariables, t->children[0]->value));
 		 var = (variable*) ( list->info );
 		 //atribuição de matrizes completa
 		 if(var->matrix && !strcmp(t->children[0]->type,"VARIAVEL") ) {  strcpy(globalVarName,  var->name); executeNode(t->children[1]); return; }
@@ -374,7 +377,7 @@ void* executeNode(treeNode* t){
 		 }
 		 return;
 	case 10: // Variavel	
-		 list = (List*)(lookupStringVariable(hashVariables, t->value)); 
+		 list = (List*)(lookupStringVariable(hashExecuteVariables, t->value)); 
 		 var = (variable*) list->info;
 		 if(var->type == 0 || var->type == 4) {
 		 	*intReturn = *((int*)var->value);
@@ -397,7 +400,7 @@ void* executeNode(treeNode* t){
 		return executeNode(t->children[0]);
 	case 12: // [] ou {}
 		
-		list = (List*)(lookupStringVariable(hashVariables, globalVarName)); 
+		list = (List*)(lookupStringVariable(hashExecuteVariables, globalVarName)); 
 		var = (variable*) list->info;
 		if(var->dimension == 1){
 			aux = t->children[0];
@@ -451,7 +454,7 @@ void* executeNode(treeNode* t){
 		}
 		return;
 	case 13: //Matriz
-		 list = (List*)(lookupStringVariable(hashVariables, t->value)); 
+		 list = (List*)(lookupStringVariable(hashExecuteVariables, t->value)); 
 		 var = (variable*) list->info;
 		 if(var->dimension == 1){
 		 	i = *((int*)executeNode(t->children[0]));
@@ -597,7 +600,7 @@ void* executeNode(treeNode* t){
 		}	
 		return;
 	case 27: //seleciona
-		list = (List*)(lookupStringVariable(hashVariables, t->children[0]->value)); 
+		list = (List*)(lookupStringVariable(hashExecuteVariables, t->children[0]->value)); 
 		 var = (variable*) list->info;
 		 treeNode* cases = t->children[1];
 		 if(var->type==0){
@@ -635,7 +638,7 @@ void* executeNode(treeNode* t){
 		return executeFunction(t);
 	case 30: // Retorno
 		//empilha valor do retorno
-		pushStack(stackVariables, executeNode(t->children[0]));
+		pushStack(stackExecuteVariables, executeNode(t->children[0]));
 		globalRetornoFlag = 1;
 		return;
 	case 31: //maximo
@@ -700,7 +703,7 @@ void* executeNode(treeNode* t){
 		}
 		return;
 	case 35: //leia
-		list = (List*)(lookupStringVariable(hashVariables, t->children[1]->value)); 
+		list = (List*)(lookupStringVariable(hashExecuteVariables, t->children[1]->value)); 
 		var = (variable*) list->info;
 		
 		if(var->type == 0){
@@ -755,7 +758,7 @@ void* executeNode(treeNode* t){
 		}
 		return;
 	case 37: //leialn
-		list = (List*)(lookupStringVariable(hashVariables, t->children[1]->value)); 
+		list = (List*)(lookupStringVariable(hashExecuteVariables, t->children[1]->value)); 
 		var = (variable*) list->info;
 		//Só faz sentido para string
 		if(var->type==2){
