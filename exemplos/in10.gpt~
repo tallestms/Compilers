@@ -11,13 +11,13 @@ função fibonacci(a:inteiro,b:inteiro,c:inteiro)
 	d:inteiro;
 	i:inteiro;
 início
-	//imprimaln("parametros:");
-	//imrpima(a);
-	//imprima(" ");
-	//imrpima(b);
-	//imprima(" ");
-	//imrpimaln(c);
-	//d:=a+b;
+	imprimaln("parametros:");
+	imprima(a);
+	imprima(" ");
+	imprima(b);
+	imprima(" ");
+	imprimaln(c);
+	d:=a+b;
 	i:=c-1;
 	imprima(d);
 	imprima(", ");

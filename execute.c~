@@ -31,6 +31,7 @@ void *executeFunction(treeNode *func){
 	List *list;
 	variable *var;
 	int numVariables = 0;
+	int numParams = 0;
 	void* retorno = NULL;
 	void* flag = (void*)0x1;
 	int i;
@@ -62,33 +63,61 @@ void *executeFunction(treeNode *func){
 		auxParam = auxParam->next;
 	}
 	
-	//Passar parametros
+	/**
+	*** Passagem de parametros
+	*** Coloco os valores na pilha, passo para  a pilha auxiliar para manter a ordem
+	*** e depois desempilho na variável correta.
+	**/
 	auxParam = func->children[1];
 	while(auxParam!=NULL) {
-		list = lookupStringVariable(hashVariables, auxParam->children[1]->value);
-		if(list!=NULL) {
-				var = (variable*) ( list->info );
-				if(var->type == 0 || var->type == 4){ //int
-					*((int*)var->value) = *((int*)executeNode(auxParam->children[0]));
-				}
-				if(var->type == 1){ //char
-					*((char*)var->value) = *((char*)executeNode(auxParam->children[0]));
-				}
-				if(var->type == 2){ //literal
-					strcpy(((char*)var->value), (char*)executeNode(auxParam->children[0]));
-				}
-				if(var->type == 3){ //real
-					*((double*)var->value) = *((double*)executeNode(auxParam->children[0]));
-				}
-		}
+		//list = lookupStringVariable(hashVariables, auxParam->children[0]->type);
+		//printf(">>>%s\n",auxParam->children[0]->value);
+				//empilha
+		var = (variable*) ( list->info );
+		pushStack(stackVariables, (void*)executeNode(auxParam->children[0]));
+		printNode(auxParam->children[0],3,6);
+		printf("empilhado %d\n", *((int*)executeNode(auxParam->children[0])));
+		numParams++;
 		auxParam = auxParam->next;		
 	}
+	//Usa pilha auxiliar
+	if(stackVariablesAux==NULL)
+		stackVariablesAux = createStack();
+	for (i=0;i<numParams;i++){
+		pushStack(stackVariablesAux, popStack(stackVariables));
+	}
+	//Desempilham na ordem
+	auxParam = func->children[1];
+	while(auxParam!=NULL){
+		list = lookupStringVariable(hashVariables, auxParam->children[1]->value);
+		if(list!=NULL) {
+			var = (variable*) ( list->info );
+			if(var->type == 0 || var->type == 4){ //int
+				*((int*)var->value) = *((int*)popStack(stackVariablesAux));
+				printf("variavel %s recebendo da pilha valor %d\n", var->name, *((int*)var->value) );
+			}
+			if(var->type == 1){ //char
+				*((char*)var->value) = *((char*)popStack(stackVariablesAux));
+			}
+			if(var->type == 2){ //literal
+				strcpy(((char*)var->value), (char*)popStack(stackVariablesAux));
+			}
+			if(var->type == 3){ //real
+				*((double*)var->value) = *((double*)popStack(stackVariablesAux));
+			}
+		}
+		auxParam = auxParam->next;
+	}
+	
+	
 	//	executar a função empilhando o retorno quando houver 
 	list = lookupStringFunction(hashFunction, func->children[0]->value);
 	if(list != NULL){
 		function* funcAux = (function*) list->info;
 		auxFunc = funcAux->functionTree->children[3];
-		printNode(auxFunc, 13,6);
+		printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+		printNode(funcAux->functionTree, 13, 2);
+		//printNode(auxFunc, 13,6);
 		while(auxFunc!=NULL && globalRetornoFlag == 0){
 			executeNode(auxFunc);
 			auxFunc = auxFunc->next;

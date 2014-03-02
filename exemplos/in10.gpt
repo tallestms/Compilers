@@ -7,16 +7,16 @@ início
   retorne c;
 fim
 */
-função fibonacci(a:inteiro,b:inteiro,c:inteiro)
+função fibonacci(a:inteiro, b:inteiro,c:inteiro)
 	d:inteiro;
 	i:inteiro;
 início
 	imprimaln("parametros:");
-	imrpima(a);
+	imprima(a);
 	imprima(" ");
-	imrpima(b);
+	imprima(b);
 	imprima(" ");
-	imrpimaln(c);
+	imprimaln(c);
 	d:=a+b;
 	i:=c-1;
 	imprima(d);
