@@ -1,4 +1,12 @@
 algoritmo declaracao_de_variaveis;
+
+função soma(a: inteiro, b:inteiro):inteiro
+  c : inteiro;
+início
+  c := a + b;
+  retorne c;
+fim
+
 função fibonacci(a:inteiro,b:inteiro,c:inteiro)
 	d:inteiro;
 	i:inteiro;

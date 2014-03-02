@@ -85,7 +85,7 @@ int showMenu(){
 	return i;
 }
 
-void showMenu(){
+void showMenu2(){
 	
 	int row,col;
 	char * str = (char*) malloc(50*sizeof(char));
@@ -98,7 +98,7 @@ void showMenu(){
 	//noecho();			/* Don't echo() while we do getch */
 	//mvprintw(row/2, col/2, "You Entered: %s", str);
 	int i;
-	for()
+	for(;;);
 	mvprintw(1,1,"############################################################");
 	mvprintw(2,1,"############################################################");
 	mvprintw(7,1,"############################################################");

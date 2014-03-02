@@ -83,8 +83,10 @@ void *executeFunction(treeNode *func){
 		}
 		auxParam = auxParam->next;		
 	}
-	//	executar a função empilhando o retorno quando houver
-	auxFunc = func->children[0]->children[3];
+	//	executar a função empilhando o retorno quando houver 
+	list = lookupStringFunction(hashFunction, func->children[0]->value);
+	function* aux = (function*) list->info;
+	auxFunc = aux->functionTree;
 	while(auxFunc!=NULL && globalRetornoFlag == 0){
 		executeNode(auxFunc);
 		auxFunc = auxFunc->next;
@@ -158,7 +160,7 @@ void* executeNode(treeNode* t){
 	double doubleA, doubleB;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
-	printf("tipo convertido: %d\n",c);
+	//printf("tipo convertido: %d\n",c);
 	switch (c) {
 	case -2: //literal
 		strcpy(stringReturn, t->value);
