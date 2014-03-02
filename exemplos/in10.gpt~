@@ -1,29 +1,29 @@
 algoritmo declaracao_de_variaveis;
-
+/*
 função soma(a: inteiro, b:inteiro):inteiro
   c : inteiro;
 início
   c := a + b;
   retorne c;
 fim
-
+*/
 função fibonacci(a:inteiro,b:inteiro,c:inteiro)
 	d:inteiro;
 	i:inteiro;
 início
-	d:=a+b;
+	//imprimaln("parametros:");
+	//imrpima(a);
+	//imprima(" ");
+	//imrpima(b);
+	//imprima(" ");
+	//imrpimaln(c);
+	//d:=a+b;
 	i:=c-1;
 	imprima(d);
 	imprima(", ");
 	 se (c>0) então
-<<<<<<< HEAD
 	 	fibonacci(b, d, i);
 	 fim-se
-=======
-		soma(a,b);
-	 	fibonacci(b, d, i);
-	fim-se
->>>>>>> d9c96c0f85f07be402be00b84d80401eb822042c
 fim
 
 
@@ -34,5 +34,5 @@ variáveis
 fim-variáveis
 
 início
-	fibonacci(1,1,4);
+	fibonacci(1,1,30);
 fim	

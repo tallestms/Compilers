@@ -87,8 +87,8 @@ void *executeFunction(treeNode *func){
 	list = lookupStringFunction(hashFunction, func->children[0]->value);
 	if(list != NULL){
 		function* funcAux = (function*) list->info;
-		auxFunc = funcAux->functionTree;
-		printNode(auxFunc, 13,6);
+		auxFunc = funcAux->functionTree->children[3];
+		//printNode(auxFunc, 13,6);
 		while(auxFunc!=NULL && globalRetornoFlag == 0){
 			executeNode(auxFunc);
 			auxFunc = auxFunc->next;
