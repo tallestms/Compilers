@@ -2,6 +2,8 @@
 #include <string.h>
 #include "aux.h"
 
+extern int err;
+
 int verifyRelationship(int *varRelations, int currentRelationPos)
 {
   int i = 0;
@@ -102,8 +104,13 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v,"condicao-para")) return 26;
 	if(!strcmp(v,"condicao-seleciona")) return 27;
 	if(!strcmp(v, "^")) return 28;
-	if(!strcmp(t, "CHAMADA-FUNCAO")) return 29;
+<<<<<<< HEAD
+	if(!strcmp(t, "CHAMADA FUNCAO")) return 29;
 	if(1) return 30; //TODO Retorno
+=======
+	if(!strcmp(t, "CHAMADA-FUNCAO")) return 29;
+	if(!strcmp(t,"RETORNO FUNCAO")) return 30; 
+>>>>>>> 4fd1c22b76e5043ebad969e59b77b317cd11927f
 	
 	
 	return -1000;
@@ -201,5 +208,6 @@ int verifyPrimitivesMaxMinMed(char* currentFunction)
 
 void terminate(){
 		//TODO desalocar
-		exit(0);
+		err = 1;
+		//exit(0);
 }

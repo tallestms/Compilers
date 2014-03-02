@@ -17,6 +17,8 @@ início
   retorne a;
 fim
 */
+
+
 /*
 função soma4(x: inteiro, y: inteiro, z: inteiro, w: inteiro) : inteiro
   a:inteiro;
@@ -46,7 +48,7 @@ variáveis
 	//b : inteiro;
 	//c : lógico;
 	//a : real;
-	b : real;
+	//b : real;
 	//c : lógico;
 	//z : lógico;
 	//c:real;
@@ -58,6 +60,9 @@ variáveis
 fim-variáveis
 
 início
+	//a := soma2(1,2,3,4,5,6);
+	//a := verdadeiro;
+	//a := 2 > 1 e 2 < 1 ou (4*2+4*3-2+10) < (2*10);
 	//a := soma2(1,2,3,4,5,6);
 	//z := a > a e (a*a+a*a-2+10) < (a*10);
 	//a:=10;

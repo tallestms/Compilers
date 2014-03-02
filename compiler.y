@@ -17,6 +17,8 @@
 #define MAX_LITERAL 50
 #define IN_DEBUG_MODE 1
 
+//extern YY_FLUSH_BUFFER;
+extern int err;
 extern char* yytext;
 extern FILE* yyin;
 extern int in_function;
@@ -92,36 +94,6 @@ treeNode* tempDelimitadorNivelUm = NULL;
 *	FUNÇÕES
 **/
 
-FILE *abre_arquivo(char *filename, char *modo) {
-	FILE *file;
-
-	if (!(file = fopen(filename, modo))) {
-		printf("Erro na abertura do arquivo %s\n", filename);
-	}
-	return file;
-}
-
-Program* compila(char *nome_programa) {
-
-	yyin = abre_arquivo(nome_programa, "r");
-	if (yyin == NULL) exit(1);
-
-	yyparse();
-
-	Program *p = createProgram();
-	//Copia as paradas
-	p->name = nome_programa;
-	p->exec = globalTree;
-	p->hashVariables = hashVariables;
-	p->hashFunctions = hashFunction;
-	//Seta como null
-	globalTree = NULL;
-	hashVariables = NULL;
-	hashFunction = NULL;
-	
-	fclose(yyin);
-	return p;
-}
 
 void addAttributionNodeIntoGlobalTree(){
 	if(globalTree==NULL){
@@ -2031,9 +2003,9 @@ ARGUMENTOS_FUNCAO: EXPR
   expressionNode = NULL;
 }
 | /*Empty*/;
-EXPR: SIEXPR { swapoutDoisUm(); swapoutTresDois(); }
+EXPR: SIEXPR { swapoutTresDois(); }
 
-| EXPR COMPARACOES SIEXPR { swapoutDoisUm();swapoutTresDois(); }
+| EXPR COMPARACOES SIEXPR { swapoutTresDois(); }
 {
     if (in_comparacao = 1 && in_condicional == 0)
   {	
@@ -2196,7 +2168,6 @@ FATOR: SINALFATOR
 {
   //if(in_function!=1)
   {
-     
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
     ++currentRelationPos;
@@ -2609,8 +2580,14 @@ Aqui sera feita analise de matriz com apenas um index
 		expressionNode->children[1] = aux;
 	}
 	//coloco o nó atual de expressão na pilha e seto para null
+	if(stackParentesis == NULL) stackParentesis = createStack();
+	stackParentesis = addNodeIntoStack(swapZeroMenor, stackParentesis);
+	stackParentesis = addNodeIntoStack(swapUmZero, stackParentesis);
+	stackParentesis = addNodeIntoStack(swapDoisUm, stackParentesis);
+	stackParentesis = addNodeIntoStack(swapTresDois, stackParentesis);
 	stackParentesis = addNodeIntoStack(expressionNode, stackParentesis);
-	expressionNode = NULL;
+	
+	swapZeroMenor = swapUmZero = swapDoisUm = swapTresDois = expressionNode = NULL;
 
 } EXPR token_fechap {
 	treeNode* aux = (treeNode*) popStack(stackParentesis);
@@ -2619,7 +2596,13 @@ Aqui sera feita analise de matriz com apenas um index
 	} else {
 		aux->children[1]->children[0] = expressionNode; 
 	}
-	expressionNode = aux;	
+	expressionNode = aux;
+	swapTresDois = 	(treeNode*) popStack(stackParentesis);
+	swapDoisUm = (treeNode*) popStack(stackParentesis);
+	swapUmZero = (treeNode*) popStack(stackParentesis);
+	swapZeroMenor =(treeNode*) popStack(stackParentesis);
+	printf("FINAL\n");
+	//printNode(expressionNode,13,0);
 } 
 | token_verdadeiro 
 {
@@ -2771,7 +2754,7 @@ Aqui sera feita analise de matriz com apenas um index
     List *functionList = lookupStringFunction(hashFunction, currentFunction);
     if(verifyPrimitivesMaxMinMed) 
     {
-      fillTreeNode(functionNode, currentFunction, "PRIMITIVA"); 
+      fillTreeNode(functionNode, currentIdentifier, "PRIMITIVA"); 
             
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;
@@ -3278,12 +3261,58 @@ void createPrimitives()
   setFunction(newFunction, functionAux,T_SEMRETORNO, 1, NULL, 1);
 }
 
-main()
-{
-    //Criando as hash
+FILE *abre_arquivo(char *filename, char *modo) {
+	FILE *file;
+
+	if (!(file = fopen(filename, modo))) {
+		printf("Erro na abertura do arquivo %s\n", filename);
+	}
+	return file;
+}
+
+Program* compila(char *nome_programa) {
+
+	//Criando as hash
     hashVariables = createHash(MAX_HASH);
     hashFunction = createHash(MAX_HASH);
     createPrimitives();
+
+	//Contador de linhas
+	nLine = 1;
+	
+	//Erro
+	err = 0;
+    
+	yyin = abre_arquivo(nome_programa, "r");
+	if (yyin == NULL) exit(1);
+
+	yyparse();
+	
+	//Reiniciando o buffer do flex
+	YY_FLUSH_BUFFER;
+	
+	if(err==1){
+		return NULL;
+	}
+	
+	Program *p = createProgram();
+	//Copia as paradas
+	p->name = nome_programa;
+	p->exec = globalTree;
+	p->hashVariables = hashVariables;
+	p->hashFunctions = hashFunction;
+	//Seta como null
+	globalTree = NULL;
+	hashVariables = NULL;
+	hashFunction = NULL;
+	
+	fclose(yyin);
+	return p;
+}
+
+main()
+{
+
     Program *program;
     int option, tam, i;
     char lixo;
@@ -3299,16 +3328,23 @@ main()
 			programa = (char*) solicitaNomePrograma();
 			printf("Abrindo %s\n", programa);
 			program = compila(programa);
-	   		listPrograms = insertList(listPrograms, program);
+			if(program==NULL || err == 1){
+				printf("Não foi possível compilar o programa devido a discordâncias da linguagem de entrada. Por favor verifique as linhas indicadas acima e tente novamente.\n");
+			}else {
+	   			listPrograms = insertList(listPrograms, program);
+	   			printf("Programa compilado com éxito, pronto para executar-se.\n");
+	   		}
 	   		scanf("%c",&lixo);
 			break;
 		case 2: //Executar
 			tam = sizeList(listPrograms);
-			if(tam==0) printf("Não há programas a serem executados!");
+			if(tam==0) printf("Não há programas a serem executados. Favor compilar algum programa e voltar a tentar.\n");
 			else {
 				for(i=0;i<tam;i++){
+					printf("%d\n",tam);
 					program = (Program*)getListPosition(listPrograms,i);
-					printf("%d - %s\n", i+1, program->name);
+					if (program)
+						printf("%d - %s\n", i+1, program->name);
 				}
 				scanf("%d",&option);
 				scanf("%c",&lixo);
@@ -3316,8 +3352,7 @@ main()
 					executeProgram(program);
 					scanf("%c",&lixo);
 				}else
-					printf("O programa não pode ser recuperado\n");
-
+					printf("O programa desejado não pode se executado ou não existe.\n");
 			}
 			break;
 		case 3:
@@ -3327,7 +3362,24 @@ main()
 			printNode(program->exec, 13, 0);		
 			scanf("%c",&lixo);
 			break;
-		case 5:
+		case 4:
+			tam = sizeList(listPrograms);
+			if(tam==0) printf("Não há programas compilados. Você pode compilar programas na opção 1 do menu.\n");
+			else {
+				for(i=0;i<tam;i++){
+					printf("%d\n",tam);
+					program = (Program*)getListPosition(listPrograms,i);
+					if (program)
+						printf("%d - %s\n", i+1, program->name);
+				}
+			}
+			scanf("%c",&lixo);
+			break;
+		case 5: 
+			listarFiles();
+			scanf("%c",&lixo);
+			break;
+		case 6:
 			return 0;
 		default: break;
 		}
