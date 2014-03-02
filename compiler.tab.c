@@ -3287,7 +3287,7 @@ yyreduce:
 	  printf("Valores incompativeis na linha %d.\n", nLine);
 	  terminate();
 	}
-	else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
+	else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0 && ((variable*)(identifier_temp->info))->type != 4)
 	{	
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	  terminate();

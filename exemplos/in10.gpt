@@ -1,5 +1,5 @@
 algoritmo declaracao_de_variaveis;
-/*
+
 função soma2(x: inteiro, y: inteiro, z: inteiro, w: inteiro, o: inteiro, p: inteiro): lógico
   a:inteiro;
   c:inteiro;
@@ -11,12 +11,12 @@ início
   retorne a+x+x > y;
   a := z + w + a;
   retorne a > w e y < w ou (a*x+y*z-2+10) < x*10;
-  retorne a;
+  retorne a>a;
   a := z + w;
   b := 10.10;
-  retorne a;
+  retorne a>a;
 fim
-*/
+
 
 
 /*
@@ -126,7 +126,9 @@ início
 	imprimaln(a);
 	imprima(a);
 	imprima(a);
-	//z := soma2(a,a,a,a,a,a);
+	z := verdadeiro;
+	z := soma2(a,a,a,a,a,a);
+	imprima(z);
 	
 	//b := 10.10;
 	//b := minimo(b,b);
