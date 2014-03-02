@@ -50,13 +50,12 @@ void listarFiles(){
 
 
 int showMenu(){
-	int i;
+	int i,j;
 	char lixo;
-
-	system("clear");
-	printf("#########################\n");
-	printf("#########################\n");
-	printf("##                     ##\n");
+	
+	
+    system("clear");
+	
 	printf("##     COMPILADORES    ##\n");
 	printf("##      G-PORTUGOL     ##\n");
 	printf("##                     ##\n");

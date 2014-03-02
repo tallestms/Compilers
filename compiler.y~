@@ -3125,6 +3125,6 @@ void terminate(){
       freeTable(hashVariables);
       freeTableFunction(hashFunction);
 	
-      return 0;
+      goto
 }
 

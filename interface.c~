@@ -14,7 +14,7 @@ char* solicitaNomePrograma(){
 	programa = (char *) calloc(50, sizeof(char));
 	printf("Digite o nome do programa: \n");
 	scanf("%[^\n]", programa);
-	/scanf("%c", &lixo);
+	scanf("%c", &lixo);
 	//strcpy(programa, "exemplos/in10.gpt"); //executando exemplo in10.gpt
 	
 	return programa;
@@ -50,13 +50,12 @@ void listarFiles(){
 
 
 int showMenu(){
-	int i;
+	int i,j;
 	char lixo;
-
-	system("clear");
-	printf("#########################\n");
-	printf("#########################\n");
-	printf("##                     ##\n");
+	
+	
+    system("clear");
+	
 	printf("##     COMPILADORES    ##\n");
 	printf("##      G-PORTUGOL     ##\n");
 	printf("##                     ##\n");
