@@ -12,4 +12,5 @@ int convertValuesTreeNode(char v[50],char t[50]);
 double stringRealToDouble(char s[50]);
 int findArgumentType(int argumentNumber, List* aux);
 void retiraAspasFinal(char* s);
-
+void *retornaValor(int type, void* point);
+void terminate();

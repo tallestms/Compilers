@@ -102,7 +102,7 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v,"condicao-para")) return 26;
 	if(!strcmp(v,"condicao-seleciona")) return 27;
 	if(!strcmp(v, "^")) return 28;
-	if(!strcmp(t, "CHAMADA-FUNCAO")) return 29;
+	if(!strcmp(t, "CHAMADA FUNCAO")) return 29;
 	if(1) return 30; //TODO Retorno
 	
 	
@@ -175,6 +175,29 @@ void *retornaValor(int type, void* point){
 	return;
 }
 
+int verifyPrimitivesMaxMinMed(char* currentFunction)
+{
+  if(strcmp(currentFunction, "maximo inteiro") == 0)
+      return 1;
+  else if(strcmp(currentFunction, "maximo real") == 0)
+      return 1;
+  else if(strcmp(currentFunction, "maximo caracter") == 0)
+      return 1;
+  else if(strcmp(currentFunction, "minimo inteiro") == 0)
+      return 1;
+  else if(strcmp(currentFunction, "minimo real") == 0)
+      return 1;
+  else if(strcmp(currentFunction, "minimo caracter") == 0)
+      return 1;
+  else if(strcmp(currentFunction, "media inteiro") == 0)
+      return 1;
+  else if(strcmp(currentFunction, "media real") == 0)
+      return 1;
+  else if(strcmp(currentFunction, "media caracter") == 0)
+      return 1;
+  else
+      return 0;  
+}
 
 void terminate(){
 		//TODO desalocar

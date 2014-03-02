@@ -1,5 +1,4 @@
 algoritmo declaracao_de_variaveis;
-
 /*
 função soma2(x: inteiro, y: inteiro, z: inteiro, w: inteiro, o: inteiro, p: inteiro): lógico
   a:inteiro;
@@ -47,7 +46,7 @@ variáveis
 	//b : inteiro;
 	//c : lógico;
 	//a : real;
-	//b : real;
+	b : real;
 	//c : lógico;
 	//z : lógico;
 	//c:real;
@@ -59,7 +58,7 @@ variáveis
 fim-variáveis
 
 início
-	a := soma2(1,2,3,4,5,6);
+	//a := soma2(1,2,3,4,5,6);
 	//z := a > a e (a*a+a*a-2+10) < (a*10);
 	//a:=10;
 	//a:=soma2(1,2,3,4,5,6);
@@ -106,7 +105,15 @@ início
 	//n := [1,2,3,4];
 	//a := m[0][0] + m[1][1];
 
-	//a := 10;
+	//leia(a);
+	a := 10;
+	a := maximo(a,a);
+	leia(a);
+	imprima(1);
+	//imprima(a);
+	
+	//b := 10.10;
+	//b := minimo(b,b);
 	
 	//a := 10;
 	//d := 20;
