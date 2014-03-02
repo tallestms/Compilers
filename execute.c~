@@ -34,6 +34,7 @@ void *executeFunction(treeNode *func){
 	void* retorno = NULL;
 	void* flag = (void*)0x1;
 	int i;
+	
 	/*empilhar variaveis da função chamada*/
 	if (stackVariables==NULL)
 		stackVariables = createStack();
@@ -61,9 +62,31 @@ void *executeFunction(treeNode *func){
 		auxParam = auxParam->next;
 	}
 	
+	//Passar parametros
+	auxParam = func->children[1];
+	while(auxParam!=NULL) {
+		list = lookupStringVariable(hashVariables, auxParam->children[1]->value);
+		if(list!=NULL) {
+				var = (variable*) ( list->info );
+				if(var->type == 0 || var->type == 4){ //int
+					*((int*)var->value) = *((int*)executeNode(auxParam->children[0]));
+				}
+				if(var->type == 1){ //char
+					*((char*)var->value) = *((char*)executeNode(auxParam->children[0]));
+				}
+				if(var->type == 2){ //literal
+					strcpy(((char*)var->value), (char*)executeNode(auxParam->children[0]));
+				}
+				if(var->type == 3){ //real
+					*((double*)var->value) = *((double*)executeNode(auxParam->children[0]));
+				}
+		}
+		auxParam = auxParam->next;		
+	}
 	//	executar a função empilhando o retorno quando houver
 	auxFunc = func->children[0]->children[3];
-	while(auxFunc!=NULL && globalRetornoFlag != 0){
+	printNode(auxFunc,13,0);
+	while(auxFunc!=NULL && globalRetornoFlag == 0){
 		executeNode(auxFunc);
 		auxFunc = auxFunc->next;
 	}
@@ -136,7 +159,7 @@ void* executeNode(treeNode* t){
 	double doubleA, doubleB;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
-	//printf("tipo convertido: %d\n",c);
+	printf("tipo convertido: %d\n",c);
 	switch (c) {
 	case -2: //literal
 		strcpy(stringReturn, t->value);
@@ -678,7 +701,6 @@ void* executeNode(treeNode* t){
 		return;
 	case 36: //imprimaln
 		findType(t->children[1], type);
-		printf("%s\n", type);
 		if(!strcmp(type, "INTEIRO")){
 			printf("%d\n", *((int*)executeNode(t->children[1])));
 		}

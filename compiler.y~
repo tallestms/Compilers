@@ -534,10 +534,8 @@ FUNCAO
   if(identifier_temp!=NULL)
   {
     function* functionAux = ((function*)(identifier_temp->info));
-    functionAux->arity=currentFunctionArity;
     //Adicionando versao inversa da lista para facilitar mais tarde
-    currentParameters = reverseList(currentParameters);
-    functionAux->parameters=currentParameters;
+
     if(functionAux->returnType!=T_SEMRETORNO)
     {
       if(returnFlag == 0)
@@ -593,10 +591,7 @@ FUNCAO
   if(identifier_temp!=NULL)
   {
     function* functionAux = ((function*)(identifier_temp->info));
-    functionAux->arity=currentFunctionArity;
     //Adicionando versao inversa da lista para facilitar mais tarde
-    currentParameters = reverseList(currentParameters);
-    functionAux->parameters=currentParameters;
     if(functionAux->returnType!=T_SEMRETORNO)
     {
       if(returnFlag == 0)
@@ -606,7 +601,6 @@ FUNCAO
       }
     }
   }
-  currentFunctionArity = 0;
   strcpy(currentScope, "main");
   returnFlag = 0;
   globalTree = ((treeNode*)(popStack(stackGlobal)));
@@ -704,15 +698,60 @@ BLOCO_SWITCH_AUX: token_caso token_abrep FATOR_CASE token_fechap token_doisp BLO
 } token_pontov 
 | token_caso token_abrep FATOR_CASE token_fechap token_doisp BLOCO_AUXILIAR;
 
-FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_inicio BLOCO_FUNCAO token_fim 
-| token_abrep VARIAVEIS_FUNCAO token_fechap VARIAVEIS {functionNode->children[2] = functionInternalVariables;} token_inicio BLOCO_FUNCAO token_fim 
-| token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp TIPOS_VARIAVEIS 
+FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_inicio 
 {
+  List *identifier_temp = lookupStringFunction(hashFunction, currentScope);
+  if(identifier_temp!=NULL)
+  {
+    function* functionAux = ((function*)(identifier_temp->info));
+    functionAux->arity = currentFunctionArity;
+      currentFunctionArity = 0;
+
+    currentParameters = reverseList(currentParameters);
+    functionAux->parameters=currentParameters;
+    currentParameters = startList();
+  }
+}
+BLOCO_FUNCAO token_fim 
+| token_abrep VARIAVEIS_FUNCAO token_fechap VARIAVEIS 
+{
+functionNode->children[2] = functionInternalVariables;
+List *identifier_temp = lookupStringFunction(hashFunction, currentScope);
+if(identifier_temp!=NULL)
+  {
+    function* functionAux = ((function*)(identifier_temp->info));    
+    functionAux->arity = currentFunctionArity;
+    currentFunctionArity = 0;
+
+    currentParameters = reverseList(currentParameters);
+    functionAux->parameters=currentParameters;
+        currentParameters = startList();
+
+  }
+} 
+
+
+token_inicio BLOCO_FUNCAO token_fim 
+| token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp 
+TIPOS_VARIAVEIS 
+{
+
 // Em tipos_variaveis ira retornar o tipo de retorno da funcao, a qual sera acrescentada.
   List *aux = lookupStringFunction(hashFunction, currentScope);
   if(aux!=NULL)
+  {
     ((function*)(aux->info))->returnType = convertType(currentType);
-  convertTypeReverseUpper(convertType(currentType),functionNode->children[0]->type);  
+    convertTypeReverseUpper(convertType(currentType),functionNode->children[0]->type);  
+    function* functionAux = ((function*)(aux->info));
+    functionAux->arity = currentFunctionArity;
+      currentFunctionArity = 0;
+      
+          currentParameters = reverseList(currentParameters);
+    functionAux->parameters=currentParameters;
+        currentParameters = startList();
+
+
+  }
   returnFlag = 0;
 }
 VARIAVEIS 
@@ -721,10 +760,18 @@ token_inicio BLOCO_FUNCAO token_fim
 | token_abrep VARIAVEIS_FUNCAO token_fechap token_doisp TIPOS_VARIAVEIS 
 /*Retorno sera verificado aqui em todas as funcoes com mesmo nome!*/
 {
+
   List *aux = lookupStringFunction(hashFunction, currentScope);
   if(aux!=NULL)
+  {
     ((function*)(aux->info))->returnType = convertType(currentType);
-      convertTypeReverseUpper(convertType(currentType),functionNode->children[0]->type);  
+      convertTypeReverseUpper(convertType(currentType),functionNode->children[0]->type);
+      function* functionAux = ((function*)(aux->info));
+    functionAux->arity = currentFunctionArity;
+      currentFunctionArity = 0;
+    currentParameters = reverseList(currentParameters);
+    functionAux->parameters=currentParameters;
+   }
   returnFlag = 0;
 }
 token_inicio BLOCO_FUNCAO token_fim
@@ -1829,6 +1876,7 @@ ARGUMENTOS_FUNCAO: EXPR
   argumentNumber++;
   if(argumentNumber <= functionAux->arity)
   {
+    //printf("%d\n", functionAux->arity);
     int returnTypeArgument = findArgumentType(argumentNumber, aux);
     //printf("%d %d\n", returnTypeArgument, varRelations[0]);
 
@@ -2729,13 +2777,13 @@ Aqui sera feita analise de matriz com apenas um index
     {
       functionNode->children[0] = returnNode;
       fillTreeNode(functionNode, currentIdentifier, "PRIMITIVA");   
-      //stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
+      stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;
     }
     else if(functionList!=NULL)
     {
       function* functionAux = ((function*)(functionList)->info);
-      //functionNode = newTreeNode();
+      functionNode = newTreeNode();
       fillTreeNode(functionNode, currentFunction, "CHAMADA FUNCAO");
       functionNode->children[0] = functionAux -> functionTree; 
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
