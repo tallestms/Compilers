@@ -38,7 +38,7 @@ fim
 variáveis
 
 	a : inteiro;
-	//b : inteiro;
+	b : inteiro;
 	//d : inteiro;
 	//b : inteiro;
 	//c : lógico;
@@ -112,10 +112,14 @@ início
 
 	//leia(a);
 	a := 10;
-	a := maximo(a,a);
-	leia(a);
+	b := 20;
+	a := maximo(a,b);
+	//a := minimo(a,a);
+	//a := media(a,a);
+	//leialn(a);
+	//imprimaln(a);
 	imprima(a);
-	//imprima(a);
+	imprima("Muito bem!");
 	
 	//b := 10.10;
 	//b := minimo(b,b);

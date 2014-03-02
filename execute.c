@@ -127,10 +127,12 @@ void* executeNode(treeNode* t){
 	variable* var;
 	List* list;
 	char type[50];
+	char lixo;
 	treeNode* aux;
 	treeNode* aux2;
-	int i,j;
+	int i,j, intA, intB;
 	int j1;
+	double doubleA, doubleB;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
 	//printf("tipo convertido: %d\n",c);
@@ -577,6 +579,113 @@ void* executeNode(treeNode* t){
 		//empilha valor do retorno
 		pushStack(stackVariables, executeNode(t->children[0]));
 		globalRetornoFlag = 1;
+		return;
+	case 31: //maximo
+		if(!strcmp(t->children[0]->type, "INTEIRO")){
+			intA = *((int*)executeNode(t->children[1]));
+			intB = *((int*)executeNode(t->children[2]));
+			if (intA > intB) *intReturn = intA; else *intReturn = intB;
+			return intReturn;
+		}
+		if(!strcmp(t->children[0]->type, "REAL")){
+			doubleA = *((double*)executeNode(t->children[1]));
+			doubleB = *((double*)executeNode(t->children[2]));
+			if (doubleA > doubleB) *doubleReturn = doubleA; else *doubleReturn = doubleB;
+			return doubleReturn;
+		}
+		return;
+	case 32: //minimo
+		if(!strcmp(t->children[0]->type, "INTEIRO")){
+			intA = *((int*)executeNode(t->children[1]));
+			intB = *((int*)executeNode(t->children[2]));
+			if (intA < intB) *intReturn = intA; else *intReturn = intB;
+			return intReturn;
+		}
+		if(!strcmp(t->children[0]->type, "REAL")){
+			doubleA = *((double*)executeNode(t->children[1]));
+			doubleB = *((double*)executeNode(t->children[2]));
+			if (doubleA < doubleB) *doubleReturn = doubleA; else *doubleReturn = doubleB;
+			return doubleReturn;
+		}
+		return;
+	case 33: //media
+		if(!strcmp(t->children[0]->type, "INTEIRO")){
+			intA = *((int*)executeNode(t->children[1]));
+			intB = *((int*)executeNode(t->children[2]));
+			*intReturn = (intA + intB) / 2;
+		}
+		if(!strcmp(t->children[0]->type, "REAL")){
+			doubleA = *((double*)executeNode(t->children[1]));
+			doubleB = *((double*)executeNode(t->children[2]));
+			*doubleReturn = (doubleA + doubleB) / 2;
+		}
+		return;
+	case 34: //imprima
+		findType(t->children[1], type);
+		if(!strcmp(type, "INTEIRO")){
+			printf("%d", *((int*)executeNode(t->children[1])));
+		}
+		if(!strcmp(type, "REAL")){
+			printf("%.2f", *((double*)executeNode(t->children[1])));
+		}
+		if(!strcmp(type, "LITERAL")){
+			printf("%s", ((char*)executeNode(t->children[1])));
+		}
+		if(!strcmp(type, "CARACTER")){
+			printf("%c", *((char*)executeNode(t->children[1])));
+		}
+		return;
+	case 35: //leia
+		list = (List*)(lookupStringVariable(hashVariables, t->children[0]->value)); 
+		var = (variable*) list->info;
+		
+		if(var->type == 0 || var->type == 4){
+			scanf("%d", intReturn);
+			scanf("%c", &lixo);
+			*((int*)var->value) = *intReturn;
+		}
+		if(var->type==3){
+			scanf("%s", stringReturn);
+			scanf("%c", &lixo);
+			*doubleReturn = stringRealToDouble(stringReturn);
+			*((double*)var->value) = *doubleReturn;
+		}
+		if(var->type==2){
+			scanf("%s", stringReturn);
+			scanf("%c", &lixo);
+			strcpy((char*)var->value,stringReturn);
+		}
+		if( var->type==1 ){
+			scanf("%c", charReturn);
+			scanf("%c", &lixo);
+			*((char*)var->value) = *charReturn;		
+		}
+		return;
+	case 36: //imprimaln
+		findType(t->children[1], type);
+		if(!strcmp(type, "INTEIRO")){
+			printf("%d\n", *((int*)executeNode(t->children[1])));
+		}
+		if(!strcmp(type, "REAL")){
+			printf("%.2f\n", *((double*)executeNode(t->children[1])));
+		}
+		if(!strcmp(type, "LITERAL")){
+			printf("%s\n", ((char*)executeNode(t->children[1])));
+		}
+		if(!strcmp(type, "CARACTER")){
+			printf("%c\n", *((char*)executeNode(t->children[1])));
+		}
+		return;
+	case 37: //leialn
+		list = (List*)(lookupStringVariable(hashVariables, t->children[0]->value)); 
+		var = (variable*) list->info;
+		//Só faz sentido para string
+		if(var->type==2){
+			scanf("%[^\n]", stringReturn);
+			scanf("%c", &lixo);
+			strcpy((char*)var->value,stringReturn);
+		}
+		return;
 	default: return;
 	}
 
