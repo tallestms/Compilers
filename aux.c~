@@ -110,9 +110,9 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v, "minimo")) return 32;
 	if(!strcmp(v, "media")) return 33;
 	if(!strcmp(t, "imprima")) return 34;
-	if(!strcmp(v, "leia")) return 35;
+	if(!strcmp(t, "leia")) return 35;
 	if(!strcmp(t, "imprimaln")) return 36;
-	if(!strcmp(v, "leialn")) return 37;
+	if(!strcmp(t, "leialn")) return 37;
 	
 	
 	return -1000;
