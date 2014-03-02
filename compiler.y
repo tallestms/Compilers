@@ -470,7 +470,6 @@ VARIAVEIS: VARIAVEIS_IDENTIFICADORES token_doisp TIPOS_VARIAVEIS token_pontov
 	strcpy(auxVariable, varName);
 	strcat(auxVariable, " ");
 	strcat(auxVariable, currentScope);
-	printf("%s\n", auxVariable);
 	if(lookupStringVariable(hashVariables, auxVariable)==NULL)
 	{
 	  variable* newVar = createVariable();
@@ -891,10 +890,45 @@ token_retorne {expressionNode=NULL; } EXPR token_pontov
   strcpy(identifiers, "\0");
 }
 |
-token_imprima
-token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
-token_imprimaln
-token_abrep BLOCO_IMPRIMA token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+token_imprima token_abrep BLOCO_IMPRIMA 
+{
+  treeNode* imprimaNode = newTreeNode();
+  
+  char typeImprima[10];
+  convertTypeReverseUpper(convertType(currentType), typeImprima);
+  fillTreeNode(imprimaNode,"CHAMADA FUNCAO" , "imprima");
+	  
+	  treeNode* imprimaNodeChildren0 = newTreeNode();
+	  fillTreeNode(imprimaNodeChildren0, "RETORNO", "VOID");
+	  
+	  
+	  imprimaNode->children[0] = imprimaNodeChildren0;
+	  imprimaNode->children[1] = expressionNode;
+	  
+	  addNodeIntoGlobalTree(imprimaNode);
+	expressionNode = NULL;
+}
+token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+token_imprimaln token_abrep BLOCO_IMPRIMA
+{
+  treeNode* imprimaNode = newTreeNode();
+  
+  char typeImprima[10];
+  convertTypeReverseUpper(convertType(currentType), typeImprima);
+  fillTreeNode(imprimaNode,"CHAMADA FUNCAO" , "imprimaln");
+	  
+	  treeNode* imprimaNodeChildren0 = newTreeNode();
+	  fillTreeNode(imprimaNodeChildren0, "RETORNO", "VOID");
+	  
+	  
+	  imprimaNode->children[0] = imprimaNodeChildren0;
+	  imprimaNode->children[1] = expressionNode;
+	  
+	  addNodeIntoGlobalTree(imprimaNode);
+	expressionNode = NULL;
+
+}
+token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
 token_leia token_abrep token_identificador
 {
   	List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
@@ -905,7 +939,22 @@ token_leia token_abrep token_identificador
 	} 
 	else
 	{
-	  ((variable*)(identifier_temp->info))->used = 1;
+	  variable* auxVariable =  ((variable*)(identifier_temp->info));
+	  auxVariable->used = 1;
+	  treeNode* leiaNode = newTreeNode();
+	  char typeLeia[10];
+	  convertTypeReverseUpper(auxVariable->type, typeLeia);
+	  fillTreeNode(leiaNode,"CHAMADA FUNCAO" , "leia");
+	  
+	  treeNode* leiaNodeChildren0 = newTreeNode();
+	  treeNode* leiaNodeChildren1 = newTreeNode();
+	  fillTreeNode(leiaNodeChildren0, "RETORNO", typeLeia);
+	  fillTreeNode(leiaNodeChildren1, "VARIAVEL RETORNO", auxVariable->name);
+	  
+	  leiaNode->children[0] = leiaNodeChildren0;
+	  leiaNode->children[1] = leiaNodeChildren1;
+	  
+	  addNodeIntoGlobalTree(leiaNode);
 	}
 }
 token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
@@ -919,7 +968,22 @@ token_leialn token_abrep token_identificador
 	} 
 	else
 	{
-	  ((variable*)(identifier_temp->info))->used = 1;
+	  variable* auxVariable =  ((variable*)(identifier_temp->info));
+	  auxVariable->used = 1;
+	  treeNode* leiaNode = newTreeNode();
+	  char typeLeia[10];
+	  convertTypeReverseUpper(auxVariable->type, typeLeia);
+	  fillTreeNode(leiaNode,"CHAMADA FUNCAO" , "leialn");
+	  
+	  treeNode* leiaNodeChildren0 = newTreeNode();
+	  treeNode* leiaNodeChildren1 = newTreeNode();
+	  fillTreeNode(leiaNodeChildren0, "RETORNO", typeLeia);
+	  fillTreeNode(leiaNodeChildren1, "VARIAVEL RETORNO", auxVariable->name);
+	  
+	  leiaNode->children[0] = leiaNodeChildren0;
+	  leiaNode->children[1] = leiaNodeChildren1;
+	  
+	  addNodeIntoGlobalTree(leiaNode);
 	}
   
 }
@@ -933,7 +997,7 @@ token_identificador
   {
     function* functionAux = ((function*)(functionList)->info);
     functionNode = newTreeNode();
-    fillTreeNode(functionNode, currentFunction, "CHAMADA-FUNCAO");
+    fillTreeNode(functionNode, currentFunction, "CHAMADA FUNCAO");
     functionNode->children[0] = functionAux -> functionTree; 
     //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   }
@@ -1801,7 +1865,14 @@ ARGUMENTOS_FUNCAO: EXPR
       terminate();
     }
     
-    if(functionNode->children[1] == NULL)
+    
+
+    else if(verifyPrimitivesMaxMinMed(currentFunction))
+    {
+      functionNode->children[1] = expressionNode;
+      expressionNode = NULL;
+    }
+    else if(functionNode->children[1] == NULL)
     {
       treeNode *functionArgument = newTreeNode();
       copyTreeNodes(functionArgument, functionAux->functionTree->children[1]);
@@ -1872,7 +1943,12 @@ ARGUMENTOS_FUNCAO: EXPR
       terminate();
     }
     
-    if(functionNode->children[1] == NULL)
+    if(verifyPrimitivesMaxMinMed(currentFunction))
+    {
+    functionNode->children[2] = expressionNode;
+    expressionNode = NULL;
+    }
+    else if(functionNode->children[1] == NULL)
     {
       treeNode *functionArgument = newTreeNode();
       copyTreeNodes(functionArgument, functionAux->functionTree->children[1]);
@@ -2571,6 +2647,10 @@ Aqui sera feita analise de matriz com apenas um index
 | token_identificador
 {
 
+    functionNode = newTreeNode();
+    treeNode* returnNode = newTreeNode();
+    functionNode->children[0] = returnNode;
+      
   //Aqui estamos entrando dentro de uma funcao dentro, isto e, funcao(a,b,c)
   strcpy(currentFunction, currentIdentifier);
   in_function = 1; //Dentro de funcao, a partir de agora havera copia de tipos na string functionArguments (olha no arquivo .l)
@@ -2580,24 +2660,30 @@ Aqui sera feita analise de matriz com apenas um index
     //treeNode* functionNode = ((function*)(identifier_temp->info))->functionTree;
     if(strcmp(currentIdentifier, "maximo")==0)
     {
-
+      
       if (typeAttribute==T_INTEIRO)
       {
 	strcpy(currentFunction, "maximo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "inteiro");
+	fillTreeNode(returnNode, "RETORNO", "INTEIRO");
+	
       }
       else if (typeAttribute==T_REAL)
       {
 	strcpy(currentFunction, "maximo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "real");
+	fillTreeNode(returnNode, "RETORNO", "REAL");
+
       }
       else if (typeAttribute==T_CARACTER)
       {
 	strcpy(currentFunction, "maximo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "caracter");
+	fillTreeNode(returnNode, "RETORNO", "CARACTER");
+
       }
       else
       {
@@ -2613,18 +2699,24 @@ Aqui sera feita analise de matriz com apenas um index
 	strcpy(currentFunction, "minimo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "inteiro");
+		fillTreeNode(returnNode, "RETORNO", "INTEIRO");
+
       }
       else if (typeAttribute==T_REAL)
       {
 	strcpy(currentFunction, "minimo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "real");
+		fillTreeNode(returnNode, "RETORNO", "REAL");
+
       }
       else if (typeAttribute==T_CARACTER)
       {
 	strcpy(currentFunction, "minimo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "caracter");
+		fillTreeNode(returnNode, "RETORNO", "CARACTER");
+
       }
       else
       {
@@ -2640,12 +2732,16 @@ Aqui sera feita analise de matriz com apenas um index
 	strcpy(currentFunction, "media");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "inteiro");
+			fillTreeNode(returnNode, "RETORNO", "INTEIRO");
+
       }
       else if (typeAttribute==T_REAL)
       {
 	strcpy(currentFunction, "media");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "real");
+			fillTreeNode(returnNode, "RETORNO", "REAL");
+
       }
       else
       {
@@ -2656,16 +2752,24 @@ Aqui sera feita analise de matriz com apenas um index
      }
   
     List *functionList = lookupStringFunction(hashFunction, currentFunction);
-    if(functionList!=NULL)
+    if(verifyPrimitivesMaxMinMed) 
+    {
+      fillTreeNode(functionNode, currentIdentifier, "PRIMITIVA"); 
+            
+      stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
+      expressionNode=NULL;
+    }
+    else if(functionList!=NULL)
     {
       function* functionAux = ((function*)(functionList)->info);
       functionNode = newTreeNode();
-      fillTreeNode(functionNode, currentFunction, "CHAMADA-FUNCAO");
+      fillTreeNode(functionNode, currentFunction, "CHAMADA FUNCAO");
       functionNode->children[0] = functionAux -> functionTree; 
       
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;
     }
+    
   }
 }
 token_abrep ARGUMENTOS_FUNCAO token_fechap
