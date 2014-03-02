@@ -101,7 +101,7 @@ int sizeList(List *l)
 void* getListPosition(List *list, int pos){
 	List *aux = list;
 	int i;
-	for(i=0;aux!=NULL && i<pos;aux=aux->next);
+	for(i=0;aux!=NULL && i<pos;i++){aux=aux->next;}
 	if(i<pos){
 		return NULL;
 	}

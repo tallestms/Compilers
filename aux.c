@@ -2,6 +2,8 @@
 #include <string.h>
 #include "aux.h"
 
+extern int err;
+
 int verifyRelationship(int *varRelations, int currentRelationPos)
 {
   int i = 0;
@@ -103,7 +105,7 @@ int convertValuesTreeNode(char v[50],char t[50]){
 	if(!strcmp(v,"condicao-seleciona")) return 27;
 	if(!strcmp(v, "^")) return 28;
 	if(!strcmp(t, "CHAMADA-FUNCAO")) return 29;
-	if(1) return 30; //TODO Retorno
+	if(!strcmp(t,"RETORNO FUNCAO")) return 30; 
 	
 	
 	return -1000;
@@ -178,5 +180,6 @@ void *retornaValor(int type, void* point){
 
 void terminate(){
 		//TODO desalocar
-		exit(0);
+		err = 1;
+		//exit(0);
 }

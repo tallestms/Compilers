@@ -67,9 +67,10 @@ void *executeFunction(treeNode *func){
 		auxFunc = auxFunc->next;
 	}
 	
-	/*desempilhar o retorno*/
-	if(strcmp(func->children[0]->children[0]->type,"VOID")!=0)
-		retorno = popStack(stackVariables);
+	/*desempilhar o retorno*/ //TODO
+//	if(strcmp(func->children[0]->children[0]->type,"VOID")!=0) {
+//		retorno = popStack(stackVariables);
+//	}
 	printf("variaveis empilhadas: %d\n", numVariables);
 	/*desempilhar as variaveis da função chamada usando o size e a pilha auxiliar*/
 	if(stackVariablesAux==NULL)
@@ -573,7 +574,7 @@ void* executeNode(treeNode* t){
 		 return;
 	case 29: // Chamada de função
 		return executeFunction(t);
-	case 30: //TODO Retorno
+	case 30: // Retorno
 		//empilha valor do retorno
 		pushStack(stackVariables, executeNode(t->children[0]));
 		globalRetornoFlag = 1;

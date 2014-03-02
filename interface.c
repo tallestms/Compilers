@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "interface.h"
+#include <sys/types.h>
+#include <dirent.h>
 
 char* solicitaNomePrograma(){
 	char *programa;
@@ -16,6 +18,35 @@ char* solicitaNomePrograma(){
 	
 	return programa;
 }
+
+void listarFiles(){
+
+	DIR *dirp; 
+	struct dirent *dp;
+	int errno = 0;
+	int len = 0;
+	int i=0;
+	dirp = opendir(".");
+	char* p;
+	
+	while (dirp && !errno) {
+    	errno = 0;
+    	if ((dp = readdir(dirp)) != NULL) {
+    		len = strlen(dp->d_name);
+    		if(len>4){
+    			p = (char*)malloc(sizeof(char)*len);
+    			if(p[len-4]=='.' && p[len-3]=='g' && p[len-2]=='p' && p[len-1]=='t' ){
+    				printf("%d - %s\n", ++i,dp->d_name);	
+    			}	
+    		}
+   	     }else{
+   	     	errno = 1;
+   	     }
+   	 }
+   	 if(i==0)
+   	 	printf("Não há nenhum arquivo .gpt no diretório local.\n");
+}
+
 
 int showMenu(){
 	int i;
@@ -39,6 +70,10 @@ int showMenu(){
 	printf("## 3 - Mostrar árvore  ##\n");
 	printf("##                     ##\n");
 	printf("## 4 - Ver programas   ##\n");
+	printf("##                     ##\n");
+	printf("## 5 - Ver .gpt	       ##\n");
+	printf("##                     ##\n");
+	printf("## 6 - Sair    	       ##\n");
 	printf("##                     ##\n");
 	printf("#########################\n");
 	printf("#########################\n\n");
