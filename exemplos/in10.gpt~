@@ -38,7 +38,7 @@ fim
 variáveis
 
 	a : inteiro;
-	//b : inteiro;
+	b : inteiro;
 	//d : inteiro;
 	//b : inteiro;
 	//c : lógico;
@@ -50,7 +50,7 @@ variáveis
 	//a : real;
 	//b : real;
 	//c : lógico;
-	//z : lógico;
+	z : lógico;
 	//c:real;
 	//d:inteiro;
 	//m:matriz[2][2] de literais;
@@ -112,10 +112,23 @@ início
 
 	//leia(a);
 	a := 10;
-	a := maximo(a,a);
+	b := 20;
+	a := maximo(a,b);
+	//a := minimo(a,a);
+	//a := media(a,a);
+	//leialn(a);
+	//imprimaln(a);
+	imprima(a);
+	imprima("Muito bem!");
+	//leia(a);
+	a := a + 10+20+30*30;
+	imprimaln(a);
+	imprimaln(a);
 	leia(a);
 	imprima(a);
-	//imprima(a);
+	leia(a);
+	imprima(a);
+	//z := soma2(a,a,a,a,a,a);
 	
 	//b := 10.10;
 	//b := minimo(b,b);

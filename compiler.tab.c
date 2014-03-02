@@ -5926,7 +5926,6 @@ main()
 			if(tam==0) printf("Não há programas a serem executados. Favor compilar algum programa e voltar a tentar.\n");
 			else {
 				for(i=0;i<tam;i++){
-					printf("%d\n",tam);
 					program = (Program*)getListPosition(listPrograms,i);
 					if (program)
 						printf("%d - %s\n", i+1, program->name);
