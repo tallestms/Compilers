@@ -61,6 +61,28 @@ void *executeFunction(treeNode *func){
 		auxParam = auxParam->next;
 	}
 	
+	//Passar parametros
+	auxParam = func->children[1];
+	while(auxParam!=NULL) {
+		list = lookupStringVariable(hashVariables, auxParam->children[1]->value);
+		if(list!=NULL) {
+				var = (variable*) ( list->info );
+				if(var->type == 0 || var->type == 4){ //int
+					*((int*)var->value) = *((int*)executeNode(auxParam->children[0]));
+				}
+				if(var->type == 1){ //char
+					*((char*)var->value) = *((char*)executeNode(auxParam->children[0]));
+				}
+				if(var->type == 2){ //literal
+					strcpy(((char*)var->value), (char*)executeNode(auxParam->->children[0]));
+				}
+				if(var->type == 3){ //real
+					*((double*)var->value) = *((double*)executeNode(auxParam->children[0]));
+				}
+		}
+		auxParam->next;		
+	}
+	
 	//	executar a função empilhando o retorno quando houver
 	auxFunc = func->children[0]->children[3];
 	while(auxFunc!=NULL && globalRetornoFlag != 0){
