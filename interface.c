@@ -34,9 +34,9 @@ void listarFiles(){
     	if ((dp = readdir(dirp)) != NULL) {
     		len = strlen(dp->d_name);
     		if(len>4){
-    			p = (char*)malloc(sizeof(char)*len);
-    			if(p[len-4]=='.' && p[len-3]=='g' && p[len-2]=='p' && p[len-1]=='t' ){
-    				printf("%d - %s\n", ++i,dp->d_name);	
+    			if( p = strstr(dp->d_name, ".gpt") ){
+    				if(p[4] == '\0')
+	    				printf("%d - %s\n", ++i,dp->d_name);	
     			}	
     		}
    	     }else{
