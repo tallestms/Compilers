@@ -19,6 +19,9 @@ char* findType(treeNode *t, char* s){
 		var = (variable*) l->info;
 		if (var->type == 3) strcpy(s, "REAL");
 		else if (var->type == 0) strcpy(s, "INTEIRO");
+		else if (var->type == 4) strcpy(s, "LOGICO");
+		else if (var->type == 2) strcpy(s, "LITERAL");
+		else if (var->type == 1) strcpy(s, "CARACTER");
 	}
 }
 
@@ -632,12 +635,18 @@ void* executeNode(treeNode* t){
 		if(!strcmp(type, "CARACTER")){
 			printf("%c", *((char*)executeNode(t->children[1])));
 		}
+		if(!strcmp(type, "LOGICO")){
+			if(*((char*)executeNode(t->children[1])))
+				printf("verdadeiro\n");
+			else
+				printf("falso\n");
+		}
 		return;
 	case 35: //leia
 		list = (List*)(lookupStringVariable(hashVariables, t->children[1]->value)); 
 		var = (variable*) list->info;
 		
-		if(var->type == 0 || var->type == 4){
+		if(var->type == 0){
 			scanf("%d", intReturn);
 			scanf("%c", &lixo);
 			*((int*)var->value) = *intReturn;
@@ -658,6 +667,14 @@ void* executeNode(treeNode* t){
 			scanf("%c", &lixo);
 			*((char*)var->value) = *charReturn;		
 		}
+		if(var->type == 4) {
+			scanf("%s", stringReturn);
+			scanf("%c", &lixo);
+			if(!strcmp(stringReturn, "verdadeiro"))
+			*((int*)var->value) = 1;
+			else
+			*((int*)var->value) = 0;
+		}
 		return;
 	case 36: //imprimaln
 		findType(t->children[1], type);
@@ -672,6 +689,12 @@ void* executeNode(treeNode* t){
 		}
 		if(!strcmp(type, "CARACTER")){
 			printf("%c\n", *((char*)executeNode(t->children[1])));
+		}
+		if(!strcmp(type, "LOGICO")){
+			if(*((char*)executeNode(t->children[1])))
+				printf("verdadeiro\n");
+			else
+				printf("falso\n");
 		}
 		return;
 	case 37: //leialn

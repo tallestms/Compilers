@@ -2675,7 +2675,7 @@ Aqui sera feita analise de matriz com apenas um index
 	strcpy(currentFunction, "minimo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "inteiro");
-		fillTreeNode(returnNode, "RETORNO", "INTEIRO");
+	fillTreeNode(returnNode, "RETORNO", "INTEIRO");
 
       }
       else if (typeAttribute==T_REAL)
@@ -2683,7 +2683,7 @@ Aqui sera feita analise de matriz com apenas um index
 	strcpy(currentFunction, "minimo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "real");
-		fillTreeNode(returnNode, "RETORNO", "REAL");
+	fillTreeNode(returnNode, "RETORNO", "REAL");
 
       }
       else if (typeAttribute==T_CARACTER)
@@ -2691,7 +2691,7 @@ Aqui sera feita analise de matriz com apenas um index
 	strcpy(currentFunction, "minimo");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "caracter");
-		fillTreeNode(returnNode, "RETORNO", "CARACTER");
+	fillTreeNode(returnNode, "RETORNO", "CARACTER");
 
       }
       else
@@ -2707,7 +2707,7 @@ Aqui sera feita analise de matriz com apenas um index
 	strcpy(currentFunction, "media");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "inteiro");
-			fillTreeNode(returnNode, "RETORNO", "INTEIRO");
+	fillTreeNode(returnNode, "RETORNO", "INTEIRO");
 
       }
       else if (typeAttribute==T_REAL)
@@ -2715,7 +2715,7 @@ Aqui sera feita analise de matriz com apenas um index
 	strcpy(currentFunction, "media");
 	strcat(currentFunction, " ");
 	strcat(currentFunction, "real");
-			fillTreeNode(returnNode, "RETORNO", "REAL");
+	fillTreeNode(returnNode, "RETORNO", "REAL");
 
       }
       else
@@ -2726,10 +2726,9 @@ Aqui sera feita analise de matriz com apenas um index
      }
   
     List *functionList = lookupStringFunction(hashFunction, currentFunction);
-    if(verifyPrimitivesMaxMinMed) 
+    if(verifyPrimitivesMaxMinMed(currentFunction)) 
     {
-      fillTreeNode(functionNode, currentIdentifier, "PRIMITIVA"); 
-            
+      fillTreeNode(functionNode, currentIdentifier, "PRIMITIVA");   
       stackExpressionNode = addNodeIntoStack(expressionNode, stackExpressionNode);
       expressionNode=NULL;
     }
