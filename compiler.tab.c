@@ -5671,18 +5671,19 @@ main()
 				printf("## ");
 				scanf("%c",&lixo);
 			} else {
+				makeStartLine();
+				printf("## Programas compilados e prontos para serem executados\n");
+				makeStartLine();
 				for(i=0;i<tam;i++){
 					program = (Program*)getListPosition(listPrograms,i);
 					if (program){
-						makeStartLine();
-						printf("## Programas compilados e prontos para serem executados\n");
-						makeStartLine();
+						
 						printf("##%d - %s\n", i+1, program->name);
-						makeEndLine();
-						printf("## Entre com o número do programa que deseja executar\n");
-						printf("## ");
 					}
 				}
+				makeEndLine();
+				printf("## Entre com o número do programa que deseja executar\n");
+				printf("## ");
 				scanf("%d",&option);
 				scanf("%c",&lixo);
 				if(option<1 || option> tam){ 
@@ -5712,7 +5713,19 @@ main()
 		case 3: //Mostrar a árvore  
 			tam = sizeList(listPrograms);
 			makeStartLine();
-			if(tam==0){ printf("## Não há programas compilados.\n## Favor compilar algum programa e voltar a tentar.\n"); makeEndLine();printf("## "); scanf("%c",&lixo); break;}
+			if(tam==0){ printf("## Não há programas compilados.\n## Favor compilar algum programa e voltar a tentar.\n"); makeEndLine();printf("## "); scanf("%c",&lixo); break;}			
+			
+			makeStartLine();
+			printf("## Programas compilados:\n");
+			makeStartLine();
+			for(i=0;i<tam;i++){
+				program = (Program*)getListPosition(listPrograms,i);
+				if (program){
+					
+					printf("##%d - %s\n", i+1, program->name);
+				}
+			}
+			makeEndLine();
 			printf("## Entre com o número do programa do qual deseja ver a arvore\n");
 			printf("## ");
 			scanf("%d",&option);
@@ -5725,24 +5738,32 @@ main()
 				makeStartLine();
 				printNode(program->exec, 13, 0, 0);		
 			}
-			makeEndLine();	
+			makeEndLine();
+			printf("## Pressione <enter> para voltar ao menu principal\n");	
 			printf("## ");
 			scanf("%c",&lixo);
 			break;
 		case 4: //Listar programas compilados
 			tam = sizeList(listPrograms);
-			if(tam==0) printf("Não há programas compilados. Você pode compilar programas na opção 1 do menu.\n");
-			else {
+			if(tam==0) {
+				makeStartLine(); 
+				printf("##Não há programas compilados.\n## Você pode compilar programas na opção 1 do menu.\n");
+				makeEndLine();
+			} else {
 				for(i=0;i<tam;i++){
 					program = (Program*)getListPosition(listPrograms,i);
 					if (program)
 						printf("%d - %s\n", i+1, program->name);
 				}
 			}
+			printf("## Pressione <enter> para voltar ao menu principal\n");
+			printf("## ");
 			scanf("%c",&lixo);
 			break;
 		case 5: //listar aquivos .gpt
 			listarFiles();
+			printf("## Pressione <enter> para voltar ao menu principal\n");
+			printf("## ");
 			scanf("%c",&lixo);
 			break;
 		case 6: //sobre

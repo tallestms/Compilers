@@ -31,7 +31,9 @@ void listarFiles(){
 	int i=0;
 	dirp = opendir(".");
 	char* p;
-	
+	makeStartLine();
+	printf("## Arquivos .gpt no diretório atual.\n");
+	makeStartLine();
 	while (dirp && !errno) {
     	errno = 0;
     	if ((dp = readdir(dirp)) != NULL) {
@@ -39,7 +41,7 @@ void listarFiles(){
     		if(len>4){
     			if( p = strstr(dp->d_name, ".gpt") ){
     				if(p[4] == '\0'){
-	    				printf(" -> %s\n", dp->d_name);	
+	    				printf("## - %s\n", dp->d_name);	
 	    				i++;
 	    			}
     			}	
@@ -49,7 +51,8 @@ void listarFiles(){
    	     }
    	 }
    	 if(i==0)
-   	 	printf("Não há nenhum arquivo .gpt no diretório local.\n");
+   	 	printf("## Não há nenhum arquivo .gpt no diretório local.\n");
+	makeEndLine();
 }
 
 void showSobre(){
@@ -68,6 +71,8 @@ void showSobre(){
 	printf(" ##    COMPONENTES: JACKSON WILLIAN BRITO; TALLES TATAGIBA MARTINS DE SOUZA   ## \n");
 	printf(" ############################################################################### \n");
 	printf(" ############################################################################### \n");
+	printf("## Pressione <enter> para voltar ao menu principal\n");
+	printf("## ");
 	scanf("%c",&lixo);
 }
 
