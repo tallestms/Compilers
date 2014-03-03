@@ -159,13 +159,13 @@ void *executeFunction(treeNode *func){
 
 void executeProgram(Program* p){
 	if(p!=NULL){
-		//restaura hashVariables TODO copiar
+		//restaura hashVariables 
 		hashExecuteVariables = p->hashVariables;
-		//restaura hashFunction TODO copiar
+		//restaura hashFunction 
 		hashExecuteFunctions = p->hashFunctions;
-		//Executa programa TODO copiar
+		//Executa programa 
 		executeTree(p->exec);
-		//Limpa estruturas TODO dar free
+		//Limpa estruturas 
 		hashExecuteVariables = NULL;
 		hashExecuteFunctions = NULL;
 	}
