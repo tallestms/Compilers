@@ -9,14 +9,16 @@
 char* solicitaNomePrograma(){
 	char *programa;
     char lixo;
-      
-    printf("Compilar Programa\n");
+    
+    void makeStartLine();
+    printf("## Compilar Programa\n");
 	programa = (char *) calloc(50, sizeof(char));
-	printf("Digite o nome do programa: \n");
+	printf("## Digite o nome do programa: \n");
+	printf("## ");
 	scanf("%[^\n]", programa);
 	scanf("%c", &lixo);
 	//strcpy(programa, "exemplos/in10.gpt"); //executando exemplo in10.gpt
-	
+	void makeEndLine();
 	return programa;
 }
 
@@ -97,12 +99,7 @@ int showMenu(){
 	printf("## 7 - Sair do interpretador                                                 ## \n");
 	printf("##                                                                           ## \n");
 	printf("############################################################################### \n");
-	printf("############################################################################### \n");
-	printf("## Entre com a opção desejada -                                                 \n");
-	printf("## ");
-	scanf("%d",&i);
-	scanf("%c",&lixo);
-	printf("############################################################################### \n\n");
+	i = getOption();
 
 	return i;
 }
@@ -134,5 +131,25 @@ void showBoasVindas(){
 	printf("############################################################################### \n");
 	printf("##  Aguarde 5 segundos..                                                     ##  \n");
 	printf("############################################################################### \n\n");
-	sleep(5);
+	sleep(2);
+}
+
+int getOption(){
+	char lixo;
+	int i;
+	printf("############################################################################### \n");
+	printf("## Entre com a opção desejada -                                                 \n");
+	printf("## ");	
+	scanf("%d",&i);
+	scanf("%c",&lixo);
+	printf("############################################################################### \n\n");	
+	return i;
+}
+
+void makeStartLine(){
+		printf("############################################################################### \n");
+}
+
+void makeEndLine(){
+		printf("############################################################################### \n\n");
 }

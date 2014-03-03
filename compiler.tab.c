@@ -84,7 +84,7 @@
 #define MAX_VARIABLE 32 //maior nome de variavel
 #define MAX_FUNCTION 32 //maior nome de funcao
 #define MAX_LITERAL 50
-#define IN_DEBUG_MODE 1
+#define IN_DEBUG_MODE 0
 
 extern FILE* yyin;
 
@@ -827,9 +827,9 @@ static const yytype_uint16 yyrline[] =
     1854,  1855,  1858,  1859,  1859,  1860,  1861,  1861,  1863,  1908,
     1951,  1951,  1953,  1953,  1956,  1963,  1964,  1955,  1973,  1973,
     1975,  1975,  1977,  1978,  1996,  2014,  2087,  2162,  2214,  2213,
-    2304,  2320,  2349,  2349,  2383,  2399,  2417,  2416,  2570,  2570,
-    2584,  2598,  2613,  2613,  2613,  2638,  2638,  2638,  2662,  2663,
-    2662,  2686,  2686,  2685,  2711,  2734
+    2304,  2320,  2349,  2349,  2382,  2398,  2416,  2415,  2569,  2569,
+    2583,  2597,  2612,  2612,  2612,  2637,  2637,  2637,  2661,  2662,
+    2661,  2685,  2685,  2684,  2710,  2733
 };
 #endif
 
@@ -4664,7 +4664,6 @@ else
 	swapDoisUm = (treeNode*) popStack(stackParenthesis);
 	swapUmZero = (treeNode*) popStack(stackParenthesis);
 	swapZeroMenor =(treeNode*) popStack(stackParenthesis);
-	printf("FINAL\n");
 	//printNode(expressionNode,13,0);
 }
     break;
@@ -4672,7 +4671,7 @@ else
   case 174:
 
 /* Line 1806 of yacc.c  */
-#line 2384 "compiler.y"
+#line 2383 "compiler.y"
     {
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
@@ -4693,7 +4692,7 @@ else
   case 175:
 
 /* Line 1806 of yacc.c  */
-#line 2400 "compiler.y"
+#line 2399 "compiler.y"
     {
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
@@ -4715,7 +4714,7 @@ else
   case 176:
 
 /* Line 1806 of yacc.c  */
-#line 2417 "compiler.y"
+#line 2416 "compiler.y"
     {
 
     functionNode = newTreeNode();
@@ -4844,7 +4843,7 @@ else
   case 177:
 
 /* Line 1806 of yacc.c  */
-#line 2541 "compiler.y"
+#line 2540 "compiler.y"
     { 
   List *functionList = lookupStringFunction(hashFunction, currentFunction);
   if(functionList == NULL)
@@ -4878,7 +4877,7 @@ else
   case 179:
 
 /* Line 1806 of yacc.c  */
-#line 2571 "compiler.y"
+#line 2570 "compiler.y"
     {
   if(switchType != T_INTEIRO)
   {
@@ -4897,7 +4896,7 @@ else
   case 180:
 
 /* Line 1806 of yacc.c  */
-#line 2585 "compiler.y"
+#line 2584 "compiler.y"
     {
   if(switchType != T_REAL)
   {
@@ -4916,7 +4915,7 @@ else
   case 181:
 
 /* Line 1806 of yacc.c  */
-#line 2599 "compiler.y"
+#line 2598 "compiler.y"
     {
   if(switchType != T_CARACTER)
   {
@@ -4935,14 +4934,14 @@ else
   case 182:
 
 /* Line 1806 of yacc.c  */
-#line 2613 "compiler.y"
+#line 2612 "compiler.y"
     { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm = expressionNode;  expressionNode=NULL; }
     break;
 
   case 183:
 
 /* Line 1806 of yacc.c  */
-#line 2613 "compiler.y"
+#line 2612 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -4969,7 +4968,7 @@ else
   case 184:
 
 /* Line 1806 of yacc.c  */
-#line 2634 "compiler.y"
+#line 2633 "compiler.y"
     {
 	isMatrix = 1;
 }
@@ -4978,14 +4977,14 @@ else
   case 185:
 
 /* Line 1806 of yacc.c  */
-#line 2638 "compiler.y"
+#line 2637 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 186:
 
 /* Line 1806 of yacc.c  */
-#line 2638 "compiler.y"
+#line 2637 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5011,7 +5010,7 @@ else
   case 187:
 
 /* Line 1806 of yacc.c  */
-#line 2658 "compiler.y"
+#line 2657 "compiler.y"
     {
 	isMatrix = 1; 
 	expressionNode = tempDelimitadorNivelZero;
@@ -5021,14 +5020,14 @@ else
   case 188:
 
 /* Line 1806 of yacc.c  */
-#line 2662 "compiler.y"
+#line 2661 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 189:
 
 /* Line 1806 of yacc.c  */
-#line 2663 "compiler.y"
+#line 2662 "compiler.y"
     {
 	treeNode *auxList = tempDelimitadorNivelUm->children[0];
 	while(auxList->next != NULL) auxList = auxList->next;
@@ -5056,14 +5055,14 @@ List *identifier_temp = NULL;
   case 191:
 
 /* Line 1806 of yacc.c  */
-#line 2686 "compiler.y"
+#line 2685 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 192:
 
 /* Line 1806 of yacc.c  */
-#line 2686 "compiler.y"
+#line 2685 "compiler.y"
     {
 
 	
@@ -5092,7 +5091,7 @@ List *identifier_temp = NULL;
   case 194:
 
 /* Line 1806 of yacc.c  */
-#line 2712 "compiler.y"
+#line 2711 "compiler.y"
     {	
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5119,7 +5118,7 @@ List *identifier_temp = NULL;
   case 195:
 
 /* Line 1806 of yacc.c  */
-#line 2736 "compiler.y"
+#line 2735 "compiler.y"
     {	
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5149,7 +5148,7 @@ List *identifier_temp = NULL;
 
 
 /* Line 1806 of yacc.c  */
-#line 5153 "compiler.tab.c"
+#line 5152 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -5380,7 +5379,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 2761 "compiler.y"
+#line 2760 "compiler.y"
 
 
 #include "lex.yy.c"
@@ -5648,51 +5647,86 @@ main()
 		
 		switch(option){
 		case 1: //Compilar
+			makeStartLine();
 			programa = (char*) solicitaNomePrograma();
-			printf("Abrindo %s\n", programa);
+			makeStartLine();
+			printf("## Abrindo %s\n", programa);
 			program = compila(programa);
 			if(program==NULL || err == 1){
-				printf("Não foi possível compilar o programa devido a discordâncias da linguagem de entrada. Por favor verifique as linhas indicadas acima e tente novamente.\n");
+				printf("## Não foi possível compilar o programa devido a discordâncias da linguagem de entrada.\n## Por favor verifique as linhas indicadas acima e tente novamente.\n");
+				
 			}else {
 	   			listPrograms = insertList(listPrograms, program);
-	   			printf("Programa compilado com éxito, pronto para executar-se.\n");
+	   			printf("## Programa compilado com éxito, pronto para executar-se.\n");
 	   		}
+	   		makeEndLine();
+			printf("## ");
 	   		scanf("%c",&lixo);
 			break;
 		case 2: //Executar
 			tam = sizeList(listPrograms);
-			if(tam==0){ printf("Não há programas a serem executados. Favor compilar algum programa e voltar a tentar.\n"); scanf("%c",&lixo);}
-			else {
+			if(tam==0){ 
+				printf("##Não há programas a serem executados. Favor compilar algum programa e voltar a tentar.\n"); 
+				makeEndLine();
+				printf("## ");
+				scanf("%c",&lixo);
+			} else {
 				for(i=0;i<tam;i++){
 					program = (Program*)getListPosition(listPrograms,i);
-					if (program)
-						printf("%d - %s\n", i+1, program->name);
+					if (program){
+						makeStartLine();
+						printf("## Programas compilados e prontos para serem executados\n");
+						makeStartLine();
+						printf("##%d - %s\n", i+1, program->name);
+						makeEndLine();
+						printf("## Entre com o número do programa que deseja executar\n");
+						printf("## ");
+					}
 				}
 				scanf("%d",&option);
 				scanf("%c",&lixo);
 				if(option<1 || option> tam){ 
+					makeStartLine();
 					printf("O programa desejado não pode se executado ou não existe.\n");
+					makeEndLine();
+					printf("## ");
 					break; 
 				}
 				program = (Program*)getListPosition(listPrograms,option-1);
 				if(program != NULL) {
+					makeStartLine();
+					printf("## Executando o programa: %s\n", program->name);
+					makeStartLine();
 					executeProgram(program);
+					makeEndLine();
 					scanf("%c",&lixo);
-				}else
+				}else {
+					makeStartLine();
 					printf("O programa desejado não pode se executado ou não existe.\n");
+					makeEndLine();
+					printf("## ");
+					scanf("%c",&lixo);
+				}
 			}
 			break;
 		case 3: //Mostrar a árvore  
 			tam = sizeList(listPrograms);
-			if(tam==0){ printf("Não há programas compilados. Favor compilar algum programa e voltar a tentar.\n"); scanf("%c",&lixo); break;}
-			printf("Entre com o programa do qual deseja ver a arvore\n");
+			makeStartLine();
+			if(tam==0){ printf("## Não há programas compilados.\n## Favor compilar algum programa e voltar a tentar.\n"); makeEndLine();printf("## "); scanf("%c",&lixo); break;}
+			printf("## Entre com o número do programa do qual deseja ver a arvore\n");
+			printf("## ");
 			scanf("%d",&option);
 			scanf("%c",&lixo);
-			if(option<1 || option>tam){printf("O programa desejado não pode ser encontrado.\n"); }
+			if(option<1 || option>tam){ makeStartLine(); printf("##O programa desejado não pode ser encontrado.\n"); }
 			else { 
 				program = (Program*)getListPosition(listPrograms,option-1);
-				printNode(program->exec, 13, 0);		
+				makeStartLine();
+				printf("## Árvore do programa %s\n", program->name);
+				makeStartLine();
+				printNode(program->exec, 13, 0, 0);		
 			}
+			makeEndLine();	
+			printf("## ");
 			scanf("%c",&lixo);
 			break;
 		case 4: //Listar programas compilados
@@ -5725,7 +5759,7 @@ main()
     
 	if(IN_DEBUG_MODE){
 	  	treeNode* aux = globalTree;
-  	printNode(aux, 13, 0);
+  	printNode(aux, 13, 0, 0);
 	printf("\n ---------- \n");
 	printf(" ---------- \n");
       }

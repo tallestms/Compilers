@@ -3024,51 +3024,86 @@ main()
 		
 		switch(option){
 		case 1: //Compilar
+			makeStartLine();
 			programa = (char*) solicitaNomePrograma();
-			printf("Abrindo %s\n", programa);
+			makeStartLine();
+			printf("## Abrindo %s\n", programa);
 			program = compila(programa);
 			if(program==NULL || err == 1){
-				printf("Não foi possível compilar o programa devido a discordâncias da linguagem de entrada. Por favor verifique as linhas indicadas acima e tente novamente.\n");
+				printf("## Não foi possível compilar o programa devido a discordâncias da linguagem de entrada.\n## Por favor verifique as linhas indicadas acima e tente novamente.\n");
+				
 			}else {
 	   			listPrograms = insertList(listPrograms, program);
-	   			printf("Programa compilado com éxito, pronto para executar-se.\n");
+	   			printf("## Programa compilado com éxito, pronto para executar-se.\n");
 	   		}
+	   		makeEndLine();
+			printf("## ");
 	   		scanf("%c",&lixo);
 			break;
 		case 2: //Executar
 			tam = sizeList(listPrograms);
-			if(tam==0){ printf("Não há programas a serem executados. Favor compilar algum programa e voltar a tentar.\n"); scanf("%c",&lixo);}
-			else {
+			if(tam==0){ 
+				printf("##Não há programas a serem executados. Favor compilar algum programa e voltar a tentar.\n"); 
+				makeEndLine();
+				printf("## ");
+				scanf("%c",&lixo);
+			} else {
 				for(i=0;i<tam;i++){
 					program = (Program*)getListPosition(listPrograms,i);
-					if (program)
-						printf("%d - %s\n", i+1, program->name);
+					if (program){
+						makeStartLine();
+						printf("## Programas compilados e prontos para serem executados\n");
+						makeStartLine();
+						printf("##%d - %s\n", i+1, program->name);
+						makeEndLine();
+						printf("## Entre com o número do programa que deseja executar\n");
+						printf("## ");
+					}
 				}
 				scanf("%d",&option);
 				scanf("%c",&lixo);
 				if(option<1 || option> tam){ 
+					makeStartLine();
 					printf("O programa desejado não pode se executado ou não existe.\n");
+					makeEndLine();
+					printf("## ");
 					break; 
 				}
 				program = (Program*)getListPosition(listPrograms,option-1);
 				if(program != NULL) {
+					makeStartLine();
+					printf("## Executando o programa: %s\n", program->name);
+					makeStartLine();
 					executeProgram(program);
+					makeEndLine();
 					scanf("%c",&lixo);
-				}else
+				}else {
+					makeStartLine();
 					printf("O programa desejado não pode se executado ou não existe.\n");
+					makeEndLine();
+					printf("## ");
+					scanf("%c",&lixo);
+				}
 			}
 			break;
 		case 3: //Mostrar a árvore  
 			tam = sizeList(listPrograms);
-			if(tam==0){ printf("Não há programas compilados. Favor compilar algum programa e voltar a tentar.\n"); scanf("%c",&lixo); break;}
-			printf("Entre com o programa do qual deseja ver a arvore\n");
+			makeStartLine();
+			if(tam==0){ printf("## Não há programas compilados.\n## Favor compilar algum programa e voltar a tentar.\n"); makeEndLine();printf("## "); scanf("%c",&lixo); break;}
+			printf("## Entre com o número do programa do qual deseja ver a arvore\n");
+			printf("## ");
 			scanf("%d",&option);
 			scanf("%c",&lixo);
-			if(option<1 || option>tam){printf("O programa desejado não pode ser encontrado.\n"); }
+			if(option<1 || option>tam){ makeStartLine(); printf("##O programa desejado não pode ser encontrado.\n"); }
 			else { 
 				program = (Program*)getListPosition(listPrograms,option-1);
-				printNode(program->exec, 13, 0);		
+				makeStartLine();
+				printf("## Árvore do programa %s\n", program->name);
+				makeStartLine();
+				printNode(program->exec, 13, 0, 0);		
 			}
+			makeEndLine();	
+			printf("## ");
 			scanf("%c",&lixo);
 			break;
 		case 4: //Listar programas compilados
@@ -3101,7 +3136,7 @@ main()
     
 	if(IN_DEBUG_MODE){
 	  	treeNode* aux = globalTree;
-  	printNode(aux, 13, 0);
+  	printNode(aux, 13, 0, 0);
 	printf("\n ---------- \n");
 	printf(" ---------- \n");
       }
