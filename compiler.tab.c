@@ -5671,6 +5671,9 @@ main()
 				if(i==tam){
 					listPrograms = insertList(listPrograms, program);
 				}else{
+					freeTable(auxProgram->hashVariables);
+					freeTableFunction(auxProgram->hashFunctions);
+					desallocNodes(auxProgram->exec);
 					auxProgram->hashVariables = program->hashVariables;
 					auxProgram->hashFunctions = program->hashFunctions;
 					auxProgram->exec = program->exec;
@@ -5699,7 +5702,7 @@ main()
 					program = (Program*)getListPosition(listPrograms,i);
 					if (program){
 						
-						printf("##%d - %s\n", i+1, program->name);
+						printf("## %d - %s\n", i+1, program->name);
 					}
 				}
 				makeEndLine();
@@ -5751,7 +5754,7 @@ main()
 				program = (Program*)getListPosition(listPrograms,i);
 				if (program){
 					
-					printf("##%d - %s\n", i+1, program->name);
+					printf("## %d - %s\n", i+1, program->name);
 				}
 			}
 			makeEndLine();
@@ -5783,7 +5786,7 @@ main()
 				for(i=0;i<tam;i++){
 					program = (Program*)getListPosition(listPrograms,i);
 					if (program)
-						printf("%d - %s\n", i+1, program->name);
+						printf("## %d - %s\n", i+1, program->name);
 				}
 			}
 			printf("## Pressione <enter> para voltar ao menu principal\n");
