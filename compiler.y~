@@ -285,6 +285,7 @@ void desallocEverything()
 %token token_fimenquanto
 %token token_fimpara
 %token token_fimse
+%token token_fimfaca
 %token token_fimvariaveis
 %token token_funcao
 %token token_imprima
@@ -1402,6 +1403,7 @@ token_enquanto token_abrep EXPR
     conditionNode->children[0] = expressionNode;
     conditionNode->children[1] = commandNode;
     addNodeIntoGlobalTree(conditionNode);
+    expressionNode = NULL;
 }
 token_fechap {in_condicional = 0;} token_pontov | 
 token_enquanto token_abrep 

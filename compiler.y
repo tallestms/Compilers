@@ -1403,6 +1403,7 @@ token_enquanto token_abrep EXPR
     conditionNode->children[0] = expressionNode;
     conditionNode->children[1] = commandNode;
     addNodeIntoGlobalTree(conditionNode);
+    expressionNode = NULL;
 }
 token_fechap {in_condicional = 0;} token_pontov | 
 token_enquanto token_abrep 
