@@ -26,6 +26,8 @@ início
 	imprimaln("Os valores de a e c agora sao:");
 	imprimaln(a);
 	imprimaln(c);
+	
+	
 
 
 fim	
