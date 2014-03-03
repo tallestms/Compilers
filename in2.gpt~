@@ -9,11 +9,10 @@ variáveis
 fim-variáveis
 
 início
-
-	
+	a := 10;
 	b := 20;
 	c := 0.0;
-	a := 10;
+	
 	enquanto (a < b) faça
 	    a := a + 1;
 	    se (a >= 15) então

@@ -16,7 +16,7 @@ início
 	enquanto (a < b) faça
 	    a := a + 1;
 	    se (a >= 15) então
-	      se (c = 0) então
+	      se (c = 0.0) então
 		c := 5.0;
 	      senão
 		c := c + 1.0;
