@@ -69,3 +69,16 @@ void copyTreeNodes(treeNode* a, treeNode* b)
   a->children[3] = b->children[3];
   //a->next = b->next;
 }
+
+void desallocNodes(treeNode* t)
+{
+	if (t==NULL) return;
+	int i;
+		for (i=0;i<4;i++)
+		{
+			desallocNodes(t->children[i]);
+		}
+		desallocNodes(t->next);
+	
+	free(t);
+}

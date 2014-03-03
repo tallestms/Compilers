@@ -23,4 +23,7 @@ void printNode(treeNode* t, int type, int nivel, int isNext);
 
 void copyTreeNodes(treeNode* a, treeNode* b);
 
+void desallocNodes(treeNode* t);
+
+
 #endif /* TREE_H_ */

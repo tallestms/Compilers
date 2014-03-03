@@ -114,9 +114,12 @@ void freeTable(hashTable *hashtable)
         while(list!=NULL) {
             temp = list;
             list = list->next;
-	    if(((variable*)(temp->info))->value!=NULL)
-	      free(((variable*)(temp->info))->value);
-            free(temp->info);
+	    if(temp->info!=NULL)
+	    {
+	      if(((variable*)(temp->info))->value!=NULL)
+		free(((variable*)(temp->info))->value);
+	      free(temp->info);
+	    }
             free(temp);
         }
     }
