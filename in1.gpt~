@@ -10,7 +10,8 @@ início
 	se (c>0) então
 	 	imprima(", ");
 	 	fibonacci(b, d, i);
-	 fim-se
+	fim-se
+	imprimaln("");
 fim
 
 variáveis

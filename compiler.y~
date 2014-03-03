@@ -1393,7 +1393,7 @@ BLOCO_AUXILIAR
   globalTree = ((treeNode*)(popStack(stackGlobal)));
   expressionNode = NULL;
 }
-token_pontov
+token_fimfaca
 token_enquanto token_abrep EXPR
 {  
     //cria o nó da arvore de condicao
@@ -3235,9 +3235,4 @@ void terminate(){
 	freeTableFunction(hashFunction);
 	desallocNodes(globalTree);
 	 err = 1;
-<<<<<<< HEAD
 }
-=======
-}
-
->>>>>>> 9b26c75e1009c94b430567f21bda63d3c2bffc17

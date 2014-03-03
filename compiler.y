@@ -285,6 +285,7 @@ void desallocEverything()
 %token token_fimenquanto
 %token token_fimpara
 %token token_fimse
+%token token_fimfaca
 %token token_fimvariaveis
 %token token_funcao
 %token token_imprima
@@ -1393,7 +1394,7 @@ BLOCO_AUXILIAR
   globalTree = ((treeNode*)(popStack(stackGlobal)));
   expressionNode = NULL;
 }
-token_pontov
+token_fimfaca
 token_enquanto token_abrep EXPR
 {  
     //cria o nó da arvore de condicao

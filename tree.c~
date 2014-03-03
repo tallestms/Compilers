@@ -72,7 +72,7 @@ void copyTreeNodes(treeNode* a, treeNode* b)
 
 void desallocNodes(treeNode* t)
 {
-  /*
+  
 	if (t==NULL) return;
 	int i;
 		for (i=0;i<4;i++)
@@ -82,5 +82,5 @@ void desallocNodes(treeNode* t)
 		desallocNodes(t->next);
 	
 	free(t);
-	*/
+	t=NULL;
 }
