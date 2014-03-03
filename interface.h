@@ -3,10 +3,19 @@
 
 char* solicitaNomePrograma();
 
+void showBoasVindas();
+
 void listarFiles();
+
+void showSobre();
 
 int showMenu();
 
-void showMenu2();
+void showDespedida();
 
+int getOption();
+
+void makeStartLine();
+
+void makeEndLine();
 #endif /*INTERFACE_H_*/

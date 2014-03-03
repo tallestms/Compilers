@@ -23,7 +23,7 @@ void fillTreeNode(treeNode* arv, char value[50], char type[50]){
 	strcpy(arv->value, value);
 }
 
-void printNode(treeNode* t, int type, int nivel){
+void printNode(treeNode* t, int type, int nivel, int isNext){
 	
 	/* TYPE:
 		1 - type
@@ -38,9 +38,10 @@ void printNode(treeNode* t, int type, int nivel){
 	int temp = type % 10;
 	int j;
 	for(j=0;j<nivel;j++) {
-		if(j%2==0) printf("|"); else printf(" ");
+		if(j%6==0) printf("|"); else printf(" ");
 	}
 	
+	if(isNext){ printf("->");}
 	switch(temp){
 	case 1: printf("type: %s\n", t->type); break;
 	case 2: printf("value: %s\n", t->value); break;
@@ -51,9 +52,9 @@ void printNode(treeNode* t, int type, int nivel){
 	if(type > 9){
 		int i;
 		for (i=0;t->children[i]!=NULL;i++){
-			printNode(t->children[i], type, nivel+2);
+			printNode(t->children[i], type, nivel+6,0);
 		}
-		printNode(t->next, type, nivel);
+		printNode(t->next, type, nivel,1);
 	}
 
 }
@@ -68,6 +69,7 @@ void copyTreeNodes(treeNode* a, treeNode* b)
   a->children[3] = b->children[3];
   //a->next = b->next;
 }
+<<<<<<< HEAD
 
 void desallocNodes(treeNode* t)
 {
@@ -81,3 +83,5 @@ void desallocNodes(treeNode* t)
 	
 	free(t);
 }
+=======
+>>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c

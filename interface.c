@@ -9,14 +9,16 @@
 char* solicitaNomePrograma(){
 	char *programa;
     char lixo;
-      
-    printf("Compilar Programa\n");
+    
+    void makeStartLine();
+    printf("## Compilar Programa\n");
 	programa = (char *) calloc(50, sizeof(char));
-	printf("Digite o nome do programa: \n");
+	printf("## Digite o nome do programa: \n");
+	printf("## ");
 	scanf("%[^\n]", programa);
 	scanf("%c", &lixo);
 	//strcpy(programa, "exemplos/in10.gpt"); //executando exemplo in10.gpt
-	
+	void makeEndLine();
 	return programa;
 }
 
@@ -36,8 +38,10 @@ void listarFiles(){
     		len = strlen(dp->d_name);
     		if(len>4){
     			if( p = strstr(dp->d_name, ".gpt") ){
-    				if(p[4] == '\0')
-	    				printf("%d - %s\n", ++i,dp->d_name);	
+    				if(p[4] == '\0'){
+	    				printf(" -> %s\n", dp->d_name);	
+	    				i++;
+	    			}
     			}	
     		}
    	     }else{
@@ -48,6 +52,24 @@ void listarFiles(){
    	 	printf("Não há nenhum arquivo .gpt no diretório local.\n");
 }
 
+void showSobre(){
+	char lixo;
+	system("clear");
+	printf(" ############################################################################### \n");
+	printf(" ############################################################################### \n");
+	printf(" ##    UNIVERSIDADE FEDERAL DO ESPÍRITO SANTO - UFES                          ## \n");
+	printf(" ##    CENTRO TECNOLÓGICO - CT                                                ## \n");
+	printf(" ##    DEPARTAMENTO DE INFORMATICA - DI                                       ## \n");
+	printf(" ##    CURSO DE ENGENHARIA DE COMPUTAÇÃO - ENG. COMP.                         ## \n");
+	printf(" ##                                                                           ## \n");
+	printf(" ##    INTERPRETADOR DE G-PORTUGOL                                            ## \n");
+	printf(" ##    DISCIPLINA DE COMPILADORES                                             ## \n");
+	printf(" ##    PROFESSORA: MARIELLA BERGER                                            ## \n");
+	printf(" ##    COMPONENTES: JACKSON WILLIAN BRITO; TALLES TATAGIBA MARTINS DE SOUZA   ## \n");
+	printf(" ############################################################################### \n");
+	printf(" ############################################################################### \n");
+	scanf("%c",&lixo);
+}
 
 int showMenu(){
 	int i,j;
@@ -55,73 +77,79 @@ int showMenu(){
 	
 	
     system("clear");
-	
-	printf("##     COMPILADORES    ##\n");
-	printf("##      G-PORTUGOL     ##\n");
-	printf("##                     ##\n");
-	printf("##  JACKSON ; TALLES   ##\n");	
-	printf("#########################\n");
-	printf("#########################\n");
-	printf("##                     ##\n");
-	printf("## 1 - Compilar        ##\n");
-	printf("##                     ##\n");
-	printf("## 2 - Executar        ##\n");
-	printf("##                     ##\n");
-	printf("## 3 - Mostrar árvore  ##\n");
-	printf("##                     ##\n");
-	printf("## 4 - Ver programas   ##\n");
-	printf("##                     ##\n");
-	printf("## 5 - Ver .gpt	       ##\n");
-	printf("##                     ##\n");
-	printf("## 6 - Sair    	       ##\n");
-	printf("##                     ##\n");
-	printf("#########################\n");
-	printf("#########################\n\n");
-	
-	scanf("%d",&i);
-	scanf("%c",&lixo);
-	
+	printf("############################################################################### \n");
+	printf("############################################################################### \n");
+	printf("##                                                                           ## \n");
+	printf("##                      INTERPRETADOR DE G-PORTUGOL                          ## \n");
+	printf("##                                                                           ## \n");
+	printf("############################################################################### \n");
+	printf("##                                                                           ## \n");
+	printf("## 1 - Compilar um programa                                                  ## \n");
+	printf("##                                                                           ## \n");
+	printf("## 2 - Executar um programa já compilado                                     ## \n");
+	printf("##                                                                           ## \n");
+	printf("## 3 - Mostrar árvore de execução de um programa compilado                   ## \n");
+	printf("##                                                                           ## \n");
+	printf("## 4 - Ver programas compilados                                              ## \n");
+	printf("##                                                                           ## \n");
+	printf("## 5 - Listar arquivos .gpt no diretório atual                               ## \n");
+	printf("##                                                                           ## \n");
+	printf("## 6 - Sobre o interpretador                                                 ## \n");
+	printf("##                                                                           ## \n");
+	printf("## 7 - Sair do interpretador                                                 ## \n");
+	printf("##                                                                           ## \n");
+	printf("############################################################################### \n");
+	i = getOption();
+
 	return i;
 }
 
-/*
-void showMenu2(){
-	
-	int row,col;
-	char * str = (char*) malloc(50*sizeof(char));
+void showDespedida(){
+	printf("############################################################################### \n");
+	printf("############################################################################### \n");
+	printf("##                                                                           ## \n");
+	printf("##         Obrigado por utilizar nosso interpretador de G-Portugol           ## \n");
+	printf("##                  Esperamos uma nova visita em breve!!                     ## \n");
+	printf("##                                                                           ## \n");
+	printf("############################################################################### \n");
+	printf("############################################################################### \n\n");
 
-	initscr();			/* Start curses mode 		*/
-	//getmaxyx(stdscr,row,col);		/* get the number of rows and columns */
-	//raw();				/* Line buffering disabled	*/
-	//keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
-	//getstr(str);
-	//noecho();			/* Don't echo() while we do getch */
-	//mvprintw(row/2, col/2, "You Entered: %s", str);
-	/*int i;
-	strcpy(str,"Jackson Willian Brito ; Talles Tatagiba Martins de Souza");
-	mvprintw(0,(col-strlen(str))/2,str);
-	for(i=1;i<col-1;i++){
-		mvprintw(1,i,"#");
-		mvprintw(2,i,"#");
-		mvprintw(8,i,"#");
-		mvprintw(9,i,"#");
-		mvprintw(row-3,i,"#");
-		mvprintw(row-2,i,"#");
-	}
-	for(i=10;i<row-3;i++){
-		mvprintw(i,1,"##");
-		mvprintw(i,col-3,"##");
-	}
-	/*
-	"* ######   ######   ##     ##   ######    ####   ##      ######  *"
-	"* ##       ##  ##   #### ####   ##  ##     ##    ##      ##  ##  *"
-	"* ##       ##  ##   ##  #  ##   ######     ##    ##      ######  *"
-	"* ##       ##  ##   ##     ##   ##         ##    ##      ##  ##  *"
-	"* ######   ######   ##     ##   ##        ####   #####   ##  ##  *"*/
-/*	refresh();			/* Print it on to the real screen */
- /*   getch();			/* Wait for user input */
-/*	endwin();			/* End curses mode		  */
-	
-	
-//}
+}
 
+
+void showBoasVindas(){
+	system("clear");
+	printf("############################################################################### \n");
+	printf("############################################################################### \n");
+	printf("##                                                                           ## \n");
+	printf("##              Seja bem vindo ao interpretador de G-Portugol                ## \n");
+	printf("##                                                                           ## \n");
+	printf("##     By: JACKSON WILLIAN BRITO                                             ## \n");
+	printf("##         TALLES TATAGIBA MARTINS DE SOUZA                                  ## \n");
+	printf("##                                                     Março - 2014          ## \n");
+	printf("############################################################################### \n");
+	printf("############################################################################### \n");
+	printf("##  Aguarde 5 segundos..                                                     ##  \n");
+	printf("############################################################################### \n\n");
+	sleep(2);
+}
+
+int getOption(){
+	char lixo;
+	int i;
+	printf("############################################################################### \n");
+	printf("## Entre com a opção desejada -                                                 \n");
+	printf("## ");	
+	scanf("%d",&i);
+	scanf("%c",&lixo);
+	printf("############################################################################### \n\n");	
+	return i;
+}
+
+void makeStartLine(){
+		printf("############################################################################### \n");
+}
+
+void makeEndLine(){
+		printf("############################################################################### \n\n");
+}
