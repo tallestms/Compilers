@@ -36,9 +36,9 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
 	int *value = (int*) malloc (sizeof(int));
 	var->value = value;
       }     
-      if(type == 3) //reais serao convertidos em float 
+      if(type == 3) //reais serao convertidos em double 
       {
-	float *value = (float*) malloc(sizeof(float));
+	double *value = (double*) malloc(sizeof(double));
 	var->value = value;
       }
       if(type == 1) //tipo caracter
@@ -66,9 +66,9 @@ void setVariable(variable* var, char* name, char* scope, int type, int matrix, i
 	  int *value = (int*) malloc (column*sizeof(int));
 	  var->value = value;
 	}     
-	if(type == 3) //reais serao convertidos em float 
+	if(type == 3) //reais serao convertidos em double 
 	{
-	  float *value = (float*) malloc(column*sizeof(float));
+	  double *value = (double*) malloc(column*sizeof(double));
 	  var->value = value;
 	}
 	if(type == 1) //tipo caracter

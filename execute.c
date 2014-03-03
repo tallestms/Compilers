@@ -715,7 +715,7 @@ void* executeNode(treeNode* t){
 			scanf("%s", stringReturn);
 			scanf("%c", &lixo);
 			*doubleReturn = stringRealToDouble(stringReturn);
-			*((double*)var->value) = *doubleReturn;
+			*((double*)(var->value)) = *doubleReturn;
 		}
 		if(var->type==2){
 			scanf("%s", stringReturn);

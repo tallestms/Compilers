@@ -93,7 +93,7 @@ void *executeFunction(treeNode *func){
 		if(list!=NULL) {
 			var = (variable*) ( list->info );
 			if(var->type == 0 || var->type == 4){ //int
-				*((int*)var->value) = *((int*)popStack(stackVariablesAux));
+				*((int*)var->value) = *((int*)popStack(stackExecuteVariablesAux));
 				//printf("variavel %s recebendo da pilha valor %d\n", var->name, *((int*)var->value) );
 			}
 			if(var->type == 1){ //char

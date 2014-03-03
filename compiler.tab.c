@@ -309,10 +309,22 @@ void delimitadorNivelUm(){
 	expressionNode = aux; //expressionNode sempre será NULL pela definição de matrizes
 }
 
+void desallocEverything()
+{
+      List *auxDesalloc = listPrograms;
+      while(auxDesalloc!=NULL)
+      {	
+	freeTable(((Program*)(auxDesalloc->info))->hashVariables);
+	freeTableFunction(((Program*)(auxDesalloc->info))->hashFunctions);
+	desallocNodes(((Program*)(auxDesalloc->info))->exec);
+	auxDesalloc = auxDesalloc->next;
+      }
+}
+
 
 
 /* Line 268 of yacc.c  */
-#line 316 "compiler.tab.c"
+#line 328 "compiler.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -438,7 +450,7 @@ typedef int YYSTYPE;
 
 
 /* Line 343 of yacc.c  */
-#line 442 "compiler.tab.c"
+#line 454 "compiler.tab.c"
 
 #ifdef short
 # undef short
@@ -810,26 +822,26 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   331,   331,   331,   339,   338,   345,   346,   346,   348,
-     416,   483,   483,   483,   483,   483,   483,   485,   485,   487,
-     487,   487,   488,   488,   490,   490,   490,   490,   490,   492,
-     492,   492,   494,   493,   550,   549,   604,   604,   604,   605,
-     605,   606,   606,   608,   610,   609,   629,   628,   655,   663,
-     654,   669,   672,   671,   677,   680,   679,   695,   694,   711,
-     728,   710,   731,   730,   749,   791,   833,   836,   836,   889,
-     888,   907,   906,   925,   924,   955,   954,   985,  1001,   984,
-    1021,  1073,  1021,  1098,  1144,  1158,  1098,  1185,  1221,  1184,
-    1332,  1343,  1358,  1359,  1331,  1368,  1379,  1386,  1394,  1367,
-    1396,  1404,  1421,  1424,  1395,  1432,  1437,  1438,  1451,  1456,
-    1471,  1505,  1515,  1431,  1521,  1522,  1593,  1521,  1602,  1616,
-    1601,  1622,  1625,  1626,  1625,  1650,  1651,  1650,  1675,  1743,
-    1823,  1824,  1826,  1826,  1848,  1848,  1850,  1851,  1852,  1853,
-    1854,  1855,  1858,  1859,  1859,  1860,  1861,  1861,  1863,  1908,
-    1951,  1951,  1953,  1953,  1956,  1963,  1964,  1955,  1973,  1973,
-    1975,  1975,  1977,  1978,  1996,  2014,  2087,  2162,  2214,  2213,
-    2304,  2320,  2349,  2349,  2383,  2399,  2417,  2416,  2570,  2570,
-    2584,  2598,  2613,  2613,  2613,  2638,  2638,  2638,  2662,  2663,
-    2662,  2686,  2686,  2685,  2711,  2734
+       0,   343,   343,   343,   351,   350,   357,   358,   358,   360,
+     428,   495,   495,   495,   495,   495,   495,   497,   497,   499,
+     499,   499,   500,   500,   502,   502,   502,   502,   502,   504,
+     504,   504,   506,   505,   562,   561,   616,   616,   616,   617,
+     617,   618,   618,   620,   622,   621,   641,   640,   667,   675,
+     666,   681,   684,   683,   689,   692,   691,   707,   706,   723,
+     740,   722,   743,   742,   761,   803,   845,   848,   848,   901,
+     900,   919,   918,   937,   936,   967,   966,   997,  1013,   996,
+    1033,  1085,  1033,  1110,  1156,  1170,  1110,  1197,  1233,  1196,
+    1344,  1355,  1370,  1371,  1343,  1380,  1391,  1398,  1406,  1379,
+    1408,  1416,  1433,  1436,  1407,  1444,  1449,  1450,  1463,  1468,
+    1483,  1517,  1527,  1443,  1533,  1534,  1605,  1533,  1614,  1628,
+    1613,  1634,  1637,  1638,  1637,  1662,  1663,  1662,  1687,  1755,
+    1835,  1836,  1838,  1838,  1860,  1860,  1862,  1863,  1864,  1865,
+    1866,  1867,  1870,  1871,  1871,  1872,  1873,  1873,  1875,  1920,
+    1963,  1963,  1965,  1965,  1968,  1975,  1976,  1967,  1985,  1985,
+    1987,  1987,  1989,  1990,  2008,  2026,  2099,  2174,  2226,  2225,
+    2316,  2332,  2361,  2361,  2395,  2411,  2429,  2428,  2582,  2582,
+    2596,  2610,  2625,  2625,  2625,  2650,  2650,  2650,  2674,  2675,
+    2674,  2698,  2698,  2697,  2723,  2746
 };
 #endif
 
@@ -2042,14 +2054,14 @@ yyreduce:
         case 2:
 
 /* Line 1806 of yacc.c  */
-#line 331 "compiler.y"
+#line 343 "compiler.y"
     { strcpy(identifiers, "\0");}
     break;
 
   case 3:
 
 /* Line 1806 of yacc.c  */
-#line 332 "compiler.y"
+#line 344 "compiler.y"
     {
   //verifyMatrix(hashVariables);
   //verifyUsed(hashVariables);
@@ -2060,14 +2072,14 @@ yyreduce:
   case 4:
 
 /* Line 1806 of yacc.c  */
-#line 339 "compiler.y"
+#line 351 "compiler.y"
     { strcpy(identifiers, "\0");}
     break;
 
   case 5:
 
 /* Line 1806 of yacc.c  */
-#line 340 "compiler.y"
+#line 352 "compiler.y"
     {
  // verifyMatrix(hashVariables);
  // verifyUsed(hashVariables);
@@ -2077,7 +2089,7 @@ yyreduce:
   case 9:
 
 /* Line 1806 of yacc.c  */
-#line 349 "compiler.y"
+#line 361 "compiler.y"
     {
   //Adiciona todas as variaveis em "identifiers" na hash de variaveis.
     if(strcmp(currentScope, "main")==0)
@@ -2097,7 +2109,7 @@ yyreduce:
 	else
 	{
 	  printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
-	  terminate();
+	  terminate(); return;
 	}
 	varName = strtok(NULL, " ");
       }
@@ -2138,7 +2150,7 @@ yyreduce:
 	else
 	{
 	  printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
-	  terminate();
+	  terminate(); return;
 	}
 	varName = strtok(NULL, " ");
       }
@@ -2150,7 +2162,7 @@ yyreduce:
   case 10:
 
 /* Line 1806 of yacc.c  */
-#line 417 "compiler.y"
+#line 429 "compiler.y"
     {
     if(strcmp(currentScope, "main")==0)
     {
@@ -2169,7 +2181,7 @@ yyreduce:
       else
       {
 		printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
-		terminate();
+		terminate(); return;
       }
       varName = strtok(NULL, " ");
     }
@@ -2209,7 +2221,7 @@ yyreduce:
 	else
 	{
 	  printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, varName);
-	  terminate();
+	  terminate(); return;
 	}
 	varName = strtok(NULL, " ");
       }
@@ -2221,42 +2233,42 @@ yyreduce:
   case 19:
 
 /* Line 1806 of yacc.c  */
-#line 487 "compiler.y"
+#line 499 "compiler.y"
     {dim1 = currentNumber;}
     break;
 
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 487 "compiler.y"
+#line 499 "compiler.y"
     {dim2 = currentNumber;}
     break;
 
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 487 "compiler.y"
+#line 499 "compiler.y"
     {dimension=2;}
     break;
 
   case 22:
 
 /* Line 1806 of yacc.c  */
-#line 488 "compiler.y"
+#line 500 "compiler.y"
     {dim1 = currentNumber;}
     break;
 
   case 23:
 
 /* Line 1806 of yacc.c  */
-#line 488 "compiler.y"
+#line 500 "compiler.y"
     {dimension=1;}
     break;
 
   case 32:
 
 /* Line 1806 of yacc.c  */
-#line 494 "compiler.y"
+#line 506 "compiler.y"
     {
     currentParameters = startList(); //Sempre inicia uma nova lista de parametros.
     strcpy(currentScope, currentIdentifier); //O escopo passa a ser a funcao.
@@ -2286,7 +2298,7 @@ yyreduce:
     else
     {
       printf("Erro semantico na linha %d. Funcao %s redeclarada.\n", nLine, currentIdentifier);
-      terminate();
+      terminate(); return;
       destroyList(currentParameters);
     }
   strcpy(identifiers, "\0");
@@ -2296,7 +2308,7 @@ yyreduce:
   case 33:
 
 /* Line 1806 of yacc.c  */
-#line 529 "compiler.y"
+#line 541 "compiler.y"
     {
   List *identifier_temp = lookupStringFunction(hashFunction, currentScope); //Procurando funcao dentro da hash de funcoes
   if(identifier_temp!=NULL)
@@ -2308,7 +2320,7 @@ yyreduce:
       if(returnFlag == 0)
       {
 		printf("Funcao %s precisa de retorno e nao possui.\n", currentScope);
-		terminate();
+		terminate(); return;
       }
     }
   }
@@ -2322,7 +2334,7 @@ yyreduce:
   case 34:
 
 /* Line 1806 of yacc.c  */
-#line 550 "compiler.y"
+#line 562 "compiler.y"
     {
     currentParameters = startList(); //Sempre inicia uma nova lista de parametros.
     strcpy(currentScope, currentIdentifier); //O escopo passa a ser a funcao.
@@ -2352,7 +2364,7 @@ yyreduce:
     else
     {
       printf("Erro semantico na linha %d. Funcao %s redeclarada.\n", nLine, currentIdentifier);
-      terminate();
+      terminate(); return;
     }
   strcpy(identifiers, "\0");
 }
@@ -2361,7 +2373,7 @@ yyreduce:
   case 35:
 
 /* Line 1806 of yacc.c  */
-#line 584 "compiler.y"
+#line 596 "compiler.y"
     {
   List *identifier_temp = lookupStringFunction(hashFunction, currentScope);
   if(identifier_temp!=NULL)
@@ -2373,7 +2385,7 @@ yyreduce:
       if(returnFlag == 0)
       {
 		printf("Funcao %s precisa de retorno e nao possui.\n", currentScope);
-		terminate();
+		terminate(); return;
       }
     }
   }
@@ -2386,7 +2398,7 @@ yyreduce:
   case 44:
 
 /* Line 1806 of yacc.c  */
-#line 610 "compiler.y"
+#line 622 "compiler.y"
     {
   treeNode* caseNodeAux = newTreeNode();
   commandNode = globalTree;
@@ -2409,7 +2421,7 @@ yyreduce:
   case 46:
 
 /* Line 1806 of yacc.c  */
-#line 629 "compiler.y"
+#line 641 "compiler.y"
     {
   treeNode* caseNodeAux = newTreeNode();
     
@@ -2433,7 +2445,7 @@ yyreduce:
   case 47:
 
 /* Line 1806 of yacc.c  */
-#line 648 "compiler.y"
+#line 660 "compiler.y"
     {
   commandNode = globalTree;
   globalTree = ((treeNode*)(popStack(stackGlobal)));
@@ -2444,7 +2456,7 @@ yyreduce:
   case 48:
 
 /* Line 1806 of yacc.c  */
-#line 655 "compiler.y"
+#line 667 "compiler.y"
     {
   fillTreeNode(caseNode, "caso-padrao", "CASO");
   treeNode* padraoNode = newTreeNode();
@@ -2456,7 +2468,7 @@ yyreduce:
   case 49:
 
 /* Line 1806 of yacc.c  */
-#line 663 "compiler.y"
+#line 675 "compiler.y"
     {
   treeNode* pararNode = newTreeNode();
   fillTreeNode(pararNode, "parar-caso", "PARAR-CASO");
@@ -2467,7 +2479,7 @@ yyreduce:
   case 52:
 
 /* Line 1806 of yacc.c  */
-#line 672 "compiler.y"
+#line 684 "compiler.y"
     {
   treeNode* pararNode = newTreeNode();
   fillTreeNode(pararNode, "parar-caso", "PARAR-CASO");
@@ -2478,7 +2490,7 @@ yyreduce:
   case 55:
 
 /* Line 1806 of yacc.c  */
-#line 680 "compiler.y"
+#line 692 "compiler.y"
     {
   List *identifier_temp = lookupStringFunction(hashFunction, currentScope);
   if(identifier_temp!=NULL)
@@ -2497,7 +2509,7 @@ yyreduce:
   case 57:
 
 /* Line 1806 of yacc.c  */
-#line 695 "compiler.y"
+#line 707 "compiler.y"
     {
 functionNode->children[2] = functionInternalVariables;
 List *identifier_temp = lookupStringFunction(hashFunction, currentScope);
@@ -2517,7 +2529,7 @@ if(identifier_temp!=NULL)
   case 59:
 
 /* Line 1806 of yacc.c  */
-#line 711 "compiler.y"
+#line 723 "compiler.y"
     {
 // Em tipos_variaveis ira retornar o tipo de retorno da funcao, a qual sera acrescentada.
   List *aux = lookupStringFunction(hashFunction, currentScope);
@@ -2540,14 +2552,14 @@ if(identifier_temp!=NULL)
   case 60:
 
 /* Line 1806 of yacc.c  */
-#line 728 "compiler.y"
+#line 740 "compiler.y"
     {functionNode->children[2] = functionInternalVariables;}
     break;
 
   case 62:
 
 /* Line 1806 of yacc.c  */
-#line 731 "compiler.y"
+#line 743 "compiler.y"
     {
 /*Retorno sera verificado aqui em todas as funcoes com mesmo nome!*/
   List *aux = lookupStringFunction(hashFunction, currentScope);
@@ -2569,7 +2581,7 @@ if(identifier_temp!=NULL)
   case 64:
 
 /* Line 1806 of yacc.c  */
-#line 750 "compiler.y"
+#line 762 "compiler.y"
     {
     currentFunctionArity++; //Variavel global controlando aridade sendo incrementada.
     char varName[MAX_FUNCTION+MAX_VARIABLE+1];
@@ -2607,7 +2619,7 @@ if(identifier_temp!=NULL)
     else
     {
       printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, currentScope);
-      terminate();
+      terminate(); return;
     }
   strcpy(identifiers, "\0");
 }
@@ -2616,7 +2628,7 @@ if(identifier_temp!=NULL)
   case 65:
 
 /* Line 1806 of yacc.c  */
-#line 792 "compiler.y"
+#line 804 "compiler.y"
     {
     currentFunctionArity++;
     char varName[MAX_FUNCTION+MAX_VARIABLE+1];
@@ -2654,7 +2666,7 @@ if(identifier_temp!=NULL)
     else
     {
       printf("Erro semantico na linha %d. Variavel %s redeclarada.\n", nLine, currentIdentifier);
-      terminate();
+      terminate(); return;
     }
   strcpy(identifiers, "\0");
 }
@@ -2663,14 +2675,14 @@ if(identifier_temp!=NULL)
   case 67:
 
 /* Line 1806 of yacc.c  */
-#line 836 "compiler.y"
+#line 848 "compiler.y"
     {expressionNode=NULL; }
     break;
 
   case 68:
 
 /* Line 1806 of yacc.c  */
-#line 837 "compiler.y"
+#line 849 "compiler.y"
     {
   if(strcmp(currentScope, "main") != 0)
   {
@@ -2679,7 +2691,7 @@ if(identifier_temp!=NULL)
     if(functionAux->returnType==T_SEMRETORNO)
     {
       printf("A funcao %s nao possui retorno.\n", currentScope);
-      terminate();
+      terminate(); return;
     }
     else
     {
@@ -2692,19 +2704,19 @@ if(identifier_temp!=NULL)
 	  if(functionAux->returnType != 4)
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	    terminate();
+	    terminate(); return;
 	  }
 	  in_logico=0;
       }
       else if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
       {
 	printf("Tipos nao compativeis no retorno na funcao %s na linha %d\n", currentScope, nLine);
-	terminate();
+	terminate(); return;
       }
       else if( functionAux->returnType != varRelations[0] && in_comparacao == 0)
       {
 	printf("Expressao de retorno nao e compativel com o retorno da funcao %s na linha %d.\n", currentScope, nLine);
-	terminate();
+	terminate(); return;
       }
       else
       {
@@ -2715,7 +2727,7 @@ if(identifier_temp!=NULL)
   else
   {
     printf("Nao pode utilizar o retorno dentro do programa principal");
-    terminate();
+    terminate(); return;
   }
   currentRelationPos = 0;
   expressionNode=NULL;
@@ -2726,7 +2738,7 @@ if(identifier_temp!=NULL)
   case 69:
 
 /* Line 1806 of yacc.c  */
-#line 889 "compiler.y"
+#line 901 "compiler.y"
     {
   treeNode* imprimaNode = newTreeNode();
   char typeImprima[10];
@@ -2748,14 +2760,14 @@ if(identifier_temp!=NULL)
   case 70:
 
 /* Line 1806 of yacc.c  */
-#line 905 "compiler.y"
+#line 917 "compiler.y"
     {strcpy(identifiers, "\0"); currentRelationPos = 0;}
     break;
 
   case 71:
 
 /* Line 1806 of yacc.c  */
-#line 907 "compiler.y"
+#line 919 "compiler.y"
     {
   treeNode* imprimaNode = newTreeNode();
   
@@ -2777,20 +2789,20 @@ if(identifier_temp!=NULL)
   case 72:
 
 /* Line 1806 of yacc.c  */
-#line 923 "compiler.y"
+#line 935 "compiler.y"
     {strcpy(identifiers, "\0"); currentRelationPos = 0;}
     break;
 
   case 73:
 
 /* Line 1806 of yacc.c  */
-#line 925 "compiler.y"
+#line 937 "compiler.y"
     {
   List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
   if(identifier_temp==NULL)
   {
     printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
-    terminate();
+    terminate(); return;
   } 
   else
   {
@@ -2818,20 +2830,20 @@ if(identifier_temp!=NULL)
   case 74:
 
 /* Line 1806 of yacc.c  */
-#line 953 "compiler.y"
+#line 965 "compiler.y"
     {strcpy(identifiers, "\0"); currentRelationPos = 0;}
     break;
 
   case 75:
 
 /* Line 1806 of yacc.c  */
-#line 955 "compiler.y"
+#line 967 "compiler.y"
     {
   List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
   if(identifier_temp==NULL)
   {
     printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
-    terminate();
+    terminate(); return;
   } 
   else
   {
@@ -2859,14 +2871,14 @@ if(identifier_temp!=NULL)
   case 76:
 
 /* Line 1806 of yacc.c  */
-#line 983 "compiler.y"
+#line 995 "compiler.y"
     {strcpy(identifiers, "\0"); currentRelationPos = 0;}
     break;
 
   case 77:
 
 /* Line 1806 of yacc.c  */
-#line 985 "compiler.y"
+#line 997 "compiler.y"
     {
   strcpy(currentFunction, currentIdentifier);
   List *functionList = lookupStringFunction(hashFunction, currentFunction);
@@ -2887,20 +2899,20 @@ if(identifier_temp!=NULL)
   case 78:
 
 /* Line 1806 of yacc.c  */
-#line 1001 "compiler.y"
+#line 1013 "compiler.y"
     { 
   List *functionList = lookupStringFunction(hashFunction, currentFunction);
   if(functionList == NULL)
   {
     printf("Funcao %s nao declarada na linha %d.\n", currentFunction, nLine);
-    terminate();
+    terminate(); return;
   }
   else
   {
     if(argumentNumber != ((function*)(functionList->info))->arity)
     {  
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
-      terminate();
+      terminate(); return;
     }
   
   }
@@ -2912,7 +2924,7 @@ addNodeIntoGlobalTree(functionNode);
   case 80:
 
 /* Line 1806 of yacc.c  */
-#line 1021 "compiler.y"
+#line 1033 "compiler.y"
     {
 	strcpy(currentVariable, currentIdentifier);
 	if (strcmp(currentScope, "main")!=0 ){
@@ -2923,19 +2935,19 @@ addNodeIntoGlobalTree(functionNode);
 	if (currVariable != NULL){\
 		if(((variable*)(currVariable->info))->used!=1 && ((variable*)(currVariable->info))->matrix==0){
 			printf("Erro, variavel nao inicializada na linha %d.\n", nLine);
-			terminate();
+			terminate(); return;
 		}
 		if(((variable*)(currVariable->info))->matrix!=1){
 			printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(currVariable->info))->name);
-			terminate();
+			terminate(); return;
 		}
 		if(((variable*)(currVariable->info))->dimension != 1){
 			printf("Erro na linha %d, %s possui dimensao 2.\n", nLine, ((variable*)(currVariable->info))->name);
-			terminate();
+			terminate(); return;
 		}
 		if(((variable*)(currVariable->info))->nColumn <= currentNumber ){
 			printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
-			terminate();
+			terminate(); return;
 		}
 		else
 		{
@@ -2963,7 +2975,7 @@ addNodeIntoGlobalTree(functionNode);
 		}
 	}else{
 		printf("Variavel nao declarada na linha %d\n",nLine);
-		terminate();
+		terminate(); return;
 	}
 }
     break;
@@ -2971,7 +2983,7 @@ addNodeIntoGlobalTree(functionNode);
   case 81:
 
 /* Line 1806 of yacc.c  */
-#line 1073 "compiler.y"
+#line 1085 "compiler.y"
     {
 
     //adiciono o nó de expressão a direita do nó de atribuição
@@ -2987,11 +2999,11 @@ addNodeIntoGlobalTree(functionNode);
 		if(!verifyRelationship(varRelations, currentRelationPos))
 		{
 		  printf("Tipos incompativeis na linha %d\n", nLine);
-		  terminate();
+		  terminate(); return;
 		}
 		else if(((variable*)(currVariable->info))->type!=varRelations[0]){
 			printf("Atribuição de tipos invalidos na linha %d.\n", nLine);
-			terminate();
+			terminate(); return;
 		}
 	}
   strcpy(identifiers, "\0");
@@ -3002,7 +3014,7 @@ addNodeIntoGlobalTree(functionNode);
   case 83:
 
 /* Line 1806 of yacc.c  */
-#line 1098 "compiler.y"
+#line 1110 "compiler.y"
     {
 	strcpy(currentVariable, currentIdentifier);
 	if (strcmp(currentScope, "main")!=0 ){
@@ -3013,19 +3025,19 @@ addNodeIntoGlobalTree(functionNode);
 	if (currVariable != NULL){
 		if(((variable*)(currVariable->info))->used!=1 && ((variable*)(currVariable->info))->matrix==0){
 			printf("Erro, variavel nao inicializada na linha %d.\n", nLine);
-			terminate();
+			terminate(); return;
 		}
 		if(((variable*)(currVariable->info))->matrix!=1){
 			printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(currVariable->info))->name);
-			terminate();
+			terminate(); return;
 		}
 		if(((variable*)(currVariable->info))->dimension != 2){
 			printf("Erro na linha %d, %s possui dimensao 1.\n", nLine, ((variable*)(currVariable->info))->name);
-			terminate();
+			terminate(); return;
 		}
 		if(((variable*)(currVariable->info))->nColumn <= currentNumber ){
 			printf("Erro na linha %d, %s possui %d colunas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
-			terminate();
+			terminate(); return;
 		}
 		
 		  //cria o nó da arvore de atribuição
@@ -3046,7 +3058,7 @@ addNodeIntoGlobalTree(functionNode);
 		
 	}else{
 		printf("Variavel nao declarada na linha %d.\n",nLine);
-		terminate();
+		terminate(); return;
 	}
 }
     break;
@@ -3054,13 +3066,13 @@ addNodeIntoGlobalTree(functionNode);
   case 84:
 
 /* Line 1806 of yacc.c  */
-#line 1144 "compiler.y"
+#line 1156 "compiler.y"
     {
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
 		if(((variable*)(currVariable->info))->nLine <= currentNumber ){
 			printf("Erro na linha %d, %s possui %d linhas apenas.\n", nLine, ((variable*)(currVariable->info))->name,((variable*)(currVariable->info))->nColumn );
-			terminate();
+			terminate(); return;
 		}
 		  //cria o no com o valor da linha acessada
 		  char s[50];
@@ -3075,7 +3087,7 @@ addNodeIntoGlobalTree(functionNode);
   case 85:
 
 /* Line 1806 of yacc.c  */
-#line 1158 "compiler.y"
+#line 1170 "compiler.y"
     {
 	List* currVariable = lookupStringVariable(hashVariables, currentVariable);
 	if (currVariable != NULL){
@@ -3092,11 +3104,11 @@ addNodeIntoGlobalTree(functionNode);
 		if(!verifyRelationship(varRelations, currentRelationPos))
 		{
 		  printf("Tipos incompativeis na linha %d.\n", nLine);
-		  terminate();
+		  terminate(); return;
 		}
 		else if(((variable*)(currVariable->info))->type!=varRelations[0]){
 			printf("Atribuição de tipos invalidos na linha %d.\n", nLine);
-			terminate();
+			terminate(); return;
 		}
 	}
   strcpy(identifiers, "\0");
@@ -3107,7 +3119,7 @@ addNodeIntoGlobalTree(functionNode);
   case 87:
 
 /* Line 1806 of yacc.c  */
-#line 1185 "compiler.y"
+#line 1197 "compiler.y"
     {  
   currentRelationComparison = 0;
   char auxVariable[100];
@@ -3138,7 +3150,7 @@ addNodeIntoGlobalTree(functionNode);
     else
     {
       printf("Variavel %s na linha %d nao foi declarada.\n", currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
       
   strcpy(currentVariable, auxVariable);
@@ -3148,7 +3160,7 @@ addNodeIntoGlobalTree(functionNode);
   case 88:
 
 /* Line 1806 of yacc.c  */
-#line 1221 "compiler.y"
+#line 1233 "compiler.y"
     {
     //adiciono o nó de expressão a direita do nó de atribuição
     attributionNode->children[1] = expressionNode;
@@ -3167,19 +3179,19 @@ addNodeIntoGlobalTree(functionNode);
 	if(identifier_temp==NULL)
 	{
 	  printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
-	  terminate();
+	  terminate(); return;
 	} 
 	else if((varRelations[0] == T_LITERAL || varRelations[0] == T_CARACTER) && currentRelationPos > 1) //caracter ou literal
 	{
 	  printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
-	  terminate();
+	  terminate(); return;
 	}
 	else if(in_logico==1 && in_condicional == 0)
 	{
 	  if((((variable*)(identifier_temp->info))->type) != 4)
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	    terminate();
+	    terminate(); return;
 	  }
 	  else
 	    ((variable*)(identifier_temp->info))->used=1;
@@ -3188,13 +3200,13 @@ addNodeIntoGlobalTree(functionNode);
 	else if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
 	{
 	  printf("Valores incompativeis na linha %d.\n", nLine);
-	  terminate();
+	  terminate(); return;
 	}
 	//TODO
 	else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0 && ((variable*)(identifier_temp->info))->type != 4)
 	{	
 	  printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	  terminate();
+	  terminate(); return;
 	}
 	else
 	{
@@ -3216,7 +3228,7 @@ addNodeIntoGlobalTree(functionNode);
 	if(!verifyRelationship(varRelations, currentRelationPos))
 	{
 	  printf("Valores incompativeis na linha %d.\n", nLine);
-	  terminate();
+	  terminate(); return;
 	}
 	else
 	{
@@ -3226,19 +3238,19 @@ addNodeIntoGlobalTree(functionNode);
 	  if(identifier_temp == NULL)
 	  {
 	    printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
-	    terminate();
+	    terminate(); return;
 	  }
 	  else if((varRelations[0] == T_CARACTER || varRelations[0] == T_LITERAL) && currentRelationPos > 1) //caracter ou literal
 	  {
 	    printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
-	    terminate();
+	    terminate(); return;
 	  }
 	  else if(in_logico==1 && in_condicional == 0)
 	  {
 	    if((((variable*)(identifier_temp->info))->type) != 4)
 	    {
 	      printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	      terminate();
+	      terminate(); return;
 	    }
 	    else
 	      ((variable*)(identifier_temp->info))->used=1;
@@ -3247,7 +3259,7 @@ addNodeIntoGlobalTree(functionNode);
 	  else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0)
 	  {
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-	    terminate();
+	    terminate(); return;
 	  }
 	  else
 	    ((variable*)(identifier_temp->info))->used=1;
@@ -3261,7 +3273,7 @@ addNodeIntoGlobalTree(functionNode);
   case 89:
 
 /* Line 1806 of yacc.c  */
-#line 1328 "compiler.y"
+#line 1340 "compiler.y"
     {
 currentRelationComparison = 0;
 }
@@ -3270,7 +3282,7 @@ currentRelationComparison = 0;
   case 90:
 
 /* Line 1806 of yacc.c  */
-#line 1332 "compiler.y"
+#line 1344 "compiler.y"
     {
     //cria o nó da arvore de condicao
     conditionNode = newTreeNode();
@@ -3285,7 +3297,7 @@ currentRelationComparison = 0;
   case 91:
 
 /* Line 1806 of yacc.c  */
-#line 1343 "compiler.y"
+#line 1355 "compiler.y"
     {
   commandNode = newTreeNode();
   fillTreeNode(commandNode, "comando-se", "COMANDO");
@@ -3305,14 +3317,14 @@ currentRelationComparison = 0;
   case 92:
 
 /* Line 1806 of yacc.c  */
-#line 1358 "compiler.y"
+#line 1370 "compiler.y"
     {currentRelationPos = 0;}
     break;
 
   case 93:
 
 /* Line 1806 of yacc.c  */
-#line 1359 "compiler.y"
+#line 1371 "compiler.y"
     {
   commandNode = globalTree;
   conditionNode = commandNode -> children[0];
@@ -3325,7 +3337,7 @@ currentRelationComparison = 0;
   case 95:
 
 /* Line 1806 of yacc.c  */
-#line 1368 "compiler.y"
+#line 1380 "compiler.y"
     {
     commandNode = newTreeNode();
     fillTreeNode(commandNode, "comando-faca", "COMANDO");
@@ -3341,7 +3353,7 @@ currentRelationComparison = 0;
   case 96:
 
 /* Line 1806 of yacc.c  */
-#line 1379 "compiler.y"
+#line 1391 "compiler.y"
     {
   commandNode = globalTree;
   globalTree = ((treeNode*)(popStack(stackGlobal)));
@@ -3352,7 +3364,7 @@ currentRelationComparison = 0;
   case 97:
 
 /* Line 1806 of yacc.c  */
-#line 1386 "compiler.y"
+#line 1398 "compiler.y"
     {  
     //cria o nó da arvore de condicao
     conditionNode = newTreeNode();
@@ -3366,14 +3378,14 @@ currentRelationComparison = 0;
   case 98:
 
 /* Line 1806 of yacc.c  */
-#line 1394 "compiler.y"
+#line 1406 "compiler.y"
     {in_condicional = 0;}
     break;
 
   case 100:
 
 /* Line 1806 of yacc.c  */
-#line 1396 "compiler.y"
+#line 1408 "compiler.y"
     {
     //cria o nó da arvore de condicao
     conditionNode = newTreeNode();
@@ -3386,7 +3398,7 @@ currentRelationComparison = 0;
   case 101:
 
 /* Line 1806 of yacc.c  */
-#line 1404 "compiler.y"
+#line 1416 "compiler.y"
     {
     //adiciono o nó de expressão a direita do nó de condicao
     conditionNode->children[0] = expressionNode;
@@ -3409,14 +3421,14 @@ currentRelationComparison = 0;
   case 102:
 
 /* Line 1806 of yacc.c  */
-#line 1421 "compiler.y"
+#line 1433 "compiler.y"
     {in_condicional = 0; currentRelationPos = 0 ; strcpy(identifiers,"\0");}
     break;
 
   case 103:
 
 /* Line 1806 of yacc.c  */
-#line 1424 "compiler.y"
+#line 1436 "compiler.y"
     {
   expressionNode = NULL;
 
@@ -3428,7 +3440,7 @@ currentRelationComparison = 0;
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 1432 "compiler.y"
+#line 1444 "compiler.y"
     {
   conditionNode = newTreeNode();
   fillTreeNode(conditionNode,"condicao-para","CONDICAO");
@@ -3439,14 +3451,14 @@ currentRelationComparison = 0;
   case 106:
 
 /* Line 1806 of yacc.c  */
-#line 1437 "compiler.y"
+#line 1449 "compiler.y"
     {strcpy(identifiers,"\0"); currentRelationPos=0;}
     break;
 
   case 107:
 
 /* Line 1806 of yacc.c  */
-#line 1438 "compiler.y"
+#line 1450 "compiler.y"
     {
   attributionNode = newTreeNode();
   fillTreeNode(attributionNode,":=","ATRIBUICAO");
@@ -3464,7 +3476,7 @@ currentRelationComparison = 0;
   case 108:
 
 /* Line 1806 of yacc.c  */
-#line 1451 "compiler.y"
+#line 1463 "compiler.y"
     {
   attributionNode->children[1] = expressionNode;
   expressionNode = NULL;
@@ -3474,7 +3486,7 @@ currentRelationComparison = 0;
   case 109:
 
 /* Line 1806 of yacc.c  */
-#line 1456 "compiler.y"
+#line 1468 "compiler.y"
     {
   treeNode *idAux = newTreeNode();
   fillTreeNode(idAux, currentVariable, "VARIAVEL");
@@ -3494,7 +3506,7 @@ currentRelationComparison = 0;
   case 110:
 
 /* Line 1806 of yacc.c  */
-#line 1471 "compiler.y"
+#line 1483 "compiler.y"
     {
   treeNode *passoAux = newTreeNode();
   fillTreeNode(passoAux, "+", "SOMA");
@@ -3533,12 +3545,12 @@ currentRelationComparison = 0;
   case 111:
 
 /* Line 1806 of yacc.c  */
-#line 1505 "compiler.y"
+#line 1517 "compiler.y"
     {
 if(!verifyRelationship(varRelations, currentRelationPos))
   {
     printf("Valores incompativeis na linha %d\n", nLine);
-    terminate();
+    terminate(); return;
   }
 strcpy(identifiers,"\0"); 
 currentRelationPos = 0;
@@ -3548,7 +3560,7 @@ currentRelationPos = 0;
   case 112:
 
 /* Line 1806 of yacc.c  */
-#line 1515 "compiler.y"
+#line 1527 "compiler.y"
     {
   expressionNode = NULL;
   //no global passa a ser o anterior
@@ -3559,14 +3571,14 @@ currentRelationPos = 0;
   case 114:
 
 /* Line 1806 of yacc.c  */
-#line 1521 "compiler.y"
+#line 1533 "compiler.y"
     {strcpy(identifiers, "\0"); currentRelationPos=0;}
     break;
 
   case 115:
 
 /* Line 1806 of yacc.c  */
-#line 1522 "compiler.y"
+#line 1534 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -3574,11 +3586,11 @@ currentRelationPos = 0;
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
     else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }else
     {  
       int currentTypeInt = ((variable*)(identifier_temp->info))->type;
@@ -3598,11 +3610,11 @@ currentRelationPos = 0;
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
     else if(((variable*)(identifier_temp->info))->used == 0 &&((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }else
     {  
       int currentTypeInt = ((variable*)(identifier_temp->info))->type;
@@ -3642,7 +3654,7 @@ currentRelationPos = 0;
   case 116:
 
 /* Line 1806 of yacc.c  */
-#line 1593 "compiler.y"
+#line 1605 "compiler.y"
     {
 if(varRelations[0] != T_LITERAL && varRelations[0] != T_LOGICO)
   switchType = varRelations[0];
@@ -3654,7 +3666,7 @@ else
   case 118:
 
 /* Line 1806 of yacc.c  */
-#line 1602 "compiler.y"
+#line 1614 "compiler.y"
     {
   //atualizando no de condicao para se-senao
   fillTreeNode(conditionNode,"condicao-se-senao","CONDICIONAL");   
@@ -3674,14 +3686,14 @@ else
   case 119:
 
 /* Line 1806 of yacc.c  */
-#line 1616 "compiler.y"
+#line 1628 "compiler.y"
     {currentRelationPos=0;}
     break;
 
   case 120:
 
 /* Line 1806 of yacc.c  */
-#line 1617 "compiler.y"
+#line 1629 "compiler.y"
     {
   commandNode = globalTree;
   globalTree = ((treeNode*)(popStack(stackGlobal)));
@@ -3692,21 +3704,21 @@ else
   case 122:
 
 /* Line 1806 of yacc.c  */
-#line 1625 "compiler.y"
+#line 1637 "compiler.y"
     {in_logico = 1;}
     break;
 
   case 123:
 
 /* Line 1806 of yacc.c  */
-#line 1626 "compiler.y"
+#line 1638 "compiler.y"
     {
   if (in_comparacao = 1 && in_condicional == 0)
   {	
     if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
-	  terminate();
+	  terminate(); return;
 	}
     currentRelationComparison=0;
     in_comparacao = 0;
@@ -3716,7 +3728,7 @@ else
     if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
-	  terminate();
+	  terminate(); return;
 	}
     currentRelationComparison=0;
     in_comparacao = 0;
@@ -3727,21 +3739,21 @@ else
   case 125:
 
 /* Line 1806 of yacc.c  */
-#line 1650 "compiler.y"
+#line 1662 "compiler.y"
     {in_logico = 1;}
     break;
 
   case 126:
 
 /* Line 1806 of yacc.c  */
-#line 1651 "compiler.y"
+#line 1663 "compiler.y"
     {
   if (in_comparacao = 1 && in_condicional == 0)
   {	
     if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
-	  terminate();
+	  terminate(); return;
 	}
     currentRelationComparison=0;
     in_comparacao = 0;
@@ -3751,7 +3763,7 @@ else
     if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
-	  terminate();
+	  terminate(); return;
 	}
     currentRelationComparison=0;
     in_comparacao = 0;
@@ -3762,7 +3774,7 @@ else
   case 128:
 
 /* Line 1806 of yacc.c  */
-#line 1676 "compiler.y"
+#line 1688 "compiler.y"
     {
   List* functionList = lookupStringVariable(hashFunction, currentFunction);
   function* functionAux = ((function*)(functionList->info));
@@ -3774,12 +3786,12 @@ else
     if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
     {
       printf("Valores incompativeis na linha %d.\n", nLine);
-      terminate();
+      terminate(); return;
     }
     else if(returnTypeArgument != varRelations[0] && in_comparacao == 0)
     {	
       printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-      terminate();
+      terminate(); return;
     }
     else if(verifyPrimitivesMaxMinMed(currentFunction))
     {
@@ -3835,7 +3847,7 @@ else
   case 129:
 
 /* Line 1806 of yacc.c  */
-#line 1744 "compiler.y"
+#line 1756 "compiler.y"
     {
   List* functionList = lookupStringVariable(hashFunction, currentFunction);
   function* functionAux = ((function*)(functionList->info));
@@ -3849,12 +3861,12 @@ else
     if(!verifyRelationship(varRelations, currentRelationPos) && in_comparacao == 0)
     {
       printf("Valores incompativeis na linha %d.\n", nLine);
-      terminate();
+      terminate(); return;
     }
     else if(returnTypeArgument != varRelations[0] && in_comparacao == 0)
     {	
       printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
-      terminate();
+      terminate(); return;
     }
     
     if(verifyPrimitivesMaxMinMed(currentFunction))
@@ -3920,28 +3932,28 @@ else
   case 131:
 
 /* Line 1806 of yacc.c  */
-#line 1824 "compiler.y"
+#line 1836 "compiler.y"
     { swapoutTresDois(); }
     break;
 
   case 132:
 
 /* Line 1806 of yacc.c  */
-#line 1826 "compiler.y"
+#line 1838 "compiler.y"
     { swapoutTresDois(); }
     break;
 
   case 133:
 
 /* Line 1806 of yacc.c  */
-#line 1827 "compiler.y"
+#line 1839 "compiler.y"
     {
     if (in_comparacao = 1 && in_condicional == 0)
     {	
     if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
-	  terminate();
+	  terminate(); return;
 	}
     currentRelationComparison=0;
     in_comparacao = 1;
@@ -3951,7 +3963,7 @@ else
     if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
 	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
-	  terminate();
+	  terminate(); return;
 	}
     currentRelationComparison=0;
   }
@@ -3961,84 +3973,84 @@ else
   case 134:
 
 /* Line 1806 of yacc.c  */
-#line 1848 "compiler.y"
+#line 1860 "compiler.y"
     {operadorDeNivelTres();}
     break;
 
   case 135:
 
 /* Line 1806 of yacc.c  */
-#line 1848 "compiler.y"
+#line 1860 "compiler.y"
     { swapoutTresDois(); }
     break;
 
   case 136:
 
 /* Line 1806 of yacc.c  */
-#line 1850 "compiler.y"
+#line 1862 "compiler.y"
     { operadorDeNivelDois(">"); }
     break;
 
   case 137:
 
 /* Line 1806 of yacc.c  */
-#line 1851 "compiler.y"
+#line 1863 "compiler.y"
     { operadorDeNivelDois(">="); }
     break;
 
   case 138:
 
 /* Line 1806 of yacc.c  */
-#line 1852 "compiler.y"
+#line 1864 "compiler.y"
     { operadorDeNivelDois("="); }
     break;
 
   case 139:
 
 /* Line 1806 of yacc.c  */
-#line 1853 "compiler.y"
+#line 1865 "compiler.y"
     { operadorDeNivelDois("<"); }
     break;
 
   case 140:
 
 /* Line 1806 of yacc.c  */
-#line 1854 "compiler.y"
+#line 1866 "compiler.y"
     { operadorDeNivelDois("<="); }
     break;
 
   case 141:
 
 /* Line 1806 of yacc.c  */
-#line 1855 "compiler.y"
+#line 1867 "compiler.y"
     { operadorDeNivelDois("<>"); }
     break;
 
   case 142:
 
 /* Line 1806 of yacc.c  */
-#line 1858 "compiler.y"
+#line 1870 "compiler.y"
     { swapoutDoisUm(); }
     break;
 
   case 143:
 
 /* Line 1806 of yacc.c  */
-#line 1859 "compiler.y"
+#line 1871 "compiler.y"
     { operadorDeNivelUm(); }
     break;
 
   case 144:
 
 /* Line 1806 of yacc.c  */
-#line 1859 "compiler.y"
+#line 1871 "compiler.y"
     { swapoutDoisUm(); }
     break;
 
   case 148:
 
 /* Line 1806 of yacc.c  */
-#line 1864 "compiler.y"
+#line 1876 "compiler.y"
     {
   /*
   Convertendo tipo do numero real e adicionando no vetor de relacoes, por exemplo (varRelations = {0, 0, 0, 1, 2})
@@ -4088,7 +4100,7 @@ else
   case 149:
 
 /* Line 1806 of yacc.c  */
-#line 1909 "compiler.y"
+#line 1921 "compiler.y"
     {
   {
     int currentTypeInt = convertType(currentType);
@@ -4136,26 +4148,26 @@ else
   case 152:
 
 /* Line 1806 of yacc.c  */
-#line 1953 "compiler.y"
+#line 1965 "compiler.y"
     {	operadorDeNivelZero("/"); }
     break;
 
   case 153:
 
 /* Line 1806 of yacc.c  */
-#line 1953 "compiler.y"
+#line 1965 "compiler.y"
     { swapoutUmZero(); }
     break;
 
   case 154:
 
 /* Line 1806 of yacc.c  */
-#line 1956 "compiler.y"
+#line 1968 "compiler.y"
     {
   if(strcmp(currentType, "inteiro")!=0)
   {
     printf("Operador %% so aceita inteiros na linha %d.\n", nLine);
-    terminate();
+    terminate(); return;
   }
 }
     break;
@@ -4163,19 +4175,19 @@ else
   case 155:
 
 /* Line 1806 of yacc.c  */
-#line 1963 "compiler.y"
+#line 1975 "compiler.y"
     { operadorDeNivelZero("%"); }
     break;
 
   case 156:
 
 /* Line 1806 of yacc.c  */
-#line 1964 "compiler.y"
+#line 1976 "compiler.y"
     {
     if(strcmp(currentType, "inteiro")!=0)
     {
       printf("Operador %% so aceita inteiro na linha %d.\n", nLine);
-      terminate();
+      terminate(); return;
     }
 }
     break;
@@ -4183,42 +4195,42 @@ else
   case 157:
 
 /* Line 1806 of yacc.c  */
-#line 1971 "compiler.y"
+#line 1983 "compiler.y"
     { swapoutUmZero(); }
     break;
 
   case 158:
 
 /* Line 1806 of yacc.c  */
-#line 1973 "compiler.y"
+#line 1985 "compiler.y"
     { operadorDeNivelZero("*"); }
     break;
 
   case 159:
 
 /* Line 1806 of yacc.c  */
-#line 1973 "compiler.y"
+#line 1985 "compiler.y"
     { swapoutUmZero(); }
     break;
 
   case 160:
 
 /* Line 1806 of yacc.c  */
-#line 1975 "compiler.y"
+#line 1987 "compiler.y"
     { operadorDeMenorNivel("^"); }
     break;
 
   case 161:
 
 /* Line 1806 of yacc.c  */
-#line 1975 "compiler.y"
+#line 1987 "compiler.y"
     { swapoutZeroMenor(); }
     break;
 
   case 163:
 
 /* Line 1806 of yacc.c  */
-#line 1979 "compiler.y"
+#line 1991 "compiler.y"
     {
   {
     int currentTypeInt = convertType(currentType);
@@ -4241,7 +4253,7 @@ else
   case 164:
 
 /* Line 1806 of yacc.c  */
-#line 1997 "compiler.y"
+#line 2009 "compiler.y"
     {
   {  
     int currentTypeInt = convertType(currentType);
@@ -4264,7 +4276,7 @@ else
   case 165:
 
 /* Line 1806 of yacc.c  */
-#line 2020 "compiler.y"
+#line 2032 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -4272,11 +4284,11 @@ else
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
     else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }else
     {  
     {
@@ -4308,11 +4320,11 @@ else
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
     else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
     else
     {  
@@ -4337,7 +4349,7 @@ else
   case 166:
 
 /* Line 1806 of yacc.c  */
-#line 2088 "compiler.y"
+#line 2100 "compiler.y"
     {
   if(strcmp(currentScope, "main")==0)
   {
@@ -4345,11 +4357,11 @@ else
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
     else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0)
     {  printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-       terminate();
+       terminate(); return;
     }
     else
     {  
@@ -4382,11 +4394,11 @@ else
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
     else if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }else
     {  
       int currentTypeInt = ((variable*)(identifier_temp->info))->type;
@@ -4414,7 +4426,7 @@ else
   case 167:
 
 /* Line 1806 of yacc.c  */
-#line 2163 "compiler.y"
+#line 2175 "compiler.y"
     {
   List *identifier_temp = NULL;
   if(strcmp(currentScope, "main")==0)
@@ -4423,7 +4435,7 @@ else
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
   }
   else
@@ -4436,7 +4448,7 @@ else
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
   }
   if(identifier_temp != NULL)
@@ -4446,14 +4458,14 @@ else
   	
     if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }else if(((variable*)(identifier_temp->info))->matrix!=1){
       printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(identifier_temp->info))->name);
-      terminate();
+      terminate(); return;
     }
     else if(((variable*)(identifier_temp->info))->nColumn <= currentNumber ){
 	printf("Erro na linha %d, %s possui %d posicoes.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nColumn );
-	terminate();
+	terminate(); return;
     }
     else
     {  
@@ -4469,7 +4481,7 @@ else
   case 168:
 
 /* Line 1806 of yacc.c  */
-#line 2214 "compiler.y"
+#line 2226 "compiler.y"
     {
   List *identifier_temp = NULL;
   if(strcmp(currentScope, "main")==0)
@@ -4478,7 +4490,7 @@ else
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
   }
   else
@@ -4491,7 +4503,7 @@ else
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
   }
   if(identifier_temp != NULL)
@@ -4501,14 +4513,14 @@ else
   
     if(((variable*)(identifier_temp->info))->used == 0 && ((variable*)(identifier_temp->info))->matrix == 0){
       printf("Variavel %s nao foi inicializada na linha %d\n", currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }else if(((variable*)(identifier_temp->info))->matrix!=1){
       printf("Erro na linha %d, %s nao e uma matriz.\n", nLine, ((variable*)(identifier_temp->info))->name);
-      terminate();
+      terminate(); return;
     }
     else if(((variable*)(identifier_temp->info))->nColumn <= currentNumber ){
 	printf("Erro na linha %d, %s possui %d colunas.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nColumn );
-	terminate();
+	terminate(); return;
     }
   }
 }
@@ -4517,7 +4529,7 @@ else
   case 169:
 
 /* Line 1806 of yacc.c  */
-#line 2257 "compiler.y"
+#line 2269 "compiler.y"
     {
    List *identifier_temp = NULL;
   if(strcmp(currentScope, "main")==0)
@@ -4526,7 +4538,7 @@ else
     if(identifier_temp==NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n",currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
   }
   else
@@ -4540,7 +4552,7 @@ else
     if(identifier_temp == NULL)
     {
       printf("Variavel %s nao declarada na linha %d\n", currentIdentifier, nLine);
-      terminate();
+      terminate(); return;
     }
     else{
     	//completa a arvore com a segunda dimensão
@@ -4557,7 +4569,7 @@ else
       if(((variable*)(identifier_temp->info))->nLine <= currentNumber )
       {
 	printf("Erro na linha %d, %s possui %d linhas.\n", nLine, ((variable*)(identifier_temp->info))->name,((variable*)(identifier_temp->info))->nLine );
-	terminate();
+	terminate(); return;
       }
 	int currentTypeInt = ((variable*)(identifier_temp->info))->type;
 	varRelations[currentRelationPos] = currentTypeInt;
@@ -4570,7 +4582,7 @@ else
   case 170:
 
 /* Line 1806 of yacc.c  */
-#line 2305 "compiler.y"
+#line 2317 "compiler.y"
     {
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
@@ -4591,12 +4603,12 @@ else
   case 171:
 
 /* Line 1806 of yacc.c  */
-#line 2321 "compiler.y"
+#line 2333 "compiler.y"
     {
   if(strlen(limitString) > MAX_LITERAL+2)
   {
     printf("Tamanho de literal passou do limite de %d caracteres na linha %d\n", MAX_LITERAL,nLine);
-    terminate();
+    terminate(); return;
   }
   else
   {
@@ -4625,7 +4637,7 @@ else
   case 172:
 
 /* Line 1806 of yacc.c  */
-#line 2349 "compiler.y"
+#line 2361 "compiler.y"
     {
 	//crio o no parentesis
 	treeNode *aux = newTreeNode();
@@ -4651,7 +4663,7 @@ else
   case 173:
 
 /* Line 1806 of yacc.c  */
-#line 2368 "compiler.y"
+#line 2380 "compiler.y"
     {
 	treeNode* aux = (treeNode*) popStack(stackParenthesis);
 	if(aux->children[0] == NULL){
@@ -4672,7 +4684,7 @@ else
   case 174:
 
 /* Line 1806 of yacc.c  */
-#line 2384 "compiler.y"
+#line 2396 "compiler.y"
     {
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
@@ -4693,7 +4705,7 @@ else
   case 175:
 
 /* Line 1806 of yacc.c  */
-#line 2400 "compiler.y"
+#line 2412 "compiler.y"
     {
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
@@ -4715,7 +4727,7 @@ else
   case 176:
 
 /* Line 1806 of yacc.c  */
-#line 2417 "compiler.y"
+#line 2429 "compiler.y"
     {
 
     functionNode = newTreeNode();
@@ -4755,7 +4767,7 @@ else
       else
       {
 	printf("Retorno nao valido na funcao maximo na linha %d\n", nLine);
-	terminate();
+	terminate(); return;
       }
      }
      if(strcmp(currentIdentifier, "minimo")==0)
@@ -4787,7 +4799,7 @@ else
       else
       {
 	printf("Retorno nao valido na funcao minimo na linha %d\n", nLine);
-	terminate();
+	terminate(); return;
       }
      }
      if(strcmp(currentIdentifier, "media")==0)
@@ -4811,7 +4823,7 @@ else
       else
       {
 	printf("Retorno nao valido na funcao media na linha %d\n", nLine);
-	terminate();
+	terminate(); return;
       }
      }
   
@@ -4844,20 +4856,20 @@ else
   case 177:
 
 /* Line 1806 of yacc.c  */
-#line 2541 "compiler.y"
+#line 2553 "compiler.y"
     { 
   List *functionList = lookupStringFunction(hashFunction, currentFunction);
   if(functionList == NULL)
   {
     printf("Funcao %s nao declarada na linha %d.\n", currentFunction, nLine);
-    terminate();
+    terminate(); return;
   }
   else
   {
     if(argumentNumber != ((function*)(functionList->info))->arity)
     {  
       printf("Funcao %s com aridade errada na linha %d.\n", currentFunction, nLine);
-      terminate();
+      terminate(); return;
     }
   
   }
@@ -4878,12 +4890,12 @@ else
   case 179:
 
 /* Line 1806 of yacc.c  */
-#line 2571 "compiler.y"
+#line 2583 "compiler.y"
     {
   if(switchType != T_INTEIRO)
   {
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
-    terminate();
+    terminate(); return;
   }
   {
     treeNode* fatorAux = newTreeNode();
@@ -4897,12 +4909,12 @@ else
   case 180:
 
 /* Line 1806 of yacc.c  */
-#line 2585 "compiler.y"
+#line 2597 "compiler.y"
     {
   if(switchType != T_REAL)
   {
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
-    terminate();
+    terminate(); return;
   }
     {
     treeNode* fatorAux = newTreeNode();
@@ -4916,12 +4928,12 @@ else
   case 181:
 
 /* Line 1806 of yacc.c  */
-#line 2599 "compiler.y"
+#line 2611 "compiler.y"
     {
   if(switchType != T_CARACTER)
   {
     printf("Caso nao compativel com variavel associada na linha %d\n", nLine);
-    terminate();
+    terminate(); return;
   }
     {
     treeNode* fatorAux = newTreeNode();
@@ -4935,14 +4947,14 @@ else
   case 182:
 
 /* Line 1806 of yacc.c  */
-#line 2613 "compiler.y"
+#line 2625 "compiler.y"
     { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm = expressionNode;  expressionNode=NULL; }
     break;
 
   case 183:
 
 /* Line 1806 of yacc.c  */
-#line 2613 "compiler.y"
+#line 2625 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -4956,7 +4968,7 @@ else
 		int numLine = ((variable*)(identifier_temp->info))->nLine;
 		if(countLine != numLine) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
-			terminate();
+			terminate(); return;
 			((variable*)(identifier_temp->info))->used = 0;
 		}else{
 			((variable*)(identifier_temp->info))->used = 1;
@@ -4969,7 +4981,7 @@ else
   case 184:
 
 /* Line 1806 of yacc.c  */
-#line 2634 "compiler.y"
+#line 2646 "compiler.y"
     {
 	isMatrix = 1;
 }
@@ -4978,14 +4990,14 @@ else
   case 185:
 
 /* Line 1806 of yacc.c  */
-#line 2638 "compiler.y"
+#line 2650 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 186:
 
 /* Line 1806 of yacc.c  */
-#line 2638 "compiler.y"
+#line 2650 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -4999,7 +5011,7 @@ else
 		int numColumn = ((variable*)(identifier_temp->info))->nColumn;
 		if(countColumn != numColumn) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
-			terminate();
+			terminate(); return;
 			((variable*)(identifier_temp->info))->used = 0;
 		}else{
 			((variable*)(identifier_temp->info))->used = 1;
@@ -5011,7 +5023,7 @@ else
   case 187:
 
 /* Line 1806 of yacc.c  */
-#line 2658 "compiler.y"
+#line 2670 "compiler.y"
     {
 	isMatrix = 1; 
 	expressionNode = tempDelimitadorNivelZero;
@@ -5021,14 +5033,14 @@ else
   case 188:
 
 /* Line 1806 of yacc.c  */
-#line 2662 "compiler.y"
+#line 2674 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 189:
 
 /* Line 1806 of yacc.c  */
-#line 2663 "compiler.y"
+#line 2675 "compiler.y"
     {
 	treeNode *auxList = tempDelimitadorNivelUm->children[0];
 	while(auxList->next != NULL) auxList = auxList->next;
@@ -5046,7 +5058,7 @@ List *identifier_temp = NULL;
 		int numColum = ((variable*)(identifier_temp->info))->nColumn;
 		if(countColumn != numColum) {
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
-			terminate();
+			terminate(); return;
 			((variable*)(identifier_temp->info))->used = 0;
 		}
 	}
@@ -5056,14 +5068,14 @@ List *identifier_temp = NULL;
   case 191:
 
 /* Line 1806 of yacc.c  */
-#line 2686 "compiler.y"
+#line 2698 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 192:
 
 /* Line 1806 of yacc.c  */
-#line 2686 "compiler.y"
+#line 2698 "compiler.y"
     {
 
 	
@@ -5082,7 +5094,7 @@ List *identifier_temp = NULL;
 	if(identifier_temp != NULL){
 		if (((variable*)(identifier_temp->info))->nColumn != countColumn){
 			printf("Erro ao inicializar matriz na linha %d. Quantidade de termos incorreta.\n",nLine);
-			terminate();
+			terminate(); return;
 			((variable*)(identifier_temp->info))->used =0;
 		}
 	}
@@ -5092,7 +5104,7 @@ List *identifier_temp = NULL;
   case 194:
 
 /* Line 1806 of yacc.c  */
-#line 2712 "compiler.y"
+#line 2724 "compiler.y"
     {	
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5105,7 +5117,7 @@ List *identifier_temp = NULL;
 	if(identifier_temp != NULL){
 		if (((variable*)(identifier_temp->info))->type != varRelations[0]){
 			printf("Tipo errado associado a matriz na linha %d\n",nLine);
-			terminate();
+			terminate(); return;
 		} 
 	}
 	countColumn++;
@@ -5119,7 +5131,7 @@ List *identifier_temp = NULL;
   case 195:
 
 /* Line 1806 of yacc.c  */
-#line 2736 "compiler.y"
+#line 2748 "compiler.y"
     {	
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5132,7 +5144,7 @@ List *identifier_temp = NULL;
 	if(identifier_temp != NULL){
 		if (((variable*)(identifier_temp->info))->type != varRelations[0]){
 			printf("Tipo errado associado a matriz na linha %d\n",nLine);
-			terminate();
+			terminate(); return;
 		}
 	}	
 	countColumn++;
@@ -5149,7 +5161,7 @@ List *identifier_temp = NULL;
 
 
 /* Line 1806 of yacc.c  */
-#line 5153 "compiler.tab.c"
+#line 5165 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -5380,7 +5392,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 2761 "compiler.y"
+#line 2773 "compiler.y"
 
 
 #include "lex.yy.c"
@@ -5608,7 +5620,6 @@ Program* compila(char *nome_programa) {
 	
 	Program *p = createProgram();
 	//Copia as paradas
-	p->name = (char*)malloc(strlen(nome_programa+2)*sizeof(char));
 	strcpy(p->name, nome_programa);
 	p->exec = globalTree;
 	p->hashVariables = hashVariables;
@@ -5698,7 +5709,8 @@ main()
 			scanf("%c",&lixo);
 			break;
 		case 6:
-			return 0;
+		      desallocEverything();
+		      return 0;
 		default: break;
 		}
 	
@@ -5741,13 +5753,14 @@ main()
 yyerror (void)
 {
 	printf("Erro na Linha: %d\n", nLine);
-	terminate();
 }
 
 void terminate(){
-      freeTable(hashVariables);
-      freeTableFunction(hashFunction);
-	
+
+	freeTable(hashVariables);
+	freeTableFunction(hashFunction);
+	 err = 1;
 }
+
 
 
