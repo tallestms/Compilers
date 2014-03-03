@@ -822,7 +822,6 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-<<<<<<< HEAD
        0,   343,   343,   343,   351,   350,   357,   358,   358,   360,
      428,   495,   495,   495,   495,   495,   495,   497,   497,   499,
      499,   499,   500,   500,   502,   502,   502,   502,   502,   504,
@@ -840,31 +839,9 @@ static const yytype_uint16 yyrline[] =
     1866,  1867,  1870,  1871,  1871,  1872,  1873,  1873,  1875,  1920,
     1963,  1963,  1965,  1965,  1968,  1975,  1976,  1967,  1985,  1985,
     1987,  1987,  1989,  1990,  2008,  2026,  2099,  2174,  2226,  2225,
-    2316,  2332,  2361,  2361,  2395,  2411,  2429,  2428,  2582,  2582,
-    2596,  2610,  2625,  2625,  2625,  2650,  2650,  2650,  2674,  2675,
-    2674,  2698,  2698,  2697,  2723,  2746
-=======
-       0,   331,   331,   331,   339,   338,   345,   346,   346,   348,
-     416,   483,   483,   483,   483,   483,   483,   485,   485,   487,
-     487,   487,   488,   488,   490,   490,   490,   490,   490,   492,
-     492,   492,   494,   493,   550,   549,   604,   604,   604,   605,
-     605,   606,   606,   608,   610,   609,   629,   628,   655,   663,
-     654,   669,   672,   671,   677,   680,   679,   695,   694,   711,
-     728,   710,   731,   730,   749,   791,   833,   836,   836,   889,
-     888,   907,   906,   925,   924,   955,   954,   985,  1001,   984,
-    1021,  1073,  1021,  1098,  1144,  1158,  1098,  1185,  1221,  1184,
-    1332,  1343,  1358,  1359,  1331,  1368,  1379,  1386,  1394,  1367,
-    1396,  1404,  1421,  1424,  1395,  1432,  1437,  1438,  1451,  1456,
-    1471,  1505,  1515,  1431,  1521,  1522,  1593,  1521,  1602,  1616,
-    1601,  1622,  1625,  1626,  1625,  1650,  1651,  1650,  1675,  1743,
-    1823,  1824,  1826,  1826,  1848,  1848,  1850,  1851,  1852,  1853,
-    1854,  1855,  1858,  1859,  1859,  1860,  1861,  1861,  1863,  1908,
-    1951,  1951,  1953,  1953,  1956,  1963,  1964,  1955,  1973,  1973,
-    1975,  1975,  1977,  1978,  1996,  2014,  2087,  2162,  2214,  2213,
-    2304,  2320,  2349,  2349,  2382,  2398,  2416,  2415,  2569,  2569,
-    2583,  2597,  2612,  2612,  2612,  2637,  2637,  2637,  2661,  2662,
-    2661,  2685,  2685,  2684,  2710,  2733
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+    2316,  2332,  2361,  2361,  2394,  2410,  2428,  2427,  2581,  2581,
+    2595,  2609,  2624,  2624,  2624,  2649,  2649,  2649,  2673,  2674,
+    2673,  2697,  2697,  2696,  2722,  2745
 };
 #endif
 
@@ -4706,11 +4683,7 @@ else
   case 174:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2396 "compiler.y"
-=======
-#line 2383 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2395 "compiler.y"
     {
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
@@ -4731,11 +4704,7 @@ else
   case 175:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2412 "compiler.y"
-=======
-#line 2399 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2411 "compiler.y"
     {
     int currentTypeInt = convertType(currentType);
     varRelations[currentRelationPos] = currentTypeInt;
@@ -4757,11 +4726,7 @@ else
   case 176:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2429 "compiler.y"
-=======
-#line 2416 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2428 "compiler.y"
     {
 
     functionNode = newTreeNode();
@@ -4890,11 +4855,7 @@ else
   case 177:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2553 "compiler.y"
-=======
-#line 2540 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2552 "compiler.y"
     { 
   List *functionList = lookupStringFunction(hashFunction, currentFunction);
   if(functionList == NULL)
@@ -4928,11 +4889,7 @@ else
   case 179:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2583 "compiler.y"
-=======
-#line 2570 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2582 "compiler.y"
     {
   if(switchType != T_INTEIRO)
   {
@@ -4951,11 +4908,7 @@ else
   case 180:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2597 "compiler.y"
-=======
-#line 2584 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2596 "compiler.y"
     {
   if(switchType != T_REAL)
   {
@@ -4974,11 +4927,7 @@ else
   case 181:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2611 "compiler.y"
-=======
-#line 2598 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2610 "compiler.y"
     {
   if(switchType != T_CARACTER)
   {
@@ -4997,22 +4946,14 @@ else
   case 182:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2625 "compiler.y"
-=======
-#line 2612 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2624 "compiler.y"
     { countLine=0; delimitadorNivelUm(); tempDelimitadorNivelUm = expressionNode;  expressionNode=NULL; }
     break;
 
   case 183:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2625 "compiler.y"
-=======
-#line 2612 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2624 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5039,11 +4980,7 @@ else
   case 184:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2646 "compiler.y"
-=======
-#line 2633 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2645 "compiler.y"
     {
 	isMatrix = 1;
 }
@@ -5052,22 +4989,14 @@ else
   case 185:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2650 "compiler.y"
-=======
-#line 2637 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2649 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 186:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2650 "compiler.y"
-=======
-#line 2637 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2649 "compiler.y"
     {
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5093,11 +5022,7 @@ else
   case 187:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2670 "compiler.y"
-=======
-#line 2657 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2669 "compiler.y"
     {
 	isMatrix = 1; 
 	expressionNode = tempDelimitadorNivelZero;
@@ -5107,22 +5032,14 @@ else
   case 188:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2674 "compiler.y"
-=======
-#line 2661 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2673 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 189:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2675 "compiler.y"
-=======
-#line 2662 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2674 "compiler.y"
     {
 	treeNode *auxList = tempDelimitadorNivelUm->children[0];
 	while(auxList->next != NULL) auxList = auxList->next;
@@ -5150,22 +5067,14 @@ List *identifier_temp = NULL;
   case 191:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2698 "compiler.y"
-=======
-#line 2685 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2697 "compiler.y"
     {countColumn=0; delimitadorNiveLZero(); tempDelimitadorNivelZero = expressionNode; expressionNode=NULL;}
     break;
 
   case 192:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2698 "compiler.y"
-=======
-#line 2685 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2697 "compiler.y"
     {
 
 	
@@ -5194,11 +5103,7 @@ List *identifier_temp = NULL;
   case 194:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2724 "compiler.y"
-=======
-#line 2711 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2723 "compiler.y"
     {	
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5225,11 +5130,7 @@ List *identifier_temp = NULL;
   case 195:
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 2748 "compiler.y"
-=======
-#line 2735 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2747 "compiler.y"
     {	
 	List *identifier_temp = NULL;
 	if (strcmp(currentScope, "main") == 0 ){
@@ -5259,11 +5160,7 @@ List *identifier_temp = NULL;
 
 
 /* Line 1806 of yacc.c  */
-<<<<<<< HEAD
-#line 5165 "compiler.tab.c"
-=======
-#line 5152 "compiler.tab.c"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 5164 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -5494,11 +5391,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-<<<<<<< HEAD
-#line 2773 "compiler.y"
-=======
-#line 2760 "compiler.y"
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
+#line 2772 "compiler.y"
 
 
 #include "lex.yy.c"
@@ -5696,12 +5589,6 @@ void ZerarGlobais(){
 	tempDelimitadorNivelUm = NULL;
 }
 
-void terminate(){
-      freeTable(hashVariables);
-      freeTableFunction(hashFunction);
-      err = 1;
-}
-
 Program* compila(char *nome_programa) {
 	
 	//Limpando coisas necessárias: TODO dar free
@@ -5863,18 +5750,13 @@ main()
 			listarFiles();
 			scanf("%c",&lixo);
 			break;
-<<<<<<< HEAD
-		case 6:
-		      desallocEverything();
-		      return 0;
-=======
 		case 6: //sobre
 			showSobre();
 			break;
 		case 7: //sair
 			showDespedida();
+			desallocEverything();
 			return 0;
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
 		default: break;
 		}
 		
@@ -5917,17 +5799,13 @@ main()
 yyerror (void)
 {
 	printf("Erro na Linha: %d\n", nLine);
+	err = 1;
 }
 
-<<<<<<< HEAD
 void terminate(){
 
 	freeTable(hashVariables);
 	freeTableFunction(hashFunction);
+	desallocNodes(globalTree);
 	 err = 1;
 }
-
-
-
-=======
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c

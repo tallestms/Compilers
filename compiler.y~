@@ -2966,12 +2966,6 @@ void ZerarGlobais(){
 	tempDelimitadorNivelUm = NULL;
 }
 
-void terminate(){
-      freeTable(hashVariables);
-      freeTableFunction(hashFunction);
-      err = 1;
-}
-
 Program* compila(char *nome_programa) {
 	
 	//Limpando coisas necessárias: TODO dar free
@@ -3006,7 +3000,6 @@ Program* compila(char *nome_programa) {
 	
 	Program *p = createProgram();
 	//Copia as paradas
-	p->name = (char*)malloc(strlen(nome_programa)*sizeof(char));
 	strcpy(p->name, nome_programa);
 	p->exec = globalTree;
 	p->hashVariables = hashVariables;
@@ -3111,6 +3104,7 @@ main()
 				program = (Program*)getListPosition(listPrograms,option-1);
 				makeStartLine();
 				printf("## Árvore do programa %s\n", program->name);
+				makeStartLine();
 				printNode(program->exec, 13, 0, 0);		
 			}
 			makeEndLine();	
@@ -3133,18 +3127,13 @@ main()
 			listarFiles();
 			scanf("%c",&lixo);
 			break;
-<<<<<<< HEAD
-		case 6:
-		      desallocEverything();
-		      return 0;
-=======
 		case 6: //sobre
 			showSobre();
 			break;
 		case 7: //sair
 			showDespedida();
+			desallocEverything();
 			return 0;
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c
 		default: break;
 		}
 		
@@ -3188,15 +3177,11 @@ yyerror (void)
 {
 	printf("Erro na Linha: %d\n", nLine);
 }
-<<<<<<< HEAD
 
 void terminate(){
 
 	freeTable(hashVariables);
 	freeTableFunction(hashFunction);
+	desallocNodes(globalTree);
 	 err = 1;
 }
-
-
-=======
->>>>>>> 2152a9cdadc407c271fb74ca5775ea3d5ef3a03c

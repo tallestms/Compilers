@@ -1,0 +1,34 @@
+algoritmo condicionais1;
+
+variáveis
+	a : inteiro;
+	b : inteiro;
+	c : real;
+	d : real;
+	z : lógico;
+fim-variáveis
+
+início
+	a := 10;
+	b := 20;
+	c := 0.0;
+	enquanto (a < b) faça
+	    a := a + 1;
+	    se (a >= 15) então
+	      se (c = 0.0) então
+		c := 5.0;
+	      senão
+		c := c + 1.0;
+	      fim-se
+	    fim-se
+	fim-enquanto
+	
+	imprimaln("Os valores de a e c agora sao:");
+	imprimaln(a);
+	imprimaln(c);
+	
+	
+
+
+fim	
+		
