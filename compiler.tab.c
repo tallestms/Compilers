@@ -314,8 +314,8 @@ void desallocEverything()
       List *auxDesalloc = listPrograms;
       while(auxDesalloc!=NULL)
       {	
-	freeTable(((Program*)(auxDesalloc->info))->hashVariables);
-	freeTableFunction(((Program*)(auxDesalloc->info))->hashFunctions);
+	//freeTable(((Program*)(auxDesalloc->info))->hashVariables);
+	//freeTableFunction(((Program*)(auxDesalloc->info))->hashFunctions);
 	desallocNodes(((Program*)(auxDesalloc->info))->exec);
 	auxDesalloc = auxDesalloc->next;
       }
@@ -2060,7 +2060,7 @@ yyreduce:
 #line 345 "compiler.y"
     {
   //verifyMatrix(hashVariables);
-  //verifyUsed(hashVariables);
+  verifyUsed(hashVariables);
 
 }
     break;
@@ -2078,7 +2078,7 @@ yyreduce:
 #line 353 "compiler.y"
     {
  // verifyMatrix(hashVariables);
- // verifyUsed(hashVariables);
+ verifyUsed(hashVariables);
 }
     break;
 

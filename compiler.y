@@ -245,8 +245,8 @@ void desallocEverything()
       List *auxDesalloc = listPrograms;
       while(auxDesalloc!=NULL)
       {	
-	freeTable(((Program*)(auxDesalloc->info))->hashVariables);
-	freeTableFunction(((Program*)(auxDesalloc->info))->hashFunctions);
+	//freeTable(((Program*)(auxDesalloc->info))->hashVariables);
+	//freeTableFunction(((Program*)(auxDesalloc->info))->hashFunctions);
 	desallocNodes(((Program*)(auxDesalloc->info))->exec);
 	auxDesalloc = auxDesalloc->next;
       }
@@ -344,7 +344,7 @@ void desallocEverything()
 PROG:  token_algoritmo token_identificador token_pontov { strcpy(identifiers, "\0");} BLOCO_FUNCOES BLOCO_VARIAVEIS token_inicio BLOCO token_fim  
 {
   //verifyMatrix(hashVariables);
-  //verifyUsed(hashVariables);
+  verifyUsed(hashVariables);
 
 }
 |
@@ -352,7 +352,7 @@ token_algoritmo token_identificador
 token_pontov { strcpy(identifiers, "\0");} BLOCO_VARIAVEIS token_inicio BLOCO token_fim 
 {
  // verifyMatrix(hashVariables);
- // verifyUsed(hashVariables);
+ verifyUsed(hashVariables);
 }
 ;
 BLOCO_VARIAVEIS: token_variaveis VARIAVEIS token_fimvariaveis |

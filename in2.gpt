@@ -51,15 +51,25 @@ início
 	  se (a = 90) então
 	    a := a + 1000;
 	  fim-se
-	fim-faca enquanto (a < 100);
+	fim-faça enquanto (a < 100);
+
 			
 	imprimaln("O valor final de a seria:");
 	imprimaln(a);
 	imprimaln("O valor final de c seria:");
 	imprimaln(c);
 	
-	
-
-
+	z := verdadeiro;
+	para (a de 20 até 30 passo 1) faça
+		se (a > 25 e z) então
+		  imprimaln(a);
+		senão
+		  imprimaln("A variavel a ainda nao chegou no valor necessario.");
+		  se (a > 22 e a < 25) então
+		    imprima("A variavel a esta entre 22 e 25: ");
+		    imprimaln(a);
+		  fim-se
+		fim-se
+	fim-para
 fim	
 		

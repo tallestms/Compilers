@@ -114,18 +114,19 @@ void freeTable(hashTable *hashtable)
         while(list!=NULL) {
             temp = list;
             list = list->next;
-	    if(temp->info!=NULL)
+	    //if(temp->info!=NULL)
 	    {
-	      if(((variable*)(temp->info))->value!=NULL)
-		free(((variable*)(temp->info))->value);
-	      free(temp->info);
+	      //if(((variable*)(temp->info))->value!=NULL)
+		//free(((variable*)(temp->info))->value);
+	      //free(temp->info);
 	    }
-            free(temp);
+	    if(temp!=NULL)
+	      free(temp);
         }
     }
 
-    free(hashtable->table);
-    free(hashtable);
+    //free(hashtable->table);
+    //free(hashtable);
 }
 
 void freeTableFunction(hashTable *hashtable)
@@ -144,16 +145,19 @@ void freeTableFunction(hashTable *hashtable)
         while(list!=NULL) {
             temp = list;
             list = list->next;
-	    if(((List*)((function*)temp->info)->parameters)!=NULL)
+	    if(temp->info!=NULL
 	    {
-	      destroyList(((List*)((function*)temp->info)->parameters));
+	      if(((List*)((function*)temp->info)->parameters)!=NULL)
+	      {
+		destroyList(((List*)((function*)temp->info)->parameters));
+	      }
+	      free(temp->info);
 	    }
-            free(temp->info);
             free(temp);
         }
     }
 
     /* Free the table itself */
-    free(hashtable->table);
-    free(hashtable);
+    //free(hashtable->table);
+    //free(hashtable);
 }

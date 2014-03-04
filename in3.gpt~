@@ -1,0 +1,8 @@
+algoritmo condicionais2;
+
+variáveis
+	a : inteiro;
+	b : inteiro;
+
+fim-variáveis
+

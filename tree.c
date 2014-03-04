@@ -82,5 +82,5 @@ void desallocNodes(treeNode* t)
 		desallocNodes(t->next);
 	
 	free(t);
-	*/
+	t=NULL; */
 }

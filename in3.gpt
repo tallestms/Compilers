@@ -1,0 +1,10 @@
+algoritmo condicionais2;
+
+variáveis
+	a : inteiro;
+	b : inteiro;
+
+fim-variáveis
+
+
+//fazer switch-case e todos as outras variaveis primitivas, leia, media, maximo e minimo

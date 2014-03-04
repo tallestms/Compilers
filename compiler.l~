@@ -70,6 +70,7 @@ identificador					[a-zA-Z_][a-zA-Z0-9_]*
 "fim-enquanto"					{return token_fimenquanto;}
 "fim-para"					{return token_fimpara;}
 "fim-se"					{return token_fimse;}
+"fim-faca"					{return token_fimfaca;}
 "fim-variáveis"					{return token_fimvariaveis;}
 "função"					{return token_funcao;}
 "imprima"					{return token_imprima;}
