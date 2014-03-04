@@ -49,6 +49,9 @@ início
 	a := 0;
 	faça 
 	  a := a + 10;
+	  se (a = 90) então
+	    a := a + 1000;
+	  fim-se
 	fim-faca enquanto (a < 100);
 			
 	imprimaln("O valor final de a seria:");

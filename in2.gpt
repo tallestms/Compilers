@@ -37,7 +37,6 @@ início
 	imprimaln("");
 	imprimaln("Escreve um numero real:");
 	leia(c);
-	imprimaln("");
 	imprimaln("O numero escrito foi");
 	imprimaln(c);
 	
@@ -46,10 +45,12 @@ início
 		a := a - 10;
 	fim-para
 	
-	//oq ta acontecendo aqui
 	a := 0;
 	faça 
 	  a := a + 10;
+	  se (a = 90) então
+	    a := a + 1000;
+	  fim-se
 	fim-faca enquanto (a < 100);
 			
 	imprimaln("O valor final de a seria:");
