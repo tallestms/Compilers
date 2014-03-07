@@ -26,6 +26,7 @@ int2 := 20;
 real1 := 10.10E9;
 real2 := 20.20E10;
 	
+	//testesoma := soma(soma(testesoma,testesoma),soma(testesoma,testesoma)); -> consertar isso depois, empilhar argumentNumber
 	enquanto (a = 1 ou a = 2 ou a = 3 ou a = 4) faça
 		imprimaln("Escreva o numero 1-4 ou qualquer outra para sair.");
 		leia(a);

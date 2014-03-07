@@ -64,7 +64,7 @@ início
 		se (a > 25 e z) então
 		  imprimaln(a);
 		senão	
-		  imprimaln("Variavel 'a' ainda nao chegou em a = 30.");
+		  imprimaln("Variavel "a" ainda nao chegou em a = 30.");
 		  se (a > 22 e a < 25) então
 		    imprima("A variavel a esta entre 22 e 25: ");
 		    imprimaln(a);

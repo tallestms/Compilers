@@ -1843,7 +1843,7 @@ ARGUMENTOS_FUNCAO: EXPR
   expressionNode = NULL;
 }
 | /*Empty*/;
-EXPR: SIEXPR { swapoutTresDois(); in_logico = 0;}
+EXPR: SIEXPR { swapoutTresDois(); }
 
 | EXPR COMPARACOES SIEXPR { swapoutTresDois(); }
 {
