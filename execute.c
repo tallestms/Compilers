@@ -11,10 +11,10 @@ int globalRetornoFlag = 0;
 
 char* findType(treeNode *t, char* s){
 	treeNode* aux = t;
-	while(aux->children[0] != NULL) aux = aux->children[0];
+	while(aux->children[0] != NULL && strcmp(aux->type,"MATRIX")) aux = aux->children[0];
 	strcpy(s,aux->type);
 	variable *var;
-	if(!strcmp(s, "VARIAVEL")){
+	if(!strcmp(s, "VARIAVEL") || !strcmp(s, "MATRIX")){
 		List *l = lookupStringVariable(hashExecuteVariables, aux->value);
 		var = (variable*) l->info;
 		if (var->type == 3) strcpy(s, "REAL");
@@ -738,6 +738,7 @@ void* executeNode(treeNode* t){
 	case 36: //imprimaln
 		findType(t->children[1], type);
 		if(!strcmp(type, "INTEIRO")){
+			printf("entrando no inteiro\n");
 			printf("%d\n", *((int*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "REAL")){
@@ -747,6 +748,7 @@ void* executeNode(treeNode* t){
 			printf("%s\n", ((char*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "CARACTER")){
+			printf("entrando no caracter\n");
 			printf("%c\n", *((char*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "LOGICO")){
