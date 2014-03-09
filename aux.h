@@ -14,4 +14,5 @@ int findArgumentType(int argumentNumber, List* aux);
 void retiraAspasFinal(char* s);
 void *retornaValor(int type, void* point);
 void terminate();
+char getCharFromCharString(char s[50]);
 int verifyPrimitivesMaxMinMed(char* currentFunction);

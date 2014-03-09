@@ -203,37 +203,7 @@ void* executeNode(treeNode* t){
 		strcpy(stringReturn, t->value);
 		return stringReturn;
 	case -1: //caracter
-		if( ((char*)t->value)[1] == '\\' ){
-			char ch = ((char*)t->value)[2];
-			switch (ch){
-			case 'n':
-				*charReturn = '\n'; break;
-			case '0':
-				*charReturn = '\0'; break;
-			case '\\':
-				*charReturn = '\\'; break;
-			case 'r':
-				*charReturn = '\r'; break;
-			case 't':
-				*charReturn = '\t'; break;
-			case 'v':
-				*charReturn = '\v'; break;
-			case 'f':
-				*charReturn = '\f'; break;
-			case '7':
-				*charReturn = '\7'; break;
-			case 'a':
-				*charReturn = '\a'; break;
-			case '\'':
-				*charReturn = '\''; break;
-			case '"':
-				*charReturn = '"'; break;
-			default: 
-				*charReturn = '\0'; break;;
-			}
-		}else {
-			*charReturn = ((char*)t->value)[1];
-		}
+		*charReturn = getCharFromCharString((char*)t->value);
 		return charReturn;
 	case 0: // verdadeiro - falso
 		if(!strcmp(t->value, "verdadeiro")) *intReturn = 1;
@@ -607,25 +577,25 @@ void* executeNode(treeNode* t){
 		 treeNode* cases = t->children[1];
 		 if(!strcmp(type, "INTEIRO")){
 		 	flag = 1;
-		 	while( cases != NULL && ( *((int*)executeNode(t->children[0])) != *((int*)executeNode(cases->children[0])) ) && strcmp(cases->children[0]->value,"padrao") ){
+		 	while( cases != NULL && ( *((int*)executeNode(t->children[0])) != atoi(cases->children[0]->value) ) && strcmp(cases->children[0]->value,"padrao") ){
 		 		cases = cases->next;	 		
 		 	}
 		}
 		if(!strcmp(type, "REAL")){
 		 	flag = 1;
-		 	while( cases != NULL && ( *((double*)executeNode(t->children[0])) != *((double*)executeNode(cases->children[0])) ) && strcmp(cases->children[0]->value,"padrao") ){
+		 	while( cases != NULL && ( *((double*)executeNode(t->children[0])) != stringRealToDouble((char*)cases->children[0]->value) ) && strcmp(cases->children[0]->value,"padrao") ){
 		 		cases = cases->next;	 		
 		 	}
 		}
 		if(!strcmp(type, "CARACTER")){
 		 	flag = 1;
-		 	while( cases != NULL && ( *((char*)executeNode(t->children[0])) != *((char*)executeNode(cases->children[0])) ) && strcmp(cases->children[0]->value,"padrao") ){
+		 	while( cases != NULL && ( *((char*)executeNode(t->children[0])) != getCharFromCharString((char*)cases->children[0]->value) ) && strcmp(cases->children[0]->value,"padrao") ){
 		 		cases = cases->next;	 		
 		 	}
 		}
 		if(!strcmp(type, "LITERAL")){
 		 	flag = 1;
-		 	while( cases != NULL && ( strcmp( ((char*)executeNode(t->children[0])) , ((char*)executeNode(cases->children[0])) ) ) && strcmp(cases->children[0]->value,"padrao") ){
+		 	while( cases != NULL && ( strcmp( ((char*)executeNode(t->children[0])) , ((char*)cases->children[0]->value) ) ) && strcmp(cases->children[0]->value,"padrao") ){
 		 		cases = cases->next;	 		
 		 	}
 		}
@@ -699,7 +669,7 @@ void* executeNode(treeNode* t){
 		if(!strcmp(type, "INTEIRO")){
 			intA = *((int*)executeNode(t->children[1]));
 			intB = *((int*)executeNode(t->children[2]));
-			*intReturn = (intA + intB) / 2;
+			*intReturn = (int)((int)(intA + intB)) / ((int)2);
 		}
 		if(!strcmp(type, "REAL")){
 			doubleA = *((double*)executeNode(t->children[1]));

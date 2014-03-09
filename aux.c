@@ -141,6 +141,40 @@ double stringRealToDouble(char s[50]){
 	return d;
 }
 
+char getCharFromCharString(char s[50]){
+	if( s[1] == '\\' ){
+		char ch = s[2];
+		switch (ch){
+		case 'n':
+			return '\n';
+		case '0':
+			return '\0';
+		case '\\':
+			return '\\'; 
+		case 'r':
+			return '\r';
+		case 't':
+			return '\t';
+		case 'v':
+			return '\v';
+		case 'f':
+			return '\f';
+		case '7':
+			return '\7';
+		case 'a':
+			return '\a';
+		case '\'':
+			return '\'';
+		case '"':
+			return '"'; 
+		default: 
+			return '\0'; 
+		}
+	}else {
+		return s[1];
+	}
+}
+
 int findArgumentType(int argumentNumber, List* aux)
 {
   int i;

@@ -3194,7 +3194,7 @@ addNodeIntoGlobalTree(functionNode);
 	  if((((variable*)(identifier_temp->info))->type) != 4)
 	  {
 	    printf("%d %d", in_logico, in_condicional);
-	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel. aaa\n",nLine);
+	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	    terminate(); return;
 	  }
 	  else
@@ -3967,7 +3967,7 @@ else
   {
     if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
-	  printf("Valores incompativeis ou nao validos na linha %d,aaa.\n", nLine);
+	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
 	  terminate(); return;
 	}
     currentRelationComparison=0;
