@@ -14,6 +14,7 @@ variáveis
 	int2 : inteiro;
 	real1 : real;
 	real2 : real;
+	x, res : inteiro;
 fim-variáveis
 
 início
@@ -53,13 +54,13 @@ real2 := 20.20E10;
 			caso (3):
 				imprimaln("O número impresso foi 3.");
 				imprima("A media 10 e 20 e: ");
-				//c := media(int1, int2);
+				//c := media(int1, int2); -> seg fault
 				imprimaln(c);
 				imprimaln("O caso 3 nao tem parar.");
 			caso (4):
 				imprimaln("O número impresso foi 4.");
 				imprima("A media 10.10E9 e 20.20E10 e: ");
-				//b := media(real1, real2);
+				//b := media(real1, real2); -> seg fault
 				imprimaln(b);
 				parar;
 			padrão:
@@ -67,5 +68,15 @@ real2 := 20.20E10;
 				parar;
 		fim-seleciona
 	fim-enquanto
+	
+	imprimaln("Escreva um numero inteiro:");
+	leia(x);
+	res := 1;	
+	faça 
+		res := res*x;
+		x := x - 1;
+		imprimaln("Novo valor de x.");
+		imprimaln(x);
+	fim-faça enquanto (x < res); 
 fim	
 
