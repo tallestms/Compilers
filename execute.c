@@ -193,6 +193,7 @@ void* executeNode(treeNode* t){
 	treeNode* aux2;
 	int i,j, intA, intB;
 	int j1;
+	int flag=0;
 	double doubleA, doubleB;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
@@ -600,18 +601,40 @@ void* executeNode(treeNode* t){
 		}	
 		return;
 	case 27: //seleciona
-		list = (List*)(lookupStringVariable(hashExecuteVariables, t->children[0]->value)); 
-		 var = (variable*) list->info;
+		findType(t, type);		
+	//	list = (List*)(lookupStringVariable(hashExecuteVariables, t->children[0]->value)); 
+	//	 var = (variable*) list->info;
 		 treeNode* cases = t->children[1];
-		 if(var->type==0){
-		 	
-		 	while( cases != NULL && ( *((int*)var->value) != atoi(cases->children[0]->value) ) && strcmp(cases->children[0]->value,"padrao") ){
+		 if(!strcmp(type, "INTEIRO")){
+		 	flag = 1;
+		 	while( cases != NULL && ( *((int*)executeNode(t->children[0])) != *((int*)executeNode(cases->children[0])) ) && strcmp(cases->children[0]->value,"padrao") ){
 		 		cases = cases->next;	 		
 		 	}
+		}
+		if(!strcmp(type, "REAL")){
+		 	flag = 1;
+		 	while( cases != NULL && ( *((double*)executeNode(t->children[0])) != *((double*)executeNode(cases->children[0])) ) && strcmp(cases->children[0]->value,"padrao") ){
+		 		cases = cases->next;	 		
+		 	}
+		}
+		if(!strcmp(type, "CARACTER")){
+		 	flag = 1;
+		 	while( cases != NULL && ( *((char*)executeNode(t->children[0])) != *((char*)executeNode(cases->children[0])) ) && strcmp(cases->children[0]->value,"padrao") ){
+		 		cases = cases->next;	 		
+		 	}
+		}
+		if(!strcmp(type, "LITERAL")){
+		 	flag = 1;
+		 	while( cases != NULL && ( strcmp( ((char*)executeNode(t->children[0])) , ((char*)executeNode(cases->children[0])) ) ) && strcmp(cases->children[0]->value,"padrao") ){
+		 		cases = cases->next;	 		
+		 	}
+		}
+		if (flag){
 		 	//executa uma vez
 		 	if(cases!=NULL){
 		 		executeTree(cases->children[1]);
 		 	}
+		 	//Executa o próximo caso o atual não tenha parar
 			while(cases != NULL && cases->children[2]==NULL){
 		 		cases = cases->next;
 		 		
@@ -642,13 +665,14 @@ void* executeNode(treeNode* t){
 		globalRetornoFlag = 1;
 		return;
 	case 31: //maximo
-		if(!strcmp(t->children[0]->type, "INTEIRO")){
+		findType(t, type);
+		if(!strcmp(type, "INTEIRO")){
 			intA = *((int*)executeNode(t->children[1]));
 			intB = *((int*)executeNode(t->children[2]));
 			if (intA > intB) *intReturn = intA; else *intReturn = intB;
 			return intReturn;
 		}
-		if(!strcmp(t->children[0]->type, "REAL")){
+		if(!strcmp(type, "REAL")){
 			doubleA = *((double*)executeNode(t->children[1]));
 			doubleB = *((double*)executeNode(t->children[2]));
 			if (doubleA > doubleB) *doubleReturn = doubleA; else *doubleReturn = doubleB;
@@ -656,13 +680,14 @@ void* executeNode(treeNode* t){
 		}
 		return;
 	case 32: //minimo
-		if(!strcmp(t->children[0]->type, "INTEIRO")){
+		findType(t, type);
+		if(!strcmp(type, "INTEIRO")){
 			intA = *((int*)executeNode(t->children[1]));
 			intB = *((int*)executeNode(t->children[2]));
 			if (intA < intB) *intReturn = intA; else *intReturn = intB;
 			return intReturn;
 		}
-		if(!strcmp(t->children[0]->type, "REAL")){
+		if(!strcmp(type, "REAL")){
 			doubleA = *((double*)executeNode(t->children[1]));
 			doubleB = *((double*)executeNode(t->children[2]));
 			if (doubleA < doubleB) *doubleReturn = doubleA; else *doubleReturn = doubleB;
@@ -670,12 +695,13 @@ void* executeNode(treeNode* t){
 		}
 		return;
 	case 33: //media
-		if(!strcmp(t->children[0]->type, "INTEIRO")){
+		findType(t, type);		
+		if(!strcmp(type, "INTEIRO")){
 			intA = *((int*)executeNode(t->children[1]));
 			intB = *((int*)executeNode(t->children[2]));
 			*intReturn = (intA + intB) / 2;
 		}
-		if(!strcmp(t->children[0]->type, "REAL")){
+		if(!strcmp(type, "REAL")){
 			doubleA = *((double*)executeNode(t->children[1]));
 			doubleB = *((double*)executeNode(t->children[2]));
 			*doubleReturn = (doubleA + doubleB) / 2;
