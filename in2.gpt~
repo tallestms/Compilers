@@ -43,7 +43,7 @@ início
 	d := 10.0;
 	para (c de d até 40.0 passo 1.0) faça
 		a := a - 10;
-		  se c = 39.0 então
+		  se (c = 39.0) então
 		    imprimaln("C chegou em 39!");
 		  fim-se
 	fim-para
@@ -73,6 +73,15 @@ início
 		    imprimaln(a);
 		  fim-se
 		fim-se
+	fim-para
+	
+	para (a de 25 até 30 passo 1) faça
+		para (b de 15 até 20 passo 1) faça
+			imprimaln(b);
+			se (a = 27) então
+			  imprimaln("A variavel b tem valor 18.");
+			fim-se
+		fim-para
 	fim-para
 fim	
 		

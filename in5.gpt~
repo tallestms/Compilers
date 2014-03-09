@@ -1,0 +1,85 @@
+algoritmo mais_exemplos;
+
+variáveis
+	a, a1 : literal;
+	b, b1 : caracter;
+	c : real;
+	z, z1 : lógico;
+	am,bm,cm,dm,em,fm : real;
+	m: matriz[3][3] de reais;
+	b2m : real;
+fim-variáveis
+
+início
+
+imprima("Escreva uma frase e iremos ler a linha toda");
+imprimaln(" usando o comando leialn.");
+leialn(a);
+//imprima(a); -> seg fault
+a1 := "Teste";
+//a := a1; -> seg fault
+//imprimaln(a); -> seg fault
+
+
+imprimaln("Escreva uma letra e iremos ler e imprimir");
+leia(b);
+//imprimaln(b); -> seg fault
+b1 := 'b';
+b := b1;
+//imprimaln(b); -> seg fault
+
+imprimaln("Escreva um numero qualquer p/ fazer uma continha");
+leia(c);
+
+c := c^10.0*(10.10E2-32.23)*((-1.0*10.21E-5/30.123123)*10.6441+20.20);
+
+imprimaln("Depois da conta temos:");
+imprimaln(c);
+imprimaln("");
+
+
+       m[2][1] := 4.12;
+       m[2][2] := -1.2;
+       m[0][1] := 2.13;
+       m[0][0] := 7.41;
+       m[1][0] := -23.12;
+       m[1][1] := 33.123E5;
+
+       am:= m[2][1];
+       imprimaln(am);
+     
+
+       bm:= m[2][2];
+       imprimaln(bm);
+       cm:= m[0][1];
+       imprimaln(cm);
+       dm:= m[0][0];
+       imprimaln(dm);
+       em:= m[1][0];
+       imprimaln(em);
+       fm:= m[1][1];
+       imprimaln(fm);
+       b2m:=2.123;
+       am:=m[1][2];
+       m[0][0] := m[2][2] + 6.10;
+       am:= m[1][0];
+       imprimaln(m[0][0]);
+       m[0][0] := 0.0;
+       imprimaln(m[0][0]);
+
+	z := verdadeiro;
+	z1 := z e m[0][0] > m[0][1] e 10 <> 15 ou 10 < (20+30);
+	se (z1 = verdadeiro) então
+	  imprimaln("z1 verdadeiro.");
+	senão
+	  imprimaln("z1 falso.");
+	fim-se
+	
+	// agora falso
+	z := falso e ((10 > (15*10)+10) e (20.0 < 0.12312E-10));
+	se (z = falso) então
+	  imprimaln("z falso.");
+	senão
+	  imprimaln("z verdadeiro.");
+	fim-se
+fim

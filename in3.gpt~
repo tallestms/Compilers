@@ -49,7 +49,7 @@ real2 := 20.20E10;
 				imprima("O minimo de 10.10E9 e 20.20E10 e: ");
 				b := minimo(real1, real2);
 				imprimaln(b);
-				//parar;
+				parar;
 			caso (3):
 				imprimaln("O número impresso foi 3.");
 				imprima("A media 10 e 20 e: ");
@@ -61,9 +61,9 @@ real2 := 20.20E10;
 				imprima("A media 10.10E9 e 20.20E10 e: ");
 				//b := media(real1, real2);
 				imprimaln(b);
-				//parar;
+				parar;
 			padrão:
-				imprimaln("Voce ira sair do programa.");
+				imprimaln("Voce ira sair do switch.");
 				parar;
 		fim-seleciona
 	fim-enquanto

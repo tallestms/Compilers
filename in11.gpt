@@ -1,0 +1,35 @@
+algoritmo declaracao_funcoes;
+
+variáveis
+  a,b,c,d,e1,f : inteiro;
+  m: matriz[3][3] de inteiros;
+  b2 : inteiro;
+fim-variáveis
+
+início
+       m[2][1] := 4;
+       m[2][2] := 1;
+       m[0][1] := 2;
+       m[0][0] := 7;
+       m[1][0] := 23;
+       m[1][1] := 33;
+       a:= m[2][1];
+       imprimaln(a);
+     
+/*
+       b:= m[2][2];
+       imprimaln(b);
+       c:= m[0][1];
+       imprimaln(c);
+       d:= m[0][0];
+       imprimaln(d);
+       e1:= m[1][0];
+       imprimaln(e1);
+       f:= m[1][1];
+       imprimaln(f);
+       b2:=2;
+       a:=m[1][2];
+       m[0][0] := m[2][2] + 6.10;
+       a:= m[1][0];
+*/
+fim
