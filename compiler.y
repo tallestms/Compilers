@@ -1532,6 +1532,7 @@ if(!verifyRelationship(varRelations, currentRelationPos))
   }
 strcpy(identifiers,"\0"); 
 currentRelationPos = 0;
+currentRelationComparison = 0;
 }
 token_faca BLOCO_AUXILIAR
 {
@@ -1696,10 +1697,22 @@ token_ou;
 
 ARGUMENTOS_FUNCAO: EXPR
 {
+
   List* functionList = lookupStringVariable(hashFunction, currentFunction);
-  function* functionAux = ((function*)(functionList->info));
-  List* aux = functionAux->parameters;
-  argumentNumber++;
+  function* functionAux; 
+  List* aux;
+  if(functionList != NULL)
+  {
+    functionAux = ((function*)(functionList->info));
+    aux = functionAux->parameters;
+    argumentNumber++;
+  }
+  else
+  {
+    printf("Funcao %s nao existe na linha %d\n", currentFunction, nLine);
+    terminate(); return;
+    
+  }
   if(argumentNumber <= functionAux->arity)
   {
     int returnTypeArgument = findArgumentType(argumentNumber, aux);
@@ -1994,7 +2007,19 @@ token_mod { operadorDeNivelZero("%"); } FATOR
 //Multiplicar
 | TERMO token_vezes { operadorDeNivelZero("*"); } FATOR { swapoutUmZero(); }
 //Pow
-| TERMO token_circ { operadorDeMenorNivel("^"); } FATOR { swapoutZeroMenor(); };
+| TERMO token_circ 
+{ 
+  List *auxList = lookupStringVariable(hashVariables, currentVariable);
+  variable* auxVariable = ((variable*)(auxList->info));
+  if (auxVariable->type != 3)
+  {
+    printf("O operador ^ so aceita retornos reais.\n");
+    terminate(); return;
+  }
+
+operadorDeMenorNivel("^"); 
+} 
+FATOR { swapoutZeroMenor(); };
 
 FATOR: SINALFATOR
 | token_numinteiro

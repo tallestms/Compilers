@@ -34,23 +34,32 @@ início
   imprimaln("Depois de ter recebido o valor a=10:");
   imprimaln(mat_inteiro[0][0]);
 
+  imprimaln("Vamos carregar a matriz de inteiro e reais agora.");
+  mat_inteiro:={[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15],[16,17,18,19,20],[21,22,23,24,25]};
+  
+  imprimaln("Somando [0][0] com [0][0]");  
   mat_inteiro[0][0] := soma(mat_inteiro[0][0], mat_inteiro[0][0]);
   imprimaln(mat_inteiro[0][0]);
   
-  mat_inteiro[4][4] := a*mat_inteiro[0][0] + mat_inteiro[0][0];
-  mat_inteiro[3][3] := mat_inteiro[4][4]+25*(a+a*(a+a*(a+a)));
+  imprimaln("Realizando operacoes");
+  mat_inteiro[4][4] := 10 + mat_inteiro[1][1];
+  mat_inteiro[3][3] := mat_inteiro[4][4]+25*(a+a*(a+mat_inteiro[2][4]*(a+a)));
   
+  imprimaln("Posicao 4,4 da matriz");
   imprimaln(mat_inteiro[4][4]);
+  
+  imprimaln("Posicao 3,3 da matriz");
   imprimaln(mat_inteiro[3][3]);
 
+  imprimaln("Escrevendo caracter");  
   mat_char[1][1] := 'a';
   //imprima_aux_caracter(mat_char[1][1]); -> seg fault
   imprimaln(mat_char[1][1]); //-> errado
   
+  imprimaln("Escrevendo literal");
   mat_literal[0] := "teste na matriz";
   //imprima_aux_literal(mat_literal[0]); -> seg fault
-  imprimaln(mat_literal[0]); //seg fault se passar matriz sem os colchetes e valor errado
-  
+  imprimaln(mat_literal[0]); //-> errado  
   
   imprima("Se quiser imprimir todos os int primos ate 1000 ");
   imprimaln("digite 1, senao, saia do programa.");
@@ -77,9 +86,9 @@ início
                fim-se
                flag:=0;
 	  se (i=1000) então
-	    imprimaln("Continua?(S=0)(N=1)");
+	    imprimaln("Continua?(N=0)(S=1)");
 	    leia(a);
-	    se (a=1) então
+	    se (a=0) então
 	      i := 100000;
 	    fim-se
 	  fim-se

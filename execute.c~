@@ -457,12 +457,12 @@ void* executeNode(treeNode* t){
 		 	j = *((int*)executeNode(t->children[1]));
 			int nColumnAux = var->nColumn;
 		 	if(var->type == 0) {
-			 	*intReturn = ((int*) var->value)[i*nColumnAux+j];
+			 	*intReturn = ((int*) var->value[i*nColumnAux+j];
 			 	return intReturn;
 			}
 			//caracter
 			if(var->type == 1) {
-			 	*charReturn = ((char*)var->value)[i*nColumnAux+j];
+			 	*charReturn = ((char*)var->value[i*nColumnAux+j];
 			 	return charReturn;
 			}
 			//literais
@@ -472,7 +472,7 @@ void* executeNode(treeNode* t){
 			}
 			//reais 
 			if(var->type == 3) {
-			 	*doubleReturn = ((double*) var->value)[i*nColumnAux+j];
+			 	*doubleReturn = ((double*) var->value[i*nColumnAux+j];
 			 	return doubleReturn;
 			}
 		 }
