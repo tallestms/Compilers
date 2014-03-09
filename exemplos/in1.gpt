@@ -53,7 +53,7 @@ fim
 
 variáveis
 	a : inteiro;
-	b : inteiro;
+	b : inteiro;   //deveria dar erro
 	c,d,f : real;
 	g : real;
 	char : caracter;

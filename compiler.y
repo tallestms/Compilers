@@ -963,7 +963,7 @@ token_leia token_abrep token_identificador
   }
   expressionNode = NULL;
 }
-token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} | 
+token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0; currentRelationComparison = 0;} | 
 token_leialn token_abrep token_identificador
 {
   List *identifier_temp = lookupStringVariable(hashVariables, currentIdentifier);
@@ -993,7 +993,7 @@ token_leialn token_abrep token_identificador
   }
     expressionNode = NULL;
 }
-token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0;} |
+token_fechap token_pontov {strcpy(identifiers, "\0"); currentRelationPos = 0; currentRelationComparison = 0;} |
 token_identificador
 {
   strcpy(currentFunction, currentIdentifier);
@@ -1268,7 +1268,7 @@ EXPR
 	  if((((variable*)(identifier_temp->info))->type) != 4)
 	  {
 	    printf("%d %d", in_logico, in_condicional);
-	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel. aaa\n",nLine);
+	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	    terminate(); return;
 	  }
 	  else

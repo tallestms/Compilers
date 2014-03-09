@@ -77,7 +77,7 @@ início
 	c := sinistro(d, z);
 	c := 20.20;
 	b := minimo(a,b);
-	c := media(d,c);
+	media(d,c);
 	a := soma2(c,d);
 	soma(10);
 	soma3(a);

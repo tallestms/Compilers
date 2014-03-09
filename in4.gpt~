@@ -1,0 +1,89 @@
+algoritmo matrizes_e_primo;
+
+função soma(a:inteiro, b:inteiro) : inteiro
+início
+	retorne (a+b);
+fim
+
+função imprima_aux_literal(a:literal)
+início
+	imprimaln(a);
+fim
+
+função imprima_aux_caracter(a:caracter)
+início
+	imprimaln(a);
+fim
+
+
+variáveis
+	a : inteiro;
+	mat_char : matriz[2][2] de caracteres; 
+	mat_literal : matriz[2] de literais;
+	mat_inteiro : matriz[5][5] de inteiros;
+	i,j,flag,resultado : inteiro;
+fim-variáveis
+início
+  
+  // Matrizes sao inicializadas com zero no programa.
+  a := 10;
+  imprimaln("O valor inicial da matriz mat_inteiro[0][0]:");
+  imprimaln(mat_inteiro[0][0]);
+  
+  mat_inteiro[0][0] := a;
+  imprimaln("Depois de ter recebido o valor a=10:");
+  imprimaln(mat_inteiro[0][0]);
+
+  mat_inteiro[0][0] := soma(mat_inteiro[0][0], mat_inteiro[0][0]);
+  imprimaln(mat_inteiro[0][0]);
+  
+  mat_inteiro[4][4] := a*mat_inteiro[0][0] + mat_inteiro[0][0];
+  mat_inteiro[3][3] := mat_inteiro[4][4]+25*(a+a*(a+a*(a+a)));
+  
+  imprimaln(mat_inteiro[4][4]);
+  imprimaln(mat_inteiro[3][3]);
+
+  mat_char[1][1] := 'a';
+  //imprima_aux_caracter(mat_char[1][1]); -> seg fault
+  imprimaln(mat_char[1][1]); //-> errado
+  
+  mat_literal[0] := "teste na matriz";
+  //imprima_aux_literal(mat_literal[0]); -> seg fault
+  imprimaln(mat_literal[0]); //seg fault se passar matriz sem os colchetes e valor errado
+  
+  
+  imprima("Se quiser imprimir todos os int primos ate 1000 ");
+  imprimaln("digite 1, senao, saia do programa.");
+  leia(a);
+  
+  se (a = 1) então
+  //Exemplo legal fornecido pelo Ivan com alteracoes.
+   i:=2;
+       j:=2;
+       flag:=0;
+       resultado:=2;
+       enquanto (i < 100000) faça
+               i:=i+1;
+               enquanto (j < i) faça
+                       se (i%j = 0) então
+                               flag :=1;                
+                       fim-se
+                       j:=j+1;
+               fim-enquanto
+               j:=2;
+               se (flag = 0) então
+                       resultado := i;
+                       imprimaln(i);
+               fim-se
+               flag:=0;
+	  se (i=1000) então
+	    imprimaln("Continua?(S=0)(N=1)");
+	    leia(a);
+	    se (a=1) então
+	      i := 100000;
+	    fim-se
+	  fim-se
+       fim-enquanto
+  fim-se
+  
+  fim

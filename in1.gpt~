@@ -19,6 +19,6 @@ fim-variáveis
 
 início
 	a := 10;
-	fibonacci(1,1,((a/2)*2-5)*2*3);
+	fibonacci(1,1,((a/2)*2-5)*2*10);
 	imprimaln("");
 fim	
