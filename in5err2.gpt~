@@ -31,9 +31,9 @@ b := b1;
 imprimaln("Escreva um numero qualquer p/ fazer uma continha");
 leia(c);
 
-c := c^10.0*(10.10E2-32.23)*((-1.0*10.21E-5/30.123123)*10.6441+20.20);
+c := c^10.0*(10.10E2-32.23)*(-1.0*10.21E-5/30.123123)*10.6441+20.20);
 
-imprimaln("Depois da conta temos:");
+imprimaln("Depois da conta temos:");5
 imprimaln(c);
 imprimaln("");
 

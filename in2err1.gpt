@@ -12,7 +12,7 @@ início
 	a := 10;
 	b := 20;
 	c := 0.0;
-	
+	variavel := 10;
 	enquanto (a < b) faça
 	    a := a + 1;
 	    se (a >= 15) então
@@ -31,8 +31,7 @@ início
 	a := (((b+a)/a)/b)*(a+a)-(10*a/2);
 	
 	imprima("O novo valor de a apos a := "); 
-	imprimaln("(	hanoi(10,'a','b','c'); //erro
-((b*a)/a)/b)+(a+a)-(a/2); seria:");
+	imprimaln("(((b*a)/a)/b)+(a+a)-(a/2); seria:");
 	imprimaln(a);
 	
 	imprimaln("");

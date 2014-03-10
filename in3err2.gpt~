@@ -1,0 +1,82 @@
+algoritmo condicionais2;
+
+função soma(a:inteiro, b:inteiro) : inteiro
+início
+	retorne (a+b);
+fim
+
+variáveis
+	a : inteiro;
+	b : real;
+	c : inteiro;
+	testesoma : inteiro;
+	int1 : inteiro;
+	int2 : inteiro;
+	real1 : real;
+	real2 : real;
+	x, res : inteiro;
+fim-variáveis
+
+início
+
+testesoma := 10;
+
+a := 1;
+int1 := 10;
+int2 := 20;
+real1 := 10.10E9;
+real2 := 20.20E10;
+	
+	enquanto (a = 1 ou a = 2 ou a = 3 ou a = 4) faça
+		imprimaln("Escreva o numero 1-4 ou qualquer outra para sair.");
+		leia(a);
+
+		// Exemplo de uso de SWITCH
+		seleciona (a)
+			caso (1):
+				imprimaln("O número impresso foi 1.");
+				imprima("O maximo de 10 e 20 e: ");
+				c := maximo(int1, int2);
+				imprimaln(c);
+				imprima("O minimo de 10 e 20 e: ");
+				c := minimo(int1, int2);
+				imprimaln(c);
+				parar;
+			caso (2):
+				imprimaln("O número impresso foi 2.");
+				imprima("O maximo de 10.10E9 e 20.20E10 e: ");
+				b := maximo(real1, real2);
+				imprimaln(b);
+				imprima("O minimo de 10.10E9 e 20.20E10 e: ");
+				b := minimo(real1, real2);
+				imprimaln(b);
+				parar;
+			caso (3):
+				imprimaln("O número impresso foi 3.");
+				imprima("A media 10 e 20 e: ");
+				//c := media(int1, int2); -> seg fault
+				imprimaln(c);
+				imprimaln("O caso 3 nao tem parar.");
+			caso (4):
+				imprimaln("O número impresso foi 4.");
+				imprima("A media 10.10E9 e 20.20E10 e: ");
+				//b := media(real1, real2); -> seg fault
+				imprimaln(b);
+				parar;
+			padrão:
+				imprimaln("Voce ira sair do switch.");
+				parar;
+		fim-seleciona
+	fim-enquanto
+	
+	imprimaln("Escreva um numero inteiro:");
+	leia(x);
+	res := 1;	
+	faça 
+		res := res*x;
+		x := x - 1;
+		imprimaln("Novo valor de x.");
+		imprimaln(x);
+	fim-faça enquanto (x > 1); 
+fim	
+
