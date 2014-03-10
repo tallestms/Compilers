@@ -11,23 +11,23 @@ variáveis
 fim-variáveis
 
 início
-/*
+
 imprima("Escreva uma frase e iremos ler a linha toda");
 imprimaln(" usando o comando leialn.");
 leialn(a);
-//imprima(a); -> seg fault
+imprima(a); 
 a1 := "Teste";
-//a := a1; -> seg fault (atribuicao)
-//imprimaln(a); -> seg fault
+a := a1;
+imprimaln(a);
 
 
 imprimaln("Escreva uma letra e iremos ler e imprimir");
 leia(b);
-//imprimaln(b); -> seg fault
+imprimaln(b); //-> seg fault
 b1 := 'b';
 b := b1;
-//imprimaln(b); -> seg fault
-
+imprimaln(b); //-> seg fault
+/*
 imprimaln("Escreva um numero qualquer p/ fazer uma continha");
 leia(c);
 
@@ -84,8 +84,5 @@ imprimaln("");
 	fim-se
 */
 
-	z := verdadeiro;
-	imprimaln(z);
-	z := falso;
-	imprimaln(z);
+
 fim

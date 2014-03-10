@@ -357,12 +357,12 @@ void* executeNode(treeNode* t){
 		 	return intReturn;
 		 } 
 		 if(var->type == 1){
-		 //	charReturn = (char*)var->value;
-		 //	return &charReturn;
+		 	charReturn = *((char*)var->value);
+		 	return charReturn;
 		 }
 		 if(var->type == 2){
 		 	strcpy(stringReturn,(char*)var->value);
-		 //	return &stringReturn;
+		 	return stringReturn;
 		 }
 		 if(var->type == 3){
 		 	*doubleReturn = *((double*)var->value);
@@ -710,19 +710,19 @@ void* executeNode(treeNode* t){
 	case 35: //leia
 		list = (List*)(lookupStringVariable(hashExecuteVariables, t->children[1]->value)); 
 		var = (variable*) list->info;
-		
-		if(var->type == 0){
+		printf("%d\n",var->type);
+		if(var->type == 0){ //inteiro
 			scanf("%d", intReturn);
 			scanf("%c", &lixo);
 			*((int*)var->value) = *intReturn;
 		}
-		if(var->type==3){
+		if(var->type==3){ //real
 			scanf("%s", stringReturn);
 			scanf("%c", &lixo);
 			*doubleReturn = stringRealToDouble(stringReturn);
 			*((double*)(var->value)) = *doubleReturn;
 		}
-		if(var->type==2){
+		if(var->type==2){ //literal
 			scanf("%s", stringReturn);
 			scanf("%c", &lixo);
 			strcpy((char*)var->value,stringReturn);
