@@ -40,11 +40,11 @@ fim-variáveis
 
 início
 	a := 10;
-	fibonacci(1,1,((a/2)*2-5)*2*3);
-	imprimaln(");
+	fibonacci(1,1,((a/2)*2-5.0)*2*3);
+	imprimaln("");
 	imprimaln("");
 	a := fat(a);
 	imprimaln("Fatorial 10:");
 	imprima(a);
-	hanoi(10,'a','b','c');
+	hanoi(10,'a','b','c'); //erro
 fim	

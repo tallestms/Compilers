@@ -13,12 +13,38 @@ início
 	fim-se
 fim
 
+função fat(a:inteiro):inteiro
+
+início
+	se (a=0) então
+	  retorne 1;
+	fim-se
+	retorne a*fat(a-1);	
+fim
+
+função hanoi(n:inteiro, a:caracter, b:caracter, c:caracter)
+início
+	se (n > 0) então
+	  hanoi((n-1),a,c,b);
+	  imprima("mover de ");
+	  imprima(a);
+	  imprima(" para ");
+	  imprimaln(c);
+	  hanoi((n-1),c,b,a);
+      fim-se
+fim
+
 variáveis
 	a : inteiro;
 fim-variáveis
 
 início
 	a := 10;
-	fibonacci(1,1,((a/2)*2-5)*2*10);
+	fibonacci(1,1,((a/2)*2-5)*2*3);
 	imprimaln("");
+	imprimaln("");
+	a := fat(a);
+	imprimaln("Fatorial 10:");
+	imprima(a);
+	hanoi(10,'a','b','c'); //erro
 fim	
