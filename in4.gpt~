@@ -5,17 +5,6 @@ início
 	retorne (a+b);
 fim
 
-função imprima_aux_literal(a:literal)
-início
-	imprimaln(a);
-fim
-
-função imprima_aux_caracter(a:caracter)
-início
-	imprimaln(a);
-fim
-
-
 variáveis
 	a : inteiro;
 	mat_char : matriz[2][2] de caracteres; 
@@ -25,6 +14,7 @@ variáveis
 fim-variáveis
 início
   
+  mat_literal := ["teste1", "teste2"];
   // Matrizes sao inicializadas com zero no programa.
   a := 10;
   imprimaln("O valor inicial da matriz mat_inteiro[0][0]:");
@@ -42,7 +32,7 @@ início
   imprimaln(mat_inteiro[0][0]);
   
   imprimaln("Realizando operacoes");
-  mat_inteiro[4][4] := 10 + mat_inteiro[1][1];
+  mat_inteiro[4][4] := 10 + mat_inteiro[0][2];
   mat_inteiro[3][3] := mat_inteiro[4][4]+25*(a+a*(a+mat_inteiro[2][4]*(a+a)));
   
   imprimaln("Posicao 4,4 da matriz");
@@ -53,13 +43,13 @@ início
 
   imprimaln("Escrevendo caracter");  
   mat_char[1][1] := 'a';
-  //imprima_aux_caracter(mat_char[1][1]); -> seg fault
-  imprimaln(mat_char[1][1]); //-> errado
+  imprimaln(mat_char[1][1]);
   
   imprimaln("Escrevendo literal");
   mat_literal[0] := "teste na matriz";
-  //imprima_aux_literal(mat_literal[0]); -> seg fault
-  imprimaln(mat_literal[0]); //-> errado  
+  imprimaln(mat_literal[0]);
+
+  imprimaln(mat_literal[1]);
   
   imprima("Se quiser imprimir todos os int primos ate 1000 ");
   imprimaln("digite 1, senao, saia do programa.");
@@ -71,7 +61,7 @@ início
        j:=2;
        flag:=0;
        resultado:=2;
-       enquanto (i < 100000) faça
+       enquanto (i < 10000) faça
                i:=i+1;
                enquanto (j < i) faça
                        se (i%j = 0) então

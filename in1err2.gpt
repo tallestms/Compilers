@@ -41,7 +41,7 @@ fim-variáveis
 início
 	a := 10;
 	fibonacci(1,1,((a/2)*2-5)*2*3);
-	imprimaln("");
+	imprimaln(");
 	imprimaln("");
 	a := fat(a);
 	imprimaln("Fatorial 10:");

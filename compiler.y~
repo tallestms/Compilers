@@ -1676,7 +1676,7 @@ token_e |
   {	
     if(!verifyRelationshipComparison(varRelations, currentRelationComparison, currentRelationPos))
 	{
-	  printf("Valores incompativeis ou nao validos na linha %d. 1678\n", nLine);
+	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
 	  terminate(); return;
 	}
     currentRelationComparison=0;
@@ -1686,7 +1686,7 @@ token_e |
   {	
     if(!verifyRelationshipCondition(varRelations, currentRelationComparison, currentRelationPos))
 	{
-	  printf("Valores incompativeis ou nao validos na linha %d. 1688\n", nLine);
+	  printf("Valores incompativeis ou nao validos na linha %d.\n", nLine);
 	  terminate(); return;
 	}
     currentRelationComparison=0;

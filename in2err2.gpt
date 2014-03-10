@@ -1,0 +1,86 @@
+algoritmo condicionais1;
+
+variáveis
+	a : inteiro;
+	b : inteiro;
+	c : real;
+	d : real;
+	z : lógico;
+fim-variáveis
+
+início
+	a := 10;
+	b := 20;
+	c := 0.0;
+	
+	enquanto (a < b) faça
+	    a := a + 1;
+	    se (a >= 15) então
+	      se (c = 0.0) então
+		c := 5.0;
+	      senão
+		c := c + 1.0;
+	      fim-se
+	fim-enquanto
+	
+	imprimaln("Os valores de a e c agora sao:");
+	imprimaln(a);
+	imprimaln(c);
+	
+	a := (((b+a)/a)/b)*(a+a)-(10*a/2);
+	
+	imprima("O novo valor de a apos a := "); 
+	imprimaln("(((b*a)/a)/b)+(a+a)-(a/2); seria:");
+	imprimaln(a);
+	
+	imprimaln("");
+	imprimaln("Escreve um numero real:");
+	leia(c);
+	imprimaln("O numero escrito foi");
+	imprimaln(c);
+	
+	d := 10.0;
+	para (c de d até 40.0 passo 1.0) faça
+		a := a - 10;
+		  se (c = 39.0) então
+		    imprimaln("C chegou em 39!");
+		  fim-se
+	fim-para
+	
+	a := 0;
+	faça 
+	  a := a + 10;
+	  se (a = 90) então
+	    a := a + 1000;
+	  fim-se
+	fim-faça enquanto (a < 100);
+
+			
+	imprimaln("O valor final de a seria:");
+	imprimaln(a);
+	imprimaln("O valor final de c seria:");
+	imprimaln(c);
+	
+	z := verdadeiro;
+	para (a de 20 até 30 passo 1) faça
+		se (a > 25 e z) então
+		  imprimaln(a);
+		senão	
+		  imprimaln("Variavel 'a' ainda nao chegou em a = 30.");
+		  se (a > 22 e a < 25) então
+		    imprima("A variavel a esta entre 22 e 25: ");
+		    imprimaln(a);
+		  fim-se
+		fim-se
+	fim-para
+	
+	para (a de 25 até 30 passo 1) faça
+		para (b de 15 até 20 passo 1) faça
+			imprimaln(b);
+			se (b = 18) então
+			  imprimaln("A variavel b tem valor 18.");
+			fim-se
+		fim-para
+	fim-para
+fim	
+		

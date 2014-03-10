@@ -17,7 +17,7 @@ imprimaln(" usando o comando leialn.");
 leialn(a);
 //imprima(a); -> seg fault
 a1 := "Teste";
-//a := a1; -> seg fault
+//a := a1; -> seg fault (atribuicao)
 //imprimaln(a); -> seg fault
 
 
@@ -76,7 +76,7 @@ imprimaln("");
 	fim-se
 	
 	// agora falso
-	z := falso e ((10 > (15*10)+10) e (20.0 < 0.12312E-10)); // deveria dar falso
+	z := falso e ((10 > (15*10)+10) e (20.0 < 0.12312E-10)); // erro deveria dar falso
 	se (z = falso) então
 	  imprimaln("z falso.");
 	senão

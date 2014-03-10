@@ -698,7 +698,7 @@ FUNCAO: token_abrep VARIAVEIS_FUNCAO token_fechap token_inicio
     functionAux->arity = currentFunctionArity;
       currentFunctionArity = 0;
 
-    currentParameters = reverseList(currentParameters);
+    //currentParameters = reverseList(currentParameters);
     functionAux->parameters=currentParameters;
     currentParameters = startList();
   }
@@ -714,7 +714,7 @@ if(identifier_temp!=NULL)
     functionAux->arity = currentFunctionArity;
     currentFunctionArity = 0;
 
-    currentParameters = reverseList(currentParameters);
+    //currentParameters = reverseList(currentParameters);
     functionAux->parameters=currentParameters;
     currentParameters = startList();
   }
@@ -732,7 +732,7 @@ token_inicio BLOCO_FUNCAO token_fim
     functionAux->arity = currentFunctionArity;
     currentFunctionArity = 0;
       
-    currentParameters = reverseList(currentParameters);
+    //currentParameters = reverseList(currentParameters);
     functionAux->parameters=currentParameters;
     currentParameters = startList();
   }
@@ -751,7 +751,7 @@ token_inicio BLOCO_FUNCAO token_fim
     function* functionAux = ((function*)(aux->info));
     functionAux->arity = currentFunctionArity;
     currentFunctionArity = 0;
-    currentParameters = reverseList(currentParameters);
+    //currentParameters = reverseList(currentParameters);
     functionAux->parameters=currentParameters;
     currentParameters = startList();
    }
@@ -1258,7 +1258,7 @@ EXPR
 	  printf("Variavel %s nao declarada na linha %d.\n",returnVariable, nLine);
 	  terminate(); return;
 	} 
-	else if((varRelations[0] == T_LITERAL || varRelations[0] == T_CARACTER) && currentRelationPos > 1) //caracter ou literal
+	else if((varRelations[0] == T_LITERAL || varRelations[0] == T_CARACTER) && currentRelationPos > 1 && ((variable*)(identifier_temp->info))->matrix!=1) //caracter ou literal
 	{
 	  printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
 	  terminate(); return;
@@ -1317,7 +1317,7 @@ EXPR
 	    printf("Variavel %s nao declarada na linha %d.\n",currentIdentifier, nLine);
 	    terminate(); return;
 	  }
-	  else if((varRelations[0] == T_CARACTER || varRelations[0] == T_LITERAL) && currentRelationPos > 1) //caracter ou literal
+	  else if((varRelations[0] == T_CARACTER || varRelations[0] == T_LITERAL) && currentRelationPos > 1 && ((variable*)(auxVariable))->matrix!=1) //caracter ou literal
 	  {
 	    printf("Literais ou caracteres nao aceitam operacoes (mais, menos e etc) na linha %d.\n", nLine);
 	    terminate(); return;
@@ -1335,7 +1335,6 @@ EXPR
 	  }
 	  else if(((variable*)(identifier_temp->info))->type != varRelations[0] && in_comparacao == 0 && ((variable*)(identifier_temp->info))->type != 4)
 	  {
-		printf("1338");
 	    printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
 	    terminate(); return;
 	  }
@@ -1697,7 +1696,6 @@ token_ou;
 
 ARGUMENTOS_FUNCAO: EXPR
 {
-
   List* functionList = lookupStringVariable(hashFunction, currentFunction);
   function* functionAux; 
   List* aux;
@@ -1723,7 +1721,7 @@ ARGUMENTOS_FUNCAO: EXPR
     }
     else if(returnTypeArgument != varRelations[0] && in_comparacao == 0)
     {	
-      printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n",nLine);
+      printf("Erro semantico na linha %d. Tipo invalido associado a variavel.\n", nLine);
       terminate(); return;
     }
     else if(verifyPrimitivesMaxMinMed(currentFunction))
