@@ -197,7 +197,7 @@ void* executeNode(treeNode* t){
 	double doubleA, doubleB;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
-	//printf("tipo convertido: %d\n",c);
+	printf("tipo convertido: %d\n",c);
 	switch (c) {
 	case -2: //literal
 		strcpy(stringReturn, t->value);
@@ -710,7 +710,6 @@ void* executeNode(treeNode* t){
 	case 35: //leia
 		list = (List*)(lookupStringVariable(hashExecuteVariables, t->children[1]->value)); 
 		var = (variable*) list->info;
-		printf("%d\n",var->type);
 		if(var->type == 0){ //inteiro
 			scanf("%d", intReturn);
 			scanf("%c", &lixo);
@@ -744,7 +743,6 @@ void* executeNode(treeNode* t){
 	case 36: //imprimaln
 		findType(t->children[1], type);
 		if(!strcmp(type, "INTEIRO")){
-			printf("entrando no inteiro\n");
 			printf("%d\n", *((int*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "REAL")){
@@ -754,7 +752,6 @@ void* executeNode(treeNode* t){
 			printf("%s\n", ((char*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "CARACTER")){
-			printf("entrando no caracter\n");
 			printf("%c\n", *((char*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "LOGICO")){
