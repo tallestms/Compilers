@@ -11,10 +11,10 @@ int globalRetornoFlag = 0;
 
 char* findType(treeNode *t, char* s){
 	treeNode* aux = t;
-	while(aux->children[0] != NULL) aux = aux->children[0];
+	while(aux->children[0] != NULL && strcmp(aux->type,"MATRIX")) aux = aux->children[0];
 	strcpy(s,aux->type);
 	variable *var;
-	if(!strcmp(s, "VARIAVEL")){
+	if(!strcmp(s, "VARIAVEL") || !strcmp(s, "MATRIX")){
 		List *l = lookupStringVariable(hashExecuteVariables, aux->value);
 		var = (variable*) l->info;
 		if (var->type == 3) strcpy(s, "REAL");
@@ -457,12 +457,12 @@ void* executeNode(treeNode* t){
 		 	j = *((int*)executeNode(t->children[1]));
 			int nColumnAux = var->nColumn;
 		 	if(var->type == 0) {
-			 	*intReturn = ((int*) var->value[i*nColumnAux+j];
+			 	*intReturn = ((int*) var->value)[i*nColumnAux+j];
 			 	return intReturn;
 			}
 			//caracter
 			if(var->type == 1) {
-			 	*charReturn = ((char*)var->value[i*nColumnAux+j];
+			 	*charReturn = ((char*)var->value)[i*nColumnAux+j];
 			 	return charReturn;
 			}
 			//literais
@@ -472,7 +472,7 @@ void* executeNode(treeNode* t){
 			}
 			//reais 
 			if(var->type == 3) {
-			 	*doubleReturn = ((double*) var->value[i*nColumnAux+j];
+			 	*doubleReturn = ((double*) var->value)[i*nColumnAux+j];
 			 	return doubleReturn;
 			}
 		 }
@@ -516,6 +516,13 @@ void* executeNode(treeNode* t){
 		if(!strcmp(type, "REAL")){
 			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) == (*((double*)executeNode(t->children[1]))) );
 			return intReturn; 
+		}
+		if(!strcmp(type, "LOGICO")){
+			intA = *((int*)executeNode(t->children[0]));
+			intB = *((int*)executeNode(t->children[1]));
+			printf("A: %d, B: %d\n", intA, intB);
+			*intReturn = (intA && intB || intA == 0 && intB == 0) ? 1 : 0;
+			return intReturn;
 		}
 	case 18: // >=
 		findType(t,type);
@@ -738,6 +745,7 @@ void* executeNode(treeNode* t){
 	case 36: //imprimaln
 		findType(t->children[1], type);
 		if(!strcmp(type, "INTEIRO")){
+			printf("entrando no inteiro\n");
 			printf("%d\n", *((int*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "REAL")){
@@ -747,6 +755,7 @@ void* executeNode(treeNode* t){
 			printf("%s\n", ((char*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "CARACTER")){
+			printf("entrando no caracter\n");
 			printf("%c\n", *((char*)executeNode(t->children[1])));
 		}
 		if(!strcmp(type, "LOGICO")){

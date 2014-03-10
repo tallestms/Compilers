@@ -517,6 +517,12 @@ void* executeNode(treeNode* t){
 			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) == (*((double*)executeNode(t->children[1]))) );
 			return intReturn; 
 		}
+		if(!strcmp(type, "LOGICO")){
+			intA = *((int*)executeNode(t->children[0]));
+			intB = *((int*)executeNode(t->children[1]));
+			*intReturn = (intA && intB || intA == 0 && intB == 0) ? 1 : 0;
+			return intReturn;
+		}
 	case 18: // >=
 		findType(t,type);
 		if(!strcmp(type, "INTEIRO")){
