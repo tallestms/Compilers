@@ -31,7 +31,7 @@ b := b1;
 imprimaln("Escreva um numero qualquer p/ fazer uma continha");
 leia(c);
 
-c := c^10.0*(10.10E2-32.23)*(-1.0*10.21E-5/30.123123)*10.6441+20.20);
+c := c^10.0*(10.10E2-32.23)*((-1.0*10.21E-5/30.123123)*10.6441+20.20);
 
 imprimaln("Depois da conta temos:");
 imprimaln(c);
@@ -39,6 +39,7 @@ imprimaln("");
 
 
        m[2][1] := 4.12;
+       m[2][1] := 'a';
        m[2][2] := -1.2;
        m[0][1] := 2.13;
        m[0][0] := 7.41;
@@ -76,8 +77,7 @@ imprimaln("");
 	fim-se
 	
 	// agora falso
-	z := falso;
-	//falso e ((10 > (15*10)+10) e (20.0 < 0.12312E-10)); //erro deveria dar falso
+	z := falso e ((10 > (15*10)+10) e (20.0 < 0.12312E-10));
 	se (z = falso) então
 	  imprimaln("z falso.");
 	senão

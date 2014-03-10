@@ -11,10 +11,10 @@ int globalRetornoFlag = 0;
 
 char* findType(treeNode *t, char* s){
 	treeNode* aux = t;
-	while(aux->children[0] != NULL) aux = aux->children[0];
+	while(aux->children[0] != NULL && strcmp(aux->type,"MATRIX")) aux = aux->children[0];
 	strcpy(s,aux->type);
 	variable *var;
-	if(!strcmp(s, "VARIAVEL")){
+	if(!strcmp(s, "VARIAVEL") || !strcmp(s, "MATRIX")){
 		List *l = lookupStringVariable(hashExecuteVariables, aux->value);
 		var = (variable*) l->info;
 		if (var->type == 3) strcpy(s, "REAL");
@@ -197,7 +197,7 @@ void* executeNode(treeNode* t){
 	double doubleA, doubleB;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
-	//printf("tipo convertido: %d\n",c);
+	printf("tipo convertido: %d\n",c);
 	switch (c) {
 	case -2: //literal
 		strcpy(stringReturn, t->value);
@@ -357,12 +357,12 @@ void* executeNode(treeNode* t){
 		 	return intReturn;
 		 } 
 		 if(var->type == 1){
-		 //	charReturn = (char*)var->value;
-		 //	return &charReturn;
+		 	*charReturn = *((char*)var->value);
+		 	return charReturn;
 		 }
 		 if(var->type == 2){
 		 	strcpy(stringReturn,(char*)var->value);
-		 //	return &stringReturn;
+		 	return stringReturn;
 		 }
 		 if(var->type == 3){
 		 	*doubleReturn = *((double*)var->value);
@@ -457,12 +457,12 @@ void* executeNode(treeNode* t){
 		 	j = *((int*)executeNode(t->children[1]));
 			int nColumnAux = var->nColumn;
 		 	if(var->type == 0) {
-			 	*intReturn = ((int*) var->value[i*nColumnAux+j];
+			 	*intReturn = ((int*) var->value)[i*nColumnAux+j];
 			 	return intReturn;
 			}
 			//caracter
 			if(var->type == 1) {
-			 	*charReturn = ((char*)var->value[i*nColumnAux+j];
+			 	*charReturn = ((char*)var->value)[i*nColumnAux+j];
 			 	return charReturn;
 			}
 			//literais
@@ -472,7 +472,7 @@ void* executeNode(treeNode* t){
 			}
 			//reais 
 			if(var->type == 3) {
-			 	*doubleReturn = ((double*) var->value[i*nColumnAux+j];
+			 	*doubleReturn = ((double*) var->value)[i*nColumnAux+j];
 			 	return doubleReturn;
 			}
 		 }
@@ -516,6 +516,12 @@ void* executeNode(treeNode* t){
 		if(!strcmp(type, "REAL")){
 			*intReturn = (int)( (*((double*)executeNode(t->children[0]))) == (*((double*)executeNode(t->children[1]))) );
 			return intReturn; 
+		}
+		if(!strcmp(type, "LOGICO")){
+			intA = *((int*)executeNode(t->children[0]));
+			intB = *((int*)executeNode(t->children[1]));
+			*intReturn = (intA && intB || intA == 0 && intB == 0) ? 1 : 0;
+			return intReturn;
 		}
 	case 18: // >=
 		findType(t,type);
@@ -704,19 +710,18 @@ void* executeNode(treeNode* t){
 	case 35: //leia
 		list = (List*)(lookupStringVariable(hashExecuteVariables, t->children[1]->value)); 
 		var = (variable*) list->info;
-		
-		if(var->type == 0){
+		if(var->type == 0){ //inteiro
 			scanf("%d", intReturn);
 			scanf("%c", &lixo);
 			*((int*)var->value) = *intReturn;
 		}
-		if(var->type==3){
+		if(var->type==3){ //real
 			scanf("%s", stringReturn);
 			scanf("%c", &lixo);
 			*doubleReturn = stringRealToDouble(stringReturn);
 			*((double*)(var->value)) = *doubleReturn;
 		}
-		if(var->type==2){
+		if(var->type==2){ //literal
 			scanf("%s", stringReturn);
 			scanf("%c", &lixo);
 			strcpy((char*)var->value,stringReturn);

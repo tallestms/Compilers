@@ -60,7 +60,7 @@ início
        j:=2;
        flag:=0;
        resultado:=2;
-       enquanto (i < 10000) faça
+       enquanto (i < 1500) faça
                i:=i+1;
                enquanto (j < i) faça
                        se (i%j = 0) então

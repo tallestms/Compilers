@@ -60,7 +60,7 @@ real2 := 20.20E10;
 			caso (4):
 				imprimaln("O número impresso foi 4.");
 				imprima("A media 10.10E9 e 20.20E10 e: ");
-				//b := media(real1, real2); -> seg fault
+				b := media(real1, real2); -> seg fault
 				imprimaln(b);
 				parar;
 			padrão:
@@ -77,6 +77,6 @@ real2 := 20.20E10;
 		x := x - 1;
 		imprimaln("Novo valor de x.");
 		imprimaln(x);
-	fim-faça enquanto (x < res); 
+	fim-faça enquanto (x > 1); 
 fim	
 

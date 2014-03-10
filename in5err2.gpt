@@ -15,18 +15,18 @@ início
 imprima("Escreva uma frase e iremos ler a linha toda");
 imprimaln(" usando o comando leialn.");
 leialn(a);
-//imprima(a); -> seg fault
+imprima(a);
 a1 := "Teste";
 //a := a1; -> seg fault (atribuicao)
-//imprimaln(a); -> seg fault
+imprimaln(a);
 
 
 imprimaln("Escreva uma letra e iremos ler e imprimir");
 leia(b);
-//imprimaln(b); -> seg fault
+imprimaln(b);
 b1 := 'b';
 b := b1;
-//imprimaln(b); -> seg fault
+imprimaln(b);
 
 imprimaln("Escreva um numero qualquer p/ fazer uma continha");
 leia(c);
@@ -76,8 +76,7 @@ imprimaln("");
 	fim-se
 	
 	// agora falso
-	z := falso;
-	//falso e ((10 > (15*10)+10) e (20.0 < 0.12312E-10)); //erro deveria dar falso
+	z:= falso e ((10 > (15*10)+10) e (20.0 < 0.12312E-10)); //erro deveria dar falso
 	se (z = falso) então
 	  imprimaln("z falso.");
 	senão

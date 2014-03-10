@@ -48,7 +48,6 @@ início
   imprimaln("Escrevendo literal");
   mat_literal[0] := "teste na matriz";
   imprimaln(mat_literal[0]);
-
   imprimaln(mat_literal[1]);
   
   imprima("Se quiser imprimir todos os int primos ate 1000 ");

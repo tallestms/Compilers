@@ -32,7 +32,7 @@ início
   imprimaln(mat_inteiro[0][0]);
   
   imprimaln("Realizando operacoes");
-  mat_inteiro[4][4] := 10 + mat_inteiro[0][2];
+  mat_inteiro[4]4] := 10 + mat_inteiro[0][2];
   mat_inteiro[3][3] := mat_inteiro[4][4]+25*(a+a*(a+mat_inteiro[2][4]*(a+a)));
   
   imprimaln("Posicao 4,4 da matriz");
@@ -60,7 +60,7 @@ início
        j:=2;
        flag:=0;
        resultado:=2;
-       enquanto (i < 1500) faça
+       enquanto (i < 10000) faça
                i:=i+1;
                enquanto (j < i) faça
                        se (i%j = 0) então
