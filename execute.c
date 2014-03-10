@@ -109,14 +109,14 @@ void *executeFunction(treeNode *func){
 		auxParam = auxParam->next;
 	}
 	
-	
+
 	//	executar a função empilhando o retorno quando houver 
 	list = lookupStringFunction(hashExecuteFunctions, func->children[0]->value);
 	if(list != NULL){
 		function* funcAux = (function*) list->info;
 		auxFunc = funcAux->functionTree->children[3];
 		//printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-		//printNode(funcAux->functionTree, 13, 2);
+		//printNode(auxFunc, 13, 2,0);
 		//printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
 		//printNode(auxFunc, 13,6);
 		while(auxFunc!=NULL && globalRetornoFlag == 0){
@@ -127,6 +127,7 @@ void *executeFunction(treeNode *func){
 		/*desempilhar o retorno*/
 		if(strcmp(func->children[0]->children[0]->type,"VOID")!=0) {
 			retorno = popStack(stackExecuteVariables);
+			globalRetornoFlag = 0;
 		}
 	}	
 	/*desempilhar as variaveis da função chamada usando o size e a pilha auxiliar*/
@@ -197,7 +198,7 @@ void* executeNode(treeNode* t){
 	double doubleA, doubleB;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
-	printf("tipo convertido: %d\n",c);
+	//printf("tipo convertido: %d\n",c);
 	switch (c) {
 	case -2: //literal
 		strcpy(stringReturn, t->value);
@@ -678,12 +679,14 @@ void* executeNode(treeNode* t){
 		if(!strcmp(type, "INTEIRO")){
 			intA = *((int*)executeNode(t->children[1]));
 			intB = *((int*)executeNode(t->children[2]));
-			*intReturn = (int)((int)(intA + intB)) / ((int)2);
+			*intReturn = (intA + intB) / 2;
+			return intReturn;
 		}
 		if(!strcmp(type, "REAL")){
 			doubleA = *((double*)executeNode(t->children[1]));
 			doubleB = *((double*)executeNode(t->children[2]));
 			*doubleReturn = (doubleA + doubleB) / 2;
+			return doubleReturn;
 		}
 		return;
 	case 34: //imprima
