@@ -710,7 +710,6 @@ void* executeNode(treeNode* t){
 	case 35: //leia
 		list = (List*)(lookupStringVariable(hashExecuteVariables, t->children[1]->value)); 
 		var = (variable*) list->info;
-		printf("aquiiiiiii\n");
 		printf("%d\n",var->type);
 		if(var->type == 0){ //inteiro
 			scanf("%d", intReturn);

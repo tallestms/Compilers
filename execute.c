@@ -357,7 +357,7 @@ void* executeNode(treeNode* t){
 		 	return intReturn;
 		 } 
 		 if(var->type == 1){
-		 	charReturn = *((char*)var->value);
+		 	*charReturn = *((char*)var->value);
 		 	return charReturn;
 		 }
 		 if(var->type == 2){
