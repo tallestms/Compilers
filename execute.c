@@ -198,10 +198,6 @@ void* executeNode(treeNode* t){
 	double doubleA, doubleB;
 	
 	int c = convertValuesTreeNode(t->value,t->type);
-<<<<<<< HEAD
-=======
-	//printf("tipo convertido: %d\n",c);
->>>>>>> 4be703058818392bf9a80169f2a9d1ba40228148
 	switch (c) {
 	case -2: //literal
 		strcpy(stringReturn, t->value);

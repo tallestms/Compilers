@@ -46,5 +46,6 @@ início
 	a := fat(a);
 	imprimaln("Fatorial 10:");
 	imprima(a);
-	hanoi(10,'a','b','c'); //erro
+	imprimaln("");
+	hanoi(2,'a','b','c');
 fim	
